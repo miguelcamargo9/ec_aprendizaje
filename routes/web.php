@@ -11,6 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+/* Routes Home Controller */
+Route::get('/', array('as' => 'home', 'uses' => 'HomeController@index'))->middleware('auth');
+Route::get('/index', array('as' => 'index', 'uses' => 'HomeController@index'))->middleware('auth');
+
+Auth::routes();
+Route::get('/home', 'HomeController@index')->name('home');
+
+/* Routes Inventario IP Controller */
+Route::get('/admin', array('as' => 'admin', 'uses' => 'Admin\TutorsController@showListTutors'))->middleware('auth');
+Route::get('/admin/tutors/list', array('as' => 'admin.tutors.list', 'uses' => 'Admin\TutorsController@showListTutors'))->middleware('auth');
