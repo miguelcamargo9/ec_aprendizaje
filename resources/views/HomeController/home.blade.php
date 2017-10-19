@@ -12,7 +12,7 @@
                 <p>Programas</p>
             </div>
             <div class="icon">
-                <i class="ion ion-ios-gear-outline"></i>
+                <i class="ion ion-bag"></i>
             </div>
             <a href="#" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
         </div>

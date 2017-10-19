@@ -107,8 +107,8 @@
                                         <img src="/packages/adminLTE/dist/img/avatar.png" class="img-circle" alt="User Image">
 
                                         <p>
-                                            {{Session::get('username')}}
-                                            <small>{{Session::get('profile')}}</small>
+                                            {{ Auth::user()->name }}
+                                            <small>Administrador</small>
                                         </p>
                                     </li>
                                     <!-- Menu Body -->
@@ -158,7 +158,7 @@
             <aside class="main-sidebar">
                 <!-- sidebar: style can be found in sidebar.less -->
                 <section class="sidebar">
-                    Sidebar user panel 
+                     <!--Sidebar user panel -->
                     <div class="user-panel">
                         <div class="pull-left image">
                             <img src="/packages/adminLTE/dist/img/avatar.png" class="img-circle" alt="User Image">
@@ -168,7 +168,7 @@
                             <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                         </div>
                     </div>
-                    search form 
+                    <!--search form -->
                     <form action="#" method="get" class="sidebar-form">
                         <div class="input-group">
                             <input type="text" name="q" class="form-control" placeholder="Buscar...">

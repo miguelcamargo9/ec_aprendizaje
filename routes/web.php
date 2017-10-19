@@ -18,6 +18,5 @@ Route::get('/index', array('as' => 'index', 'uses' => 'HomeController@index'))->
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
-/* Routes Inventario IP Controller */
-Route::get('/admin', array('as' => 'admin', 'uses' => 'Admin\TutorsController@showListTutors'))->middleware('auth');
+/* Routes Admin Controller */
 Route::get('/admin/tutors/list', array('as' => 'admin.tutors.list', 'uses' => 'Admin\TutorsController@showListTutors'))->middleware('auth');
