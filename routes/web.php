@@ -20,3 +20,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 /* Routes Admin Controller */
 Route::get('/admin/tutors/list', array('as' => 'admin.tutors.list', 'uses' => 'Admin\TutorsController@showListTutors'))->middleware('auth');
+
+
+Route::get('/tickets/list', array('as' => 'tickets.list', 'uses' => 'Tickets\TicketsController@showListTickets'))->middleware('auth');
+Route::get('/tickets/new', array('as' => 'tickets.new', 'uses' => 'Tickets\TicketsController@showNewTicket'))->middleware('auth');
