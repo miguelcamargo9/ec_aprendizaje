@@ -1,6 +1,6 @@
 @extends('index')
 
-@section('contentbody')
+
 @section('head')
     <title>Asignacion de casos</title>
     <meta name="description" content="EC aprendizaje">
