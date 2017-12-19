@@ -27,6 +27,7 @@ class HomeController extends Controller {
         $menus = $this->getMenus($user->profiles_id);
 //        echo "<pre>"; print_r($menus);        die();
         $request->session()->put('menu', $menus);
+        $request->session()->put('user', $user);
         return view('HomeController.home');
     }
 

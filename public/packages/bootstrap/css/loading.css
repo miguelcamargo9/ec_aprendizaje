@@ -1,0 +1,8 @@
+#loading {
+/*    position:absolute;*/
+    width:95%;
+    /*background:#ffffff url(ajax-loader.gif) no-repeat center;*/
+    background:#ffffff url(Preloader_3.gif) no-repeat center;
+    text-align: center;
+    padding-top: 50%;
+}

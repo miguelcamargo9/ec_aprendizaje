@@ -1,5 +1,4 @@
 @extends('index')
 
-@section('contentbody')
-    Hola Mundo
+Hola Mundo
 @endsection

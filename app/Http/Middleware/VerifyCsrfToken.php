@@ -13,5 +13,8 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         //
+        'datatables/*',
+        'tickets/getall',
+        'tickets/updatestate',
     ];
 }

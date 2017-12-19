@@ -30,6 +30,11 @@
         <!-- bootstrap wysihtml5 - text editor -->
         <link rel="stylesheet" href="/packages/adminLTE/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
 
+        <link href="/packages/bootstrap/css/bootstrap.min_1.css" rel="stylesheet">
+        <link href="/packages/DataTables/datatables.min.css" rel="stylesheet">
+        {{--<link href="/packages/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">--}}
+        {{--<link href="/packages/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">--}}
+
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -469,6 +474,8 @@
         <!-- ./wrapper -->
         <!-- jQuery 2.2.3 -->
         <script src="/packages/adminLTE/plugins/jQuery/jquery-2.2.3.min.js"></script>
+        <!-- Data Tables -->
+        <script src="/packages/DataTables/datatables.min.js"></script>
         <!-- jQuery UI 1.11.4 -->
         <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
         <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
