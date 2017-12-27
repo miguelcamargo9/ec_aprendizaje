@@ -9,13 +9,13 @@ class Ticket extends Model
     protected $table = 'caso';
     public $timestamps = false;
 
-    public function Client() {
-        return $this->belongsTo('Client', 'id_cliente', 'id');
+    public function client() {
+        return $this->hasMany('App\Models\Client', 'id', 'id_cliente');
     }
-    public function Tutor() {
-        return $this->belongsTo('Tutor', 'id_tutor', 'id');
+    public function tutor() {
+        return $this->hasMany('App\Models\Tutor', 'id', 'id_tutor');
     }
-    public function State() {
-        return $this->belongsTo('State', 'id_estado', 'id');
+    public function state() {
+        return $this->hasMany('App\Models\State', 'id', 'id_estado');
     }
 }

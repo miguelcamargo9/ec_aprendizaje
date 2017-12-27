@@ -9,10 +9,10 @@ class Client extends Model
     protected $table = 'cliente';
     public $timestamps = false;
 
-    public function Father() {
-        return $this->belongsTo('Father', 'id_padre', 'Id');
+    public function father() {
+        return $this->belongsTo('App\Models\Father', 'id_padre', 'id');
     }
-    public function Child() {
-        return $this->belongsTo('Child', 'id_hijo', 'Id');
+    public function child() {
+        return $this->belongsTo('App\Models\Child', 'id_hijo', 'id');
     }
 }

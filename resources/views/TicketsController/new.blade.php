@@ -23,8 +23,12 @@
         <!-- /. tools -->
     </div>
     <div class="box-body">
-        <form method="POST" action="/tickets/registry">
+         <form method="POST" action="/tickets/registry">
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
+            <div ng-app="app" ng-controller="studentCtrl" class="form-group">
+                Estudiante <select class="form-control" ng-model="selectedName" ng-options="x for x in names">
+                </select>
+            </div>
             <div class="form-group">
                 Fecha Inicial <input type="date" class="form-control" id='initdate' name="dateini" placeholder="Fecha Inicial:" required>
             </div>
@@ -44,6 +48,12 @@
 @endsection
 
 @section('scriptsjs')
+    <script>
+        var app = angular.module('app', []);
+        app.controller('studentCtrl', function($scope) {
+            $scope.names = ["Emilio", "Tobias", "Samuel", "Pepito Perez"];
+        });
+    </script>
     <!-- AdminLTE for demo purposes -->
     <script src="/packages/adminLTE/dist/js/demo.js"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
