@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class ParentsController extends Controller {
+  
+ 
+  
+ 
   /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -25,11 +29,12 @@ class ParentsController extends Controller {
     return view('ParentsController.new');
   }
 
-  public function getTicketsByParent() {
-    
-    $data = Session::get("user");
+  public function getTicketsByParent(Request $request) {
+
+   // $data = Session::get("user");
+    $data = $request->session()->get('user');
     echo $data->id;
-    $result = Ticket::with('tutor', 'state', 'client')->get();
+    //$result = Ticket::with('tutor', 'state', 'client')->get();
 //
 //    foreach ($result as $value) {
 //      //$value->id_cliente = empty($value->id_cliente) ? "N/A" : $value->id_cliente;
