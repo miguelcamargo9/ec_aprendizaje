@@ -51,7 +51,7 @@ class TicketsController extends Controller {
         $descripcion = Input::get('description');
         $perfil= Session::get('idPeril');
         $userid = Session::get('user');
-        echo "$userid - $perfil"; die();
+        //echo "$userid - $perfil"; die();
         Ticket::where('ID', '=', $id)->update(array('id_tutor' => 1,'descripcion' => $descripcion));
 
         return view('TicketsController.new', array('mensaje' => 'caso asignado el caso con éxito'));

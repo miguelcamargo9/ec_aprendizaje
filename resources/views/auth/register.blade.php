@@ -24,8 +24,36 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('nickname') ? ' has-error' : '' }}">
+                            <label for="nickname" class="col-md-4 control-label">Nickname</label>
+
+                            <div class="col-md-6">
+                                <input id="nickname" type="text" class="form-control" name="nickname" value="{{ old('nickname') }}" required autofocus>
+
+                                @if ($errors->has('nickname'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('nickname') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('identification_number') ? ' has-error' : '' }}">
+                            <label for="identification_number" class="col-md-4 control-label">Cedula de Ciudadania</label>
+
+                            <div class="col-md-6">
+                                <input id="identification_number" type="text" class="form-control" name="identification_number" value="{{ old('identification_number') }}" required autofocus>
+
+                                @if ($errors->has('identification_number'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('identification_number') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+                            <label for="email" class="col-md-4 control-label">Dirección E-Mail</label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
