@@ -6,23 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\State;
 use App\Models\Ticket;
 use App\Models\Tutor;
-use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 
 
 class TicketsController extends Controller {
-    /*
-      |--------------------------------------------------------------------------
-      | Login Controller
-      |--------------------------------------------------------------------------
-      |
-      | This controller handles authenticating users for the application and
-      | redirecting them to your home screen. The controller uses a trait
-      | to conveniently provide its functionality to your applications.
-      |
-     */
 
     public function showListTickets() {
         return view('TicketsController.list',array('mensaje' => ''));

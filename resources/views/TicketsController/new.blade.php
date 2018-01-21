@@ -25,9 +25,14 @@
     <div class="box-body">
          <form method="POST" action="/tickets/registry">
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
-            <div ng-app="app" ng-controller="studentCtrl" class="form-group">
-                Estudiante <select class="form-control" ng-model="selectedName" ng-options="x for x in names">
-                </select>
+            <div ng-app="app" ng-controller="ticketCtrl" class="form-group">
+                Estudiante <ui-select ng-model="client" theme="bootstrap">
+                    <ui-select-match placeholder="Seleccione un Cliente"><% client.child.nombre %> <% client.child.apellido %> - (Padre) <% client.father.name %></ui-select-match>
+                    <ui-select-choices repeat="client in clients | filter: $select.search">
+                        <span ng-bind-html="client.child.nombre | highlight: $select.search"></span> <span ng-bind-html="client.child.apellido | highlight: $select.search"></span> - (Padre) 
+                        <small ng-bind-html="client.father.name | highlight: $select.search"></small>
+                    </ui-select-choices>
+                </ui-select>
             </div>
             <div class="form-group">
                 Fecha Inicial <input type="date" class="form-control" id='initdate' name="dateini" placeholder="Fecha Inicial:" required>
@@ -35,9 +40,9 @@
             <div class="form-group">
                 Fecha Final <input type="date" class="form-control" id='enddate' name="dateend" placeholder="Fecha Final:" required>
             </div>
-            <div>
+<!--            <div>
                 <textarea name='description' class="textarea" placeholder="Message" style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;" required></textarea>
-            </div>
+            </div>-->
             <div class="box-footer clearfix">
                 <button type="submit" class="pull-right btn btn-default" id="accept">Crear
                     <i class="fa fa-arrow-circle-right"></i></button>
@@ -48,14 +53,13 @@
 @endsection
 
 @section('scriptsjs')
-    <script>
-        var app = angular.module('app', []);
-        app.controller('studentCtrl', function($scope) {
-            $scope.names = ["Emilio", "Tobias", "Samuel", "Pepito Perez"];
-        });
-    </script>
     <!-- AdminLTE for demo purposes -->
     <script src="/packages/adminLTE/dist/js/demo.js"></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="/packages/adminLTE/dist/js/pages/dashboard.js"></script>
+    
+    <link href="/packages/ui-select-master/dist/select.css" rel="stylesheet">
+    <script src="//code.angularjs.org/1.2.20/angular-sanitize.min.js"></script>
+    <script src="/js/ticketsController/ticketsController.js"></script>
+    <script src="/js/ticketsController/ticketsFactory.js"></script>
+    <script type="text/javascript" src="/packages/ui-select-master/dist/select.js"></script>
+    
 @endsection
