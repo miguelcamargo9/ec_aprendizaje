@@ -30,22 +30,25 @@ $(document).ready(function () {
   /*
    * ENVIO A GUARDAR EL COMENTARIO QUE HIZO EL PADRE
    */
-  console.log(666);
+  //;
+  //$("#comentario").wysihtml5();
   $("#btn-form-comentario").click(function () {
-    console.log(666);
+     
     var comentario = $("#comentario").val();
     var idCaso = $("#idCaso").val();
     var _token = $("#_token").val();
     $.ajax({
-      url:"/parents/addcommentary",
-      type:"POST",
-      data:{
-        comentario:comentario,
-        id:idCaso,
-        _token:_token
+      url: "/parents/addcommentary",
+      type: "POST",
+      data: {
+        comentario: comentario,
+        id: idCaso,
+        _token: _token
       }
     }).done(function () {
       $("#msg-done").show();
+      window.location="";
+      //$("#comentario").attr('disabled', 'disabled');
     });
   });
 });

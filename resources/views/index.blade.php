@@ -113,7 +113,7 @@
 
                                         <p>
                                             {{ Auth::user()->name }}
-                                            <small>Administrador</small>
+                                            <small>{{ Session::get('profile') }}</small>
                                         </p>
                                     </li>
                                     <!-- Menu Body -->

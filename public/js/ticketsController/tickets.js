@@ -6,15 +6,15 @@ $(document).ready(function () {
         },
         "sAjaxDataProp": "",
         'columnDefs': [{
-            'targets': 0,
-            'searchable': false,
-            'orderable': false,
-            'className': 'dt-body-center',
-            'render': function (data, type, full, meta) {
-                return '<input type="checkbox" name="id[]" value="'
-                    + $('<div/>').text(data).html() + '">';
-            }
-        }],
+                'targets': 0,
+                'searchable': false,
+                'orderable': false,
+                'className': 'dt-body-center',
+                'render': function (data, type, full, meta) {
+                    return '<input type="checkbox" name="id[]" value="'
+                            + $('<div/>').text(data).html() + '">';
+                }
+            }],
         "columns": [
             {"data": "id"},
             {"data": "id_estado"},
@@ -59,11 +59,11 @@ $(document).ready(function () {
                 if (this.checked) {
                     // Create a hidden element
                     $(form).append(
-                        $('<input>')
+                            $('<input>')
                             .attr('type', 'hidden')
                             .attr('name', this.name)
                             .val(this.value)
-                    );
+                            );
                 }
             }
         });
@@ -79,16 +79,59 @@ $(document).ready(function () {
             url: '/tickets/updatestate',
             data: data
         })
-            .done(function (data) {
-                alert(data);
-                window.location.reload();
-            })
-            .fail(function () {
-                alert("error");
-            });
+                .done(function (data) {
+                    alert(data);
+                    window.location.reload();
+                })
+                .fail(function () {
+                    alert("error");
+                });
 
         // Prevent actual form submission
         e.preventDefault();
+    });
+
+    $("#editar").click(function () {
+        var comentario = $("#comentario_tutor").val();
+        var fecha_ini = $("#fecha_ini").val();
+        var fecha_fin = $("#fecha_fin").val();
+        var idCaso = $("#idCaso").val();
+        var _token = $("#_token").val();
+        $.ajax({
+            url: "/tickets/edit",
+            type: "POST",
+            data: {
+                comentario: comentario,
+                fecha_ini: fecha_ini,
+                fecha_fin: fecha_fin,
+                id: idCaso,
+                _token: _token
+            }
+        }).done(function () {
+            $("#msg-done").show();
+        });
+    });
+    
+     $("#completar").click(function () {
+        var comentario = $("#comentario_tutor").val();
+        var fecha_ini = $("#fecha_ini").val();
+        var fecha_fin = $("#fecha_fin").val();
+        var idCaso = $("#idCaso").val();
+        var _token = $("#_token").val();
+        $.ajax({
+            url: "/tickets/edit",
+            type: "POST",
+            data: {
+                comentario: comentario,
+                cierre: true,
+                fecha_ini: fecha_ini,
+                fecha_fin: fecha_fin,
+                id: idCaso,
+                _token: _token
+            }
+        }).done(function () {
+            $("#msg-done").show();
+        });
     });
 });
 
