@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\State;
 use App\Models\Ticket;
 use App\Models\Tutor;
+use App\Models\Client;
+use App\Models\Child;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
@@ -40,13 +43,17 @@ class TicketsController extends Controller {
     }
 
     public function editTicket() {
-        $descripcion = Input::get('description');
-        $perfil = Session::get('idPeril');
-        $userid = Session::get('user');
-        //echo "$userid - $perfil"; die();
-        Ticket::where('ID', '=', $id)->update(array('id_tutor' => 1, 'descripcion' => $descripcion));
-
-        return view('TicketsController.new', array('mensaje' => 'caso asignado el caso con éxito'));
+        $comentario = Input::get('comentario');
+        $fecha_ini = Input::get('fecha_ini');
+        $fecha_fin = Input::get('fecha_fin');
+        $id = Input::get('id');
+        $cierre = Input::get('cierre');
+        if (isset($cierre)) {
+            Ticket::where('id', '=', $id)->update(array("descripcion" => $comentario, "fecha_inicio" => $fecha_ini, "fecha_fin" => $fecha_fin, "id_estado" => 3));
+            //ENVIO DE CORREO
+        } else {
+            Ticket::where('id', '=', $id)->update(array('descripcion' => $comentario, "fecha_inicio" => $fecha_ini, "fecha_fin" => $fecha_fin));
+        }
     }
 
     public function getAllTickets() {
@@ -130,10 +137,27 @@ class TicketsController extends Controller {
         }
         return $state;
     }
-    
+
     public function getInfoTickets($idTicket) {
         $infoTicket = Ticket::find($idTicket);
+        $client = $this->getClient($infoTicket->id_cliente);
+        $child = $this->getChild($client->id_hijo);
+        $parent = $this->getParent($client->users_id_padre);
+        $client_name = $child->nombre . " " . $child->apellido . " - (Padre) " . $parent->name;
+        $infoTicket->client_name = $client_name;
         return view('TicketsController.info', $infoTicket->toArray());
+    }
+
+    public function getClient($id_cliente) {
+        return Client::find($id_cliente);
+    }
+
+    public function getChild($id_child) {
+        return Child::find($id_child);
+    }
+
+    public function getParent($id_parent) {
+        return Usuario::find($id_parent);
     }
 
 }

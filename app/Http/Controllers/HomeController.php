@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\View;
+use App\Models\Profile;
 
 class HomeController extends Controller {
 
@@ -25,7 +26,7 @@ class HomeController extends Controller {
     public function index(Request $request) {
         $user = Auth::user();
         $menus = $this->getMenus($user->profiles_id);
-//        echo "<pre>"; print_r($menus);        die();
+        $request->session()->put('profile', $this->getProfile($user->profiles_id)->profile);
         $request->session()->put('menu', $menus);
         $request->session()->put('user', $user);
         return view('HomeController.home');
@@ -44,6 +45,10 @@ class HomeController extends Controller {
             }
         }
         return $menus;
+    }
+    
+    public function getProfile($id_profile){
+        return Profile::find($id_profile); 
     }
 
 }
