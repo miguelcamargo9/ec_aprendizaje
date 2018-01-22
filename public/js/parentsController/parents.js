@@ -6,24 +6,24 @@ $(document).ready(function () {
             "type": "GET"
         },
         "sAjaxDataProp": "",
-        'columnDefs': [{
-            'targets': 0,
-            'searchable': false,
-            'orderable': false,
-            'className': 'dt-body-center',
-            'render': function (data, type, full, meta) {
-                return '<input type="checkbox" name="id[]" value="'
-                    + $('<div/>').text(data).html() + '">';
-            }
-        }],
+//        'columnDefs': [{
+//            'targets': 0,
+//            'searchable': false,
+//            'orderable': false,
+//            'className': 'dt-body-center',
+//            'render': function (data, type, full, meta) {
+//                return '<input type="checkbox" name="id[]" value="'
+//                    + $('<div/>').text(data).html() + '">';
+//            }
+//        }],
         "columns": [
-            {"data": "id"},
-            {"data": "id_estado"},
-            {"data": "id_cliente"},
-            {"data": "id_tutor"},
-            {"data": "fecha_inicio"},
-            {"data": "fecha_fin"},
-            {"data": "descripcion"}
+            //{"data": "id"},
+            {"data": "estado"},
+            {"data": "estudiante"},
+            {"data": "tutor"},
+            {"data": "fechai"},
+            {"data": "fechaf"},
+            {"data": "boton"}
         ],
         'order': [1, 'asc']
     });
