@@ -35,3 +35,7 @@ Route::get('/tutor/tickets/list', array('as' => 'tutor.tickets.list', 'uses' => 
 /*Routers Resources */
 Route::post('/resources/getClients', array('as' => 'resources.getclients', 'uses' => 'Resources\ResourcesController@getClients'))->middleware('auth');
 
+/* Routes Parents Controller */
+Route::get('/parents/list', array('as' => 'tickets.list.parents', 'uses' => 'Parents\ParentsController@showListTickets'))->middleware('auth');
+Route::get('/parents/getbyparent', array('as' => 'tickets.by.parent', 'uses' => 'Parents\ParentsController@getTicketsByParent'))->middleware('auth');
+Route::get('/parents/ticketinfo/{idTicket}', array('as' => 'tickets.info', 'uses' => 'Parents\ParentsController@getInfoTickets'))->middleware('auth');
