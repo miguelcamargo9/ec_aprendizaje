@@ -151,8 +151,7 @@ class TicketsController extends Controller {
       foreach ($matches[0] as $id) {
         $id = substr($id, 1);
         if ($user['profiles_id'] == 3) {
-          $tutor = Tutor::where('id_user', '=', $user['id'])->first();
-          Ticket::where('ID', '=', $id)->update(array('id_tutor' => $tutor->id, 'id_estado' => 2));
+          Ticket::where('ID', '=', $id)->update(array('users_id_tutor' => $user['id'], 'id_estado' => 2));
           $mensaje = "Caso(s) asignados con éxito al tutor " . $user['name'] . "!";
         }
       }

@@ -16,5 +16,7 @@ class VerifyCsrfToken extends BaseVerifier
         'datatables/*',
         'tickets/getall',
         'tickets/updatestate',
+        'tutor/getall',
+        'tutor/getassigned',
     ];
 }
