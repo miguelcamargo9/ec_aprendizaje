@@ -53,13 +53,24 @@ class ParentsController extends Controller {
         return json_encode($respuesta);
     }
 
-    /*
-     * DEVUELVO LA INFORMACION DE UN CASO EN ESPECIFICO 
-     */
+   /*
+   * DEVUELVO LA INFORMACION DE UN CASO EN ESPECIFICO 
+   */
 
-    public function getInfoTickets($idTicket) {
-        $infoTicket = Ticket::find($idTicket);
-        return view('ParentsController.info', $infoTicket->toArray());
-    }
+  public function getInfoTickets($idTicket) {
+    $infoTicket = Ticket::find($idTicket);
+    return view('ParentsController.info', $infoTicket->toArray());
+  }
+
+  /*
+   * GUARDAR EL COMENTARIO DEL PADRE EN EL CASO
+   */
+
+  public function addCommentary(Request $request) {
+    $comentario = trim($request->input('comentario'));
+    $fechaComentario = date("Y-m-d H:i:s");
+    $idCaso = $request->input('id');
+    Ticket::where('id', '=', $idCaso)->update(array('comentario_padre' => $comentario, "fecha_comentario" => $fechaComentario));
+  }
 
 }

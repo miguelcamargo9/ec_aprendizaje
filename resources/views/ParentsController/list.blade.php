@@ -45,9 +45,6 @@ $visible = (isset($mensaje) && $mensaje != '') ? "display:block;" : "display:non
       </tr>
     </thead>
   </table>
-
-  <button type="submit" class="pull-left btn btn-default" id="accept">Asignar
-    <i class="fa fa-check-square"></i></button>
   <pre hidden id="example-console"></pre>
 </form>
 
