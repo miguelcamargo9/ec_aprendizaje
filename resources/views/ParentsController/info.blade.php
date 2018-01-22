@@ -62,6 +62,6 @@
 <!-- AdminLTE for demo purposes -->
 <!--<script src="/packages/adminLTE/dist/js/demo.js"></script>-->
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<!--<script src="/packages/adminLTE/dist/js/pages/dashboard.js"></script>-->
+<script>$(".textarea").wysihtml5();</script>
 <script src="/js/parentsController/parents.js"></script>
 @endsection

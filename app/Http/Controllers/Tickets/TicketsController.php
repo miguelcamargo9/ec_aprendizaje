@@ -58,7 +58,7 @@ class TicketsController extends Controller {
             $value->descripcion = $this->convertUtf8($value->descripcion);
             if (count($value->tutor) > 0) {
                 foreach ($value->tutor as $tutor) {
-                    $value->id_tutor = $tutor->nombre . " " . $tutor->apellido;
+                    $value->id_tutor = $tutor->name;
                 }
             } else {
                 $value->id_tutor = "No Asignado";
