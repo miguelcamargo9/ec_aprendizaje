@@ -53,8 +53,6 @@ class TicketsController extends Controller {
         $result = Ticket::with('tutor', 'state', 'client')->get();
 
         foreach ($result as $value) {
-            //$value->id_cliente = empty($value->id_cliente) ? "N/A" : $value->id_cliente;
-            //$value->id_tutor = empty($value->id_tutor) ? "N/A" : $value->id_tutor;
             $value->descripcion = $this->convertUtf8($value->descripcion);
             if (count($value->tutor) > 0) {
                 foreach ($value->tutor as $tutor) {
@@ -96,8 +94,7 @@ class TicketsController extends Controller {
             foreach ($matches[0] as $id) {
                 $id = substr($id, 1);
                 if ($user['profiles_id'] == 3) {
-                    $tutor = Tutor::where('id_user', '=', $user['id'])->first();
-                    Ticket::where('ID', '=', $id)->update(array('id_tutor' => $tutor->id, 'id_estado' => 2));
+                    Ticket::where('ID', '=', $id)->update(array('users_id_tutor' => $user['id'], 'id_estado' => 2));
                     $mensaje = "Caso(s) asignados con éxito al tutor " . $user['name'] . "!";
                 }
             }

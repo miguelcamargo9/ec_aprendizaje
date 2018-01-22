@@ -32,6 +32,11 @@ Route::get('/tickets/ticketinfo/{idTicket}', array('as' => 'tickets.info', 'uses
 
 /* Routes Tutor Controller */
 Route::get('/tutor/tickets/list', array('as' => 'tutor.tickets.list', 'uses' => 'Tutor\TutorsController@showListTutors'))->middleware('auth');
+Route::get('/tutor/tickets/mylist', array('as' => 'tutor.tickets.mylist', 'uses' => 'Tutor\TutorsController@showMyListTutors'))->middleware('auth');
+Route::post('/tutor/getall', array('as' => 'tutor.getall', 'uses' => 'Tutor\TutorsController@getAllTickets'))->middleware('auth');
+Route::post('/tutor/getassigned', array('as' => 'tutor.getassigned', 'uses' => 'Tutor\TutorsController@getMyTickets'))->middleware('auth');
+Route::get('/tutor/tickets/ticketinfo/{idTicket}', array('as' => 'tutor.tickets.info', 'uses' => 'Tutor\TutorsController@getInfoTickets'))->middleware('auth');
+Route::post('/tutor/addcommentary', array('as' => 'tutor.commentary', 'uses' => 'Tutor\TutorsController@addCommentary'))->middleware('auth');
 
 /*Routers Resources */
 Route::post('/resources/getClients', array('as' => 'resources.getclients', 'uses' => 'Resources\ResourcesController@getClients'))->middleware('auth');

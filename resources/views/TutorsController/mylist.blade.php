@@ -26,7 +26,7 @@
         <thead>
         <tr>
             <th>
-                LISTA DE CASOS
+                MIS CASOS
             </th>
         </tr>
         </thead>
@@ -41,17 +41,16 @@
                 <th>TUTOR</th>
                 <th>FECHA DE INICIO</th>
                 <th>FECHA DE FINALIZACION</th>
+                <th>VER</th>
             </tr>
             </thead>
         </table>
 
-        <button type="submit" class="pull-left btn btn-default" id="accept">Asignar
-            <i class="fa fa-check-square"></i></button>
         <pre hidden id="example-console"></pre>
     </form>
 
 @endsection
 @section('scriptsjs')
 
-    <script src="/js/tutorsController/tutors.js"></script>
+    <script src="/js/tutorsController/mytickets.js"></script>
 @endsection

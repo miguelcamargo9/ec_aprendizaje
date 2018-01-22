@@ -53,12 +53,6 @@
 </div>
 @endsection
 @section('scriptsjs')
-<script>
-//        var app = angular.module('app', []);
-//        app.controller('studentCtrl', function($scope) {
-//            $scope.names = ["Emilio", "Tobias", "Samuel", "Pepito Perez"];
-//        });
-</script>
 <!-- AdminLTE for demo purposes -->
 <!--<script src="/packages/adminLTE/dist/js/demo.js"></script>-->
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
