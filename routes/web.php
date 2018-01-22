@@ -28,6 +28,7 @@ Route::post('/tickets/registry', array('as' => 'tickets.registry', 'uses' => 'Ti
 Route::post('/tickets/edit', array('as' => 'tickets.edit', 'uses' => 'Tickets\TicketsController@editTicket'))->middleware('auth');
 Route::post('/tickets/getall', array('as' => 'tickets.getall', 'uses' => 'Tickets\TicketsController@getAllTickets'))->middleware('auth');
 Route::any('/tickets/updatestate', array('as' => 'tickets.updatestate', 'uses' => 'Tickets\TicketsController@updateState'))->middleware('auth');
+Route::get('/tickets/ticketinfo/{idTicket}', array('as' => 'tickets.info', 'uses' => 'Tickets\TicketsController@getInfoTickets'))->middleware('auth');
 
 /* Routes Tutor Controller */
 Route::get('/tutor/tickets/list', array('as' => 'tutor.tickets.list', 'uses' => 'Tutor\TutorsController@showListTutors'))->middleware('auth');

@@ -22,7 +22,7 @@ $(document).ready(function () {
             {"data": "id_tutor"},
             {"data": "fecha_inicio"},
             {"data": "fecha_fin"},
-            {"data": "descripcion"}
+            {"data": "ver"}
         ],
         'order': [1, 'asc']
     });

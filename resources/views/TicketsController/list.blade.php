@@ -39,7 +39,7 @@
                 <th>TUTOR</th>
                 <th>FECHA DE INICIO</th>
                 <th>FECHA DE FINALIZACION</th>
-                <th>DESCRIPCION</th>
+                <th>VER</th>
             </tr>
             </thead>
         </table>

@@ -49,8 +49,12 @@ app.filter('propsFilter', function () {
 });
 
 app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function ($scope, ticketsFactory, $timeout) {
-    $scope.names = ["Emilio", "Tobias", "Samuel", "Pepito Perez"];
-    ticketsFactory.getClients().success(function (data) {
+        $scope.names = ["Emilio", "Tobias", "Samuel", "Pepito Perez"];
+        ticketsFactory.getClients().success(function (data) {
             $scope.clients = data;
         });
-}]);
+
+        $scope.setClient = function (client) {
+            $scope.cliente = client.id;
+        };
+    }]);
