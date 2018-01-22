@@ -33,7 +33,6 @@ $(document).ready(function () {
   //;
   //$("#comentario").wysihtml5();
   $("#btn-form-comentario").click(function () {
-     
     var comentario = $("#comentario").val();
     var idCaso = $("#idCaso").val();
     var _token = $("#_token").val();
