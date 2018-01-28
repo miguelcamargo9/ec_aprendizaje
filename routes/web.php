@@ -40,6 +40,7 @@ Route::post('/tutor/addcommentary', array('as' => 'tutor.commentary', 'uses' => 
 
 /*Routers Resources */
 Route::post('/resources/getClients', array('as' => 'resources.getclients', 'uses' => 'Resources\ResourcesController@getClients'))->middleware('auth');
+Route::post('/resources/getTutors', array('as' => 'resources.gettutors', 'uses' => 'Resources\ResourcesController@getTutors'))->middleware('auth');
 
 /* Routes Parents Controller */
 Route::get('/parents/list', array('as' => 'tickets.list.parents', 'uses' => 'Parents\ParentsController@showListTickets'))->middleware('auth');

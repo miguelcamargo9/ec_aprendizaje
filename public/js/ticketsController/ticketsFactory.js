@@ -5,10 +5,11 @@ app.factory('ticketsFactory', function ($http) {
         'getClients': function () {
             return $http.post('/resources/getClients');
         },
-        'editDevice': function (name, ipaddress, keyradius, makerID, typeID, pop, utility, reference, sequent, deviceId, nameOLD, ipOLD) {
-            return $http.post('/editarequipo', {name: name, ip: ipaddress, numinvent: keyradius, fabricante: makerID, 
-                                                tipo: typeID, pop: pop, utility : utility, reference: reference, sequent: sequent, 
-                                                id: deviceId, name_old: nameOLD, ip_old: ipOLD, editado: 'editado'});
+        'getTutors': function () {
+            return $http.post('/resources/getTutors');
+        },
+        'createProcess': function (cliente, tutor, initdate, enddate) {
+            return $http.post('/tickets/registry', {cliente: cliente, tutor: tutor, initdate: initdate, enddate: enddate});
         },
     };
 

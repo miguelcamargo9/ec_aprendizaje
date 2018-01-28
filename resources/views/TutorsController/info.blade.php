@@ -27,10 +27,7 @@
         Cliente <input disabled type="text" class="form-control" value="{{$client_name}}" >
       </div>
       <div class="form-group">
-        Fecha Inicial <input id="fecha_ini" type="date" class="form-control" value="{{$fecha_inicio}}" >
-      </div>
-      <div class="form-group">
-        Fecha Final <input id="fecha_fin" type="date" class="form-control" value="{{$fecha_fin}}" >
+          Fecha Inicial <input disabled id="fecha_ini" type="date" class="form-control" value="{{$fecha_inicio}}" >
       </div>
       <div class="row">
         <div class="col-xs-6">
@@ -50,7 +47,7 @@
     </form>
   </div>
   <div class="box-footer clearfix">
-    <button type="button" class="btn btn-default" id="editar">Editar</button>
+    <button type="button" class="btn btn-default" id="editar">Enviar</button>
   </div>
 </div>
 @endsection
