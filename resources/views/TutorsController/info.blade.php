@@ -26,7 +26,7 @@
   <div class="box-header">
     <i class="fa fa-ticket"></i>
 
-    <h3 class="box-title">Informacion del caso</h3>
+    <h3 class="box-title">Informacion del proceso</h3>
     <!-- tools box -->
     <div class="pull-right box-tools">
       <button type="button" class="btn btn-info btn-sm" data-widget="remove" data-toggle="tooltip" title="Remove">

@@ -9,73 +9,75 @@ use App\Models\Tutor;
 use App\Models\Client;
 use App\Models\Child;
 use App\Models\Usuario;
+use App\Models\registroTutor;
+use App\Models\horasRegistro;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 
 class TicketsController extends Controller {
 
-    public function showListTickets() {
-        return view('TicketsController.list', array('mensaje' => ''));
+  public function showListTickets() {
+    return view('TicketsController.list', array('mensaje' => ''));
+  }
+
+  public function showNewTicket() {
+    return view('TicketsController.new', array('mensaje' => ''));
+  }
+
+  public function createNewTicket() {
+    $fechaIni = Input::get('initdate');
+    $fechaFin = Input::get('enddate');
+    $id_cliente = Input::get('cliente');
+    $id_tutor = Input::get('tutor');
+
+    $datosCaso = new Ticket();
+    $datosCaso->id_estado = 1;
+    $datosCaso->id_cliente = $id_cliente;
+    $datosCaso->users_id_tutor = $id_tutor;
+    $datosCaso->fecha_inicio = "$fechaIni";
+    $datosCaso->fecha_fin = "$fechaFin";
+    $datosCaso->fecha_creacion = Date("Y-m-d H:i:s");
+    $datosCaso->users_id_creator = Session::get('user')->id;
+    try {
+      $datosCaso->save();
+    } catch (Exception $ex) {
+      return response()->json(array('error' => array('Error creando el proceso')));
     }
+    return response()->json(array('success' => true, 'msj' => 'Proceso Creado con Exito'));
+  }
 
-    public function showNewTicket() {
-        return view('TicketsController.new', array('mensaje' => ''));
-    }
-
-    public function createNewTicket() {
-        $fechaIni = Input::get('initdate');
-        $fechaFin = Input::get('enddate');
-        $id_cliente = Input::get('cliente');
-        $id_tutor = Input::get('tutor');
-
-        $datosCaso = new Ticket();
-        $datosCaso->id_estado = 1;
-        $datosCaso->id_cliente = $id_cliente;
-        $datosCaso->users_id_tutor = $id_tutor;
-        $datosCaso->fecha_inicio = "$fechaIni";
-        $datosCaso->fecha_fin = "$fechaFin";
-        $datosCaso->fecha_creacion = Date("Y-m-d H:i:s");
-        $datosCaso->users_id_creator = Session::get('user')->id;
-        try {
-            $datosCaso->save();
-        } catch (Exception $ex) {
-            return response()->json(array('error' => array('Error creando el proceso')));
-        }
-        return response()->json(array('success' => true, 'msj' => 'Proceso Creado con Exito'));
-    }
-
-    public function editTicket() {
-        $comentario = Input::get('comentario');
-        $fecha_ini = Input::get('fecha_ini');
-        $fecha_fin = Input::get('fecha_fin');
-        $id = Input::get('id');
-        $cierre = Input::get('cierre');
-        if (isset($cierre)) {
-            Ticket::where('id', '=', $id)->update(array("descripcion" => $comentario, "fecha_inicio" => $fecha_ini, "fecha_fin" => $fecha_fin, "id_estado" => 3));
-            //ENVIO DE CORREO
+  public function editTicket() {
+    $comentario = Input::get('comentario');
+    $fecha_ini = Input::get('fecha_ini');
+    $fecha_fin = Input::get('fecha_fin');
+    $id = Input::get('id');
+    $cierre = Input::get('cierre');
+    if (isset($cierre)) {
+      Ticket::where('id', '=', $id)->update(array("descripcion" => $comentario, "fecha_inicio" => $fecha_ini, "fecha_fin" => $fecha_fin, "id_estado" => 3));
+      //ENVIO DE CORREO
 
 
-            $cabeceras = 'MIME-Version: 1.0' . "\r\n";
-            $cabeceras .= 'Content-type: text/html; charset=utf-8' . "\r\n";
-            $cabeceras .= 'From: Emocion Creativa <info@emocioncreativa.com>' . "\r\n";
+      $cabeceras = 'MIME-Version: 1.0' . "\r\n";
+      $cabeceras .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+      $cabeceras .= 'From: Emocion Creativa <info@emocioncreativa.com>' . "\r\n";
 
-            $para = "andre0190@gmail.com";
+      $para = "andre0190@gmail.com";
 
-            $titulo = "Caso verificado";
+      $titulo = "Caso verificado";
 
-            $ticket = Ticket::where("caso.id", "=", $id)
-                            ->leftJoin('users', 'caso.users_id_tutor', '=', 'users.id')
-                            ->leftJoin('cliente', 'caso.id_cliente', '=', 'cliente.id')
-                            ->leftJoin('hijo', 'cliente.id_hijo', '=', 'hijo.id')
-                            ->leftJoin('estado', 'caso.id_estado', '=', 'estado.id')
-                            ->select('estado.estado as estado', 'hijo.nombre as hijoName', 'hijo.apellido as estudianteAp', 'users.name as tutor')->first();
-            $ticket->toArray();
-            $estudiante = "{$ticket['hijoName']} {$ticket['estudianteAp']}";
-            $tutor = $ticket['tutor'];
-            $estado = $ticket['estado'];
+      $ticket = Ticket::where("caso.id", "=", $id)
+                      ->leftJoin('users', 'caso.users_id_tutor', '=', 'users.id')
+                      ->leftJoin('cliente', 'caso.id_cliente', '=', 'cliente.id')
+                      ->leftJoin('hijo', 'cliente.id_hijo', '=', 'hijo.id')
+                      ->leftJoin('estado', 'caso.id_estado', '=', 'estado.id')
+                      ->select('estado.estado as estado', 'hijo.nombre as hijoName', 'hijo.apellido as estudianteAp', 'users.name as tutor')->first();
+      $ticket->toArray();
+      $estudiante = "{$ticket['hijoName']} {$ticket['estudianteAp']}";
+      $tutor = $ticket['tutor'];
+      $estado = $ticket['estado'];
 
-            $mensaje = "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+      $mensaje = "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
               <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en'>
               <head>
                       <meta http-equiv='Content-Type' content='text/html;charset=UTF-8'>
@@ -101,113 +103,126 @@ class TicketsController extends Controller {
               </body>
               </html>";
 
-            mail($para, $titulo, $mensaje, $cabeceras);
-        } else {
-            Ticket::where('id', '=', $id)->update(array('descripcion' => $comentario, "fecha_inicio" => $fecha_ini, "fecha_fin" => $fecha_fin));
+      mail($para, $titulo, $mensaje, $cabeceras);
+    } else {
+      Ticket::where('id', '=', $id)->update(array('descripcion' => $comentario, "fecha_inicio" => $fecha_ini, "fecha_fin" => $fecha_fin));
+    }
+  }
+
+  public function getAllTickets() {
+    $result = Ticket::with('tutor', 'state', 'client')->get();
+
+    foreach ($result as $value) {
+      //$value->id_cliente = empty($value->id_cliente) ? "N/A" : $value->id_cliente;
+      //$value->id_tutor = empty($value->id_tutor) ? "N/A" : $value->id_tutor;
+      $value->descripcion = $this->convertUtf8($value->descripcion);
+      if (count($value->tutor) > 0) {
+        foreach ($value->tutor as $tutor) {
+          $value->id_tutor = $tutor->name;
         }
+      } else {
+        $value->id_tutor = "No Asignado";
+      }
+      foreach ($value->client as $client) {
+        $value->id_cliente = $client->child->nombre . " " . $client->child->apellido;
+      }
+      $value->id_estado = $this->getState($value->id_estado);
+      $idTicket = $value->id;
+      $ruta = "/tickets/ticketinfo/$idTicket";
+      $boton = "<a href='$ruta'><i class='fa fa-eye' aria-hidden='true'></i></a>";
+      $value->ver = $boton;
     }
 
-    public function getAllTickets() {
-        $result = Ticket::with('tutor', 'state', 'client')->get();
+    return $result;
+  }
 
-        foreach ($result as $value) {
-            //$value->id_cliente = empty($value->id_cliente) ? "N/A" : $value->id_cliente;
-            //$value->id_tutor = empty($value->id_tutor) ? "N/A" : $value->id_tutor;
-            $value->descripcion = $this->convertUtf8($value->descripcion);
-            if (count($value->tutor) > 0) {
-                foreach ($value->tutor as $tutor) {
-                    $value->id_tutor = $tutor->name;
-                }
-            } else {
-                $value->id_tutor = "No Asignado";
-            }
-            foreach ($value->client as $client) {
-                $value->id_cliente = $client->child->nombre . " " . $client->child->apellido;
-            }
-            $value->id_estado = $this->getState($value->id_estado);
-            $idTicket = $value->id;
-            $ruta = "/tickets/ticketinfo/$idTicket";
-            $boton = "<a href='$ruta'><i class='fa fa-eye' aria-hidden='true'></i></a>";
-            $value->ver = $boton;
+  public function getCreatedTickets() {
+    $result = Ticket::where('id_estado', '=', 1)->get();
+    foreach ($result as $value) {
+      $value->id_cliente = ($value->id_cliente != "") ? $value->id_cliente : "N/A";
+      $value->id_tutor = ($value->id_tutor != "") ? $value->id_cliente : "N/A";
+      $value->descripcion = $this->convertUtf8($value->descripcion);
+    }
+
+    return $result;
+  }
+
+  public function updateState(Request $request) {
+    $asignados = $request->input('ids');
+    $user = Session::get('user');
+    $mensaje = "No se puede asignar caso al usuario " . $user['name'] . " porque no esta registrado como tutor!";
+    if (preg_match_all('/=\d+/', $asignados, $matches)) {
+      //var_export ($matches);
+      foreach ($matches[0] as $id) {
+        $id = substr($id, 1);
+        if ($user['profiles_id'] == 3) {
+          Ticket::where('ID', '=', $id)->update(array('users_id_tutor' => $user['id'], 'id_estado' => 2));
+          $mensaje = "Caso(s) asignados con éxito al tutor " . $user['name'] . "!";
         }
-
-        return $result;
+      }
     }
+    return $mensaje;
+  }
 
-    public function getCreatedTickets() {
-        $result = Ticket::where('id_estado', '=', 1)->get();
-        foreach ($result as $value) {
-            $value->id_cliente = ($value->id_cliente != "") ? $value->id_cliente : "N/A";
-            $value->id_tutor = ($value->id_tutor != "") ? $value->id_cliente : "N/A";
-            $value->descripcion = $this->convertUtf8($value->descripcion);
-        }
+  public function convertUtf8($value) {
+    return mb_detect_encoding($value, mb_detect_order(), true) === 'UTF-8' ? $value : mb_convert_encoding($value, 'UTF-8');
+  }
 
-        return $result;
+  public function getTutor($id) {
+    $tutorobj = Tutor::where('id', '=', $id)->get();
+    $tutorname = "N/A";
+    foreach ($tutorobj as $item) {
+      if ($item->nombre && $item->apellido) {
+        $tutorname = $item->nombre . " " . $item->apellido;
+      }
     }
+    return $tutorname;
+  }
 
-    public function updateState(Request $request) {
-        $asignados = $request->input('ids');
-        $user = Session::get('user');
-        $mensaje = "No se puede asignar caso al usuario " . $user['name'] . " porque no esta registrado como tutor!";
-        if (preg_match_all('/=\d+/', $asignados, $matches)) {
-            //var_export ($matches);
-            foreach ($matches[0] as $id) {
-                $id = substr($id, 1);
-                if ($user['profiles_id'] == 3) {
-                    Ticket::where('ID', '=', $id)->update(array('users_id_tutor' => $user['id'], 'id_estado' => 2));
-                    $mensaje = "Caso(s) asignados con éxito al tutor " . $user['name'] . "!";
-                }
-            }
-        }
-        return $mensaje;
+  public function getState($id) {
+    $stateobj = State::where('id', '=', $id)->get();
+    $state = "N/A";
+    foreach ($stateobj as $item) {
+      if ($item->estado) {
+        $state = $item->estado;
+      }
     }
+    return $state;
+  }
 
-    public function convertUtf8($value) {
-        return mb_detect_encoding($value, mb_detect_order(), true) === 'UTF-8' ? $value : mb_convert_encoding($value, 'UTF-8');
-    }
+  public function getInfoTickets($idTicket) {
+    $infoTicket = Ticket::find($idTicket);
+    $registrosTutor = registroTutor::where('id_caso', '=', $idTicket)->get(); //BUSCO LOS REGISROS QUE HA HECHO EL TUTOR
+    
+    $client = $this->getClient($infoTicket->id_cliente);
+    $child = $this->getChild($client->id_hijo);
+    $parent = $this->getParent($client->users_id_padre);
+    $client_name = $child->nombre . " " . $child->apellido . " - (Padre) " . $parent->name;
+    $infoTicket->client_name = $client_name;
+    $infoTicket->registros = $registrosTutor;
+    return view('TicketsController.info', $infoTicket->toArray());
+  }
 
-    public function getTutor($id) {
-        $tutorobj = Tutor::where('id', '=', $id)->get();
-        $tutorname = "N/A";
-        foreach ($tutorobj as $item) {
-            if ($item->nombre && $item->apellido) {
-                $tutorname = $item->nombre . " " . $item->apellido;
-            }
-        }
-        return $tutorname;
-    }
+  /*
+   * DEVUELVO LA INFORMACION DE HORAS PARA CADA REGISTRO DEL TUTOR
+   */
 
-    public function getState($id) {
-        $stateobj = State::where('id', '=', $id)->get();
-        $state = "N/A";
-        foreach ($stateobj as $item) {
-            if ($item->estado) {
-                $state = $item->estado;
-            }
-        }
-        return $state;
-    }
+  public function getDetalleRegistros() {
+    $idRegistro = Input::get('idRegistro');
+    $horasRegistro = horasRegistro::where('registro_tutor_id', '=', $idRegistro)->get();
+    return $horasRegistro->toJson();
+  }
 
-    public function getInfoTickets($idTicket) {
-        $infoTicket = Ticket::find($idTicket);
-        $client = $this->getClient($infoTicket->id_cliente);
-        $child = $this->getChild($client->id_hijo);
-        $parent = $this->getParent($client->users_id_padre);
-        $client_name = $child->nombre . " " . $child->apellido . " - (Padre) " . $parent->name;
-        $infoTicket->client_name = $client_name;
-        return view('TicketsController.info', $infoTicket->toArray());
-    }
+  public function getClient($id_cliente) {
+    return Client::find($id_cliente);
+  }
 
-    public function getClient($id_cliente) {
-        return Client::find($id_cliente);
-    }
+  public function getChild($id_child) {
+    return Child::find($id_child);
+  }
 
-    public function getChild($id_child) {
-        return Child::find($id_child);
-    }
-
-    public function getParent($id_parent) {
-        return Usuario::find($id_parent);
-    }
+  public function getParent($id_parent) {
+    return Usuario::find($id_parent);
+  }
 
 }

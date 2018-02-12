@@ -79,7 +79,7 @@ class TutorsController extends Controller {
       $value->id_estado = $this->getState($value->id_estado);
       $idTicket = $value->id;
       $ruta = "/tutor/tickets/ticketinfo/$idTicket";
-      $boton = "<a href='$ruta'><i class='fa fa-eye' aria-hidden='true'></i></a>";
+      $boton = "<a href='$ruta'><i class='fa fa-eye' aria-hidden='true'>Ojo</i></a>";
       $value->ver = $boton;
     }
 
