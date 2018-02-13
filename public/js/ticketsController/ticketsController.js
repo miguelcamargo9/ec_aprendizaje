@@ -130,13 +130,24 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
 //CONTROLADOR PARA LOS DETALLES DE CADA REGISTRO DEL TUTOR 
 
 app.controller('ticketInfoCtrl', ['$scope', 'ticketsFactory', function ($scope, ticketsFactory) {
-    $scope.resumen="por que aca si me esta dejando";
-    $scope.getDetalesRegistro=function(idRegistro,resumen){
-      $scope.resumen=resumen;
 
-      ticketsFactory.detalleRegistros(idRegistro).success(function (data) {
-          $scope.horas=data;
-         
+    //TRAER LOS DETALLES DE LAS HORAS DEL REGISTRO SELECCIONADO
+    $scope.getDetalesRegistro = function (idRegistro, resumen,totalHoras) {
+      $scope.resumen = resumen;
+      $scope.idRegistro = idRegistro;
+      $scope.totalH = totalHoras;
+      ticketsFactory.detalleRegistros(idRegistro).then(function (respuesta) {
+        $scope.horas = respuesta.data;
       });
     };
-}]);
+
+    //GUARDAR Y APROBAR LOS CAMBIOS EL EN COMNETARIO DEL TUTOR
+    $scope.aprobarRegistro = function () {
+      var idRegistro = $scope.idRegistro;
+      var resumen = $scope.resumen;
+      var idCaso = $scope.idCaso;
+      ticketsFactory.aprobarRegistro(idRegistro,resumen,idCaso).then(function (respuesta) {
+        //$scope.horas = respuesta.data;
+      });
+    };
+  }]);

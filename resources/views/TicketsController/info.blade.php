@@ -1,7 +1,23 @@
 @extends('index')
 
 @section('contentbody')
+ <style>
+            ng-quill-editor.ng-invalid .ql-container {
+                border: 1px dashed red;
+            }
 
+            .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="14"]::before {
+                content: '14';
+            }
+
+            .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="16"]::before {
+                content: '16';
+            }
+
+            .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="18"]::before {
+                content: '18';
+            }
+        </style>
 <div class="alert alert-success" id="msg-done" role="alert" style="display: none">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
   <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -28,13 +44,8 @@
         Fecha Final <input id="fecha_fin" type="date" class="form-control" value="{{$fecha_fin}}" >
       </div>
       <div class="row" ng-controller="ticketInfoCtrl">
-        <!--                <div class="col-xs-6">
-                            <h4>Comentario del tutor:</h4>
-                            <textarea class="textarea" id="comentario_tutor" style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
-                            {{$descripcion}}
-                            </textarea>
-                        </div>-->
-        <input type="hidden" name="idCaso" id="idCaso" value="{{$id}}"  />
+   
+        <input type="hidden"  ng-model="idCaso"  ng-init="idCaso={{$id}}" ng-value="{{$id}}"  />
         <input type="hidden" name="_token" id="_token" value="{{csrf_token()}}"  />
         @if($id_estado==5)
         <!--                <div class="col-xs-6">
@@ -84,17 +95,19 @@
                 <h4 class="modal-title">Detalles del registro</h4>
               </div>
               <div class="modal-body">
-                <div data-ng-repeat="hora in horas track by $index">
+                <div data-ng-repeat="hora in horas">
                   <p><b>Fecha: </b><% hora.fecha %> <b>Hora inicio: </b><% hora.hora_inicio %> <b>Hora fin:</b> <% hora.hora_fin %></p>
                </div>
-                <h3>Total de horas </h3>
+                <h3>Total de horas: <%totalH%> </h3>
                 <textarea class="textarea" placeholder="Respuesta" ng-model="resumen"
                           style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
               
                 </textarea>
+                <!--<ng-quill-editor ng-model="resumen" placeholder="Escriba contenido aqui" ></ng-quill-editor>-->
+                
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Aprobar</button>
+                <button type="button" class="btn btn-success" ng-click="aprobarRegistro()" data-dismiss="modal">Aprobar</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
               </div>
             </div>
@@ -112,11 +125,15 @@
 </div>
 @endsection
 @section('scriptsjs')
+<link href="https://cdn.quilljs.com/1.3.5/quill.bubble.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.quilljs.com/1.3.1/quill.bubble.css">
+<!--<link href="/resources/css/quill-editor.css" rel="stylesheet" >-->
+<!--<script type="text/javascript" src="https://cdn.quilljs.com/1.3.1/quill.js"></script>-->
+<!--<script type="text/javascript" src="/js/libs/ng-quill/src/ng-quill.js"></script>-->
 
 <script src="/js/ticketsController/tickets.js"></script>
 <script src="//code.angularjs.org/1.2.20/angular-sanitize.min.js"></script>
 <script src="/js/ticketsController/ticketsController.js"></script>
 <script src="/js/ticketsController/ticketsFactory.js"></script>
 <script type="text/javascript" src="/packages/ui-select-master/dist/select.js"></script>
-<script>$(".textarea").wysihtml5();</script>
 @endsection

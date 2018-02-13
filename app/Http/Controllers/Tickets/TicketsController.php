@@ -48,13 +48,13 @@ class TicketsController extends Controller {
   }
 
   public function editTicket() {
-    $comentario = Input::get('comentario');
+    //$comentario = Input::get('comentario');
     $fecha_ini = Input::get('fecha_ini');
     $fecha_fin = Input::get('fecha_fin');
     $id = Input::get('id');
     $cierre = Input::get('cierre');
     if (isset($cierre)) {
-      Ticket::where('id', '=', $id)->update(array("descripcion" => $comentario, "fecha_inicio" => $fecha_ini, "fecha_fin" => $fecha_fin, "id_estado" => 3));
+      Ticket::where('id', '=', $id)->update(array( "fecha_inicio" => $fecha_ini, "fecha_fin" => $fecha_fin));
       //ENVIO DE CORREO
 
 
@@ -193,7 +193,7 @@ class TicketsController extends Controller {
   public function getInfoTickets($idTicket) {
     $infoTicket = Ticket::find($idTicket);
     $registrosTutor = registroTutor::where('id_caso', '=', $idTicket)->get(); //BUSCO LOS REGISROS QUE HA HECHO EL TUTOR
-    
+
     $client = $this->getClient($infoTicket->id_cliente);
     $child = $this->getChild($client->id_hijo);
     $parent = $this->getParent($client->users_id_padre);
@@ -206,11 +206,24 @@ class TicketsController extends Controller {
   /*
    * DEVUELVO LA INFORMACION DE HORAS PARA CADA REGISTRO DEL TUTOR
    */
-
   public function getDetalleRegistros() {
     $idRegistro = Input::get('idRegistro');
     $horasRegistro = horasRegistro::where('registro_tutor_id', '=', $idRegistro)->get();
     return $horasRegistro->toJson();
+  }
+
+  /*
+   * APROBAR LOS COMENTARIOS QUE DEJO EL TUTOR EN EL CASO
+   */
+  public function aprobarRegistro() {
+    $resumen = Input::get('resumen');
+    $idCaso = Input::get('idCaso');
+    $idRegistro = Input::get('idRegistro');
+    registroTutor::where('id', '=', $idRegistro)->update(array("resumen" => $resumen,"aprobado"=>"S"));
+    $todosAprobados =  registroTutor::where(array("aprobado"=>'N'))->get()->count();
+    if($todosAprobados==0){
+      Ticket::where('ID', '=', $idCaso)->update(array('id_estado' => 3));
+    }
   }
 
   public function getClient($id_cliente) {
