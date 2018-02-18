@@ -8,6 +8,8 @@ use App\Models\Ticket;
 use App\Models\Child;
 use App\Models\Client;
 use App\Models\Usuario;
+use App\Models\registroTutor;
+use App\Models\horasRegistro;
 use Illuminate\Support\Facades\Input;
 
 class ParentsController extends Controller {
@@ -57,11 +59,16 @@ class ParentsController extends Controller {
 
   public function getInfoTickets($idTicket) {
     $infoTicket = Ticket::find($idTicket);
+    $registrosTutor = registroTutor::where([['id_caso', '=', $idTicket],['aprobado','=','S']])->get(); //BUSCO LOS REGISROS QUE HA HECHO EL TUTOR
+    $horasRegistro = registroTutor::where('id_caso', '=', $idTicket)->sum('total_horas');
+    
     $client = $this->getClient($infoTicket->id_cliente);
     $child = $this->getChild($client->id_hijo);
     $parent = $this->getParent($client->users_id_padre);
     $client_name = $child->nombre . " " . $child->apellido;
     $infoTicket->client_name = $client_name;
+    $infoTicket->registros = $registrosTutor;
+    $infoTicket->horasRegisro = $horasRegistro;
     return view('ParentsController.info', $infoTicket->toArray());
   }
 
@@ -82,17 +89,23 @@ class ParentsController extends Controller {
    */
 
   public function addCommentary(Request $request) {
-    $comentario = trim($request->input('comentario'));
+    $comentario = trim($request->input('respuestaPadre'));
     $fechaComentario = date("Y-m-d H:i:s");
-    $idCaso = $request->input('id');
+    $idCaso = $request->input('idCaso');
+    $idRegistro = $request->input('idRegistro');
     $nuevoEstado = 5;
     $datosUpdate = array(
-        "comentario_padre" => $comentario,
-        "fecha_comentario" => $fechaComentario,
-        "id_estado" => $nuevoEstado);
+        "respuesta_padre" => $comentario,
+        "fecha_comentario_padre" => $fechaComentario);
     
+    try {
+      registroTutor::where('id', '=', $idRegistro)->update($datosUpdate);
+    } catch (Exception $ex) {
+      return response()->json(array('error' => array('Error creando el proceso')));
+    }
+    return response()->json(array('success' => true, 'msj' => 'Comentario guardado'));
  
-    Ticket::where('id', '=', $idCaso)->update($datosUpdate);
+    
   }
 
   public function sendEamil() {

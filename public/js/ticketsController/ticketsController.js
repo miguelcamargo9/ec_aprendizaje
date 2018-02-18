@@ -129,13 +129,14 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
 
 //CONTROLADOR PARA LOS DETALLES DE CADA REGISTRO DEL TUTOR 
 
-app.controller('ticketInfoCtrl', ['$scope', 'ticketsFactory', function ($scope, ticketsFactory) {
+app.controller('ticketInfoCtrl', ['$scope', 'ticketsFactory', '$timeout', function ($scope, ticketsFactory,$timeout) {
 
     //TRAER LOS DETALLES DE LAS HORAS DEL REGISTRO SELECCIONADO
-    $scope.getDetalesRegistro = function (idRegistro, resumen,totalHoras) {
+    $scope.getDetalesRegistro = function (idRegistro, resumen,totalHoras,estado) {
       $scope.resumen = resumen;
       $scope.idRegistro = idRegistro;
       $scope.totalH = totalHoras;
+      $scope.answered=(estado==='s')?true:false;
       ticketsFactory.detalleRegistros(idRegistro).then(function (respuesta) {
         $scope.horas = respuesta.data;
       });
@@ -147,7 +148,15 @@ app.controller('ticketInfoCtrl', ['$scope', 'ticketsFactory', function ($scope, 
       var resumen = $scope.resumen;
       var idCaso = $scope.idCaso;
       ticketsFactory.aprobarRegistro(idRegistro,resumen,idCaso).then(function (respuesta) {
-        //$scope.horas = respuesta.data;
+        rta= respuesta.data;
+        if (rta.success) {
+          $scope.success = rta.msj;
+          $timeout(function () {
+            location.reload();
+          }, 3000);
+        } else {
+          $scope.error.msjs = rta;
+        }
       });
     };
   }]);

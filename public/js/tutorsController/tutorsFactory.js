@@ -9,6 +9,8 @@ app.factory('tutorsFactory', function ($http) {
               msg:msg,
               idCaso:id
             });
+        },'detalleRegistros': function (idRegistro) {
+          return $http.post('/tickets/detalleRegistros', {idRegistro: idRegistro});
         }
     };
 

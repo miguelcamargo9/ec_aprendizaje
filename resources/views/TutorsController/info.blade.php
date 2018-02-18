@@ -35,7 +35,23 @@
     <!-- /. tools -->
   </div>
   <div class="box-body">
-    <div ng-controller="registrosHoras" class="container">
+    <div ng-controller="registrosHoras" >
+       <!--mensaje de error-->
+      <div ng-repeat="errorObj in error.msjs">
+        <div class="alert alert-danger" role="alert" ng-repeat="msj in errorObj">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            <strong><%msj%></strong>
+        </div>
+      </div>
+      <!--mensaje de exito-->
+      <div class="alert alert-success" role="alert" ng-show="success">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+          <span class="sr-only">Éxito:</span>
+          <strong><%success%></strong>
+      </div>
       <input type="hidden"  ng-model="idCaso"  ng-init="idCaso={{$id}}" ng-value="{{$id}}"  />
       <input type="hidden" name="_token" id="_token" value="{{csrf_token()}}"  />
       <div class="form-group">
@@ -44,83 +60,173 @@
       <div class="form-group">
         Fecha Inicial <input disabled id="fecha_ini" type="date" class="form-control" value="{{$fecha_inicio}}" >
       </div>
-      <!--      <div class="row">
-              <div class="col-xs-6">
-                <h4>Comentario del tutor:</h4>
-                <textarea id="comentario" class="textarea" style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
-                  {{$descripcion}}
-                </textarea>
+      <!--BOTON PARA AGREGAR UN NUEVO REGISTRO-->
+      <div class="row">
+        <div class="col-xs-12">
+        <button type="button" 
+                class="btn btn-info " 
+                
+                data-toggle="modal" 
+                data-target="#registroHoras"> Agregar registro </button> 
+        </div>
+      </div>
+      <!--FIN BOTON NUEVO REGISTRO-->
+      
+      <div class="row">
+        <div class="col-xs-12">
+          <h4>Total de horas en el proceso: {{$horasRegisro}}</h4>
+        </div>
+      </div>
+      
+      <!--PINTO TODOS LOS REGISTROS QUE HA HECHO EL USUARIO-->
+      <div class="row">
+          @foreach ($registros as $registro)
+            @if($registro->aprobado=='N')
+              <?php
+                $tipoPanel = "panel-warning";
+                $estado = "Pendiente por revisar";
+                $est='n';
+              ?>
+              @else
+              <?php
+                $tipoPanel = "panel-success";
+                $estado = "Registro revisado";
+                $est='s';
+              ?>
+            @endif
+
+          <div class="col-xs-12">
+            <div class="panel panel-default {{$tipoPanel}}">
+              <div class="panel-heading">Resumen del registro - {{$estado}}</div>
+              <div class="panel-body">
+                {{$registro->resumen}}
+
               </div>
-              @if($id_estado==5)
-                <div class="col-xs-6">
-                  <h4>Respuesta:</h4>
-                  <textarea disabled class="textarea" placeholder="Respuesta" style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
-                  </textarea>
-                </div>
-              @endif
-            </div>-->
-
-
-
-
-      <div class="form-group" data-ng-repeat="choice in choices track by $index">
-
-        <label for="choice" ng-show="showChoiceLabel(choice)">Registros</label>
-        <div class="row">
-          <div class="col-xs-4">
-
-            <p class="input-group lostop">
-              <input type="text" class="form-control"  uib-datepicker-popup="<%format%>" ng-model="choice.fecha" 
-                     is-open="opened[$index]" datepicker-options="dateOptions" ng-readonly="true" 
-                     close-text="Cerrar"
-                     ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
-
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="open($event, $index)"><i class="glyphicon glyphicon-calendar"></i></button>
-              </span>
-            </p>
-          </div>
-          <div class="col-xs-3">
-            <div class="row">
-              <div class="col-xs-6">
-                <div uib-timepicker ng-model="choice.hI" ng-change="changed()" readonly-input="true" hour-step="1"  minute-step="15" show-meridian="false"></div>
-              </div>
-              <div class="col-xs-6">
-                <div uib-timepicker ng-model="choice.hF" ng-change="changed()" readonly-input="true" hour-step="1"  minute-step="15" show-meridian="false"></div>
+              <div class="panel-footer">
+                <button type="button" 
+                        class="btn btn-info" 
+                        ng-click="getDetalesRegistro({{$registro->id}},'{{$registro->resumen}}',{{$registro->total_horas}})" 
+                        data-toggle="modal" 
+                        data-target="#detallesRegistro"> ver </button> 
               </div>
             </div>
           </div>
-          <div class="col-xs-4 lostop">
-            <button type="button" class="btn btn-default btn-sm"  ng-show="showAddChoice(choice)" ng-click="addNewChoice()">
-              <span class="glyphicon glyphicon-plus"></span> Agregar
-            </button>
-            <button type="button" class="btn btn-default btn-sm" ng-click="removeNewChoice()">
-              <span class="glyphicon glyphicon-minus"></span> Borrar
-            </button>
-<!--              <i class="fas fa-plus" aria-hidden='true' ng-show="showAddChoice(choice)" ng-click="addNewChoice()"></i>
-            <i class="fas fa-minus-circle" ng-click="removeNewChoice()"></i>-->
+        @endforeach
+      </div>
+      <!-- FIN PINTO TODOS LOS REGISTROS QUE HA HECHO EL TUTOR-->      
+      
+      <!--MODAL GUARDAR REGISTRO-->
+      <div id="registroHoras" class="modal fade" role="dialog">
+          <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Registrar horas</h4>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-xs-4"><h4 class="text-center">Fecha</h4></div>
+                  <div class="col-xs-3">
+                      <div class="row">
+                        <div class="col-xs-6"><h4 class="text-center">Hora inicio</h4></div>
+                        <div class="col-xs-6"><h4 class="text-center">Hora fin</h4></div>
+                      </div>
+                    </div>
+                </div>
+                <div class="form-group" data-ng-repeat="choice in choices track by $index">
+                  <label for="choice" ng-show="showChoiceLabel(choice)">Registros</label>
+                  <div class="row">
+                    <div class="col-xs-4">
+                      <p class="input-group lostop">
+                        <input type="text" class="form-control"  uib-datepicker-popup="<%format%>" ng-model="choice.fecha" 
+                               is-open="opened[$index]" datepicker-options="dateOptions" ng-readonly="true" 
+                               close-text="Cerrar"
+                               ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+
+                        <span class="input-group-btn">
+                          <button type="button" class="btn btn-default" ng-click="open($event, $index)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                      </p>
+                    </div>
+                    <div class="col-xs-3">
+                      <div class="row">
+                        <div class="col-xs-6">
+                          <div uib-timepicker ng-model="choice.hI" ng-change="changed()" readonly-input="true" hour-step="1"  minute-step="15" show-meridian="false"></div>
+                        </div>
+                        <div class="col-xs-6">
+                          <div uib-timepicker ng-model="choice.hF" ng-change="changed()" readonly-input="true" hour-step="1"  minute-step="15" show-meridian="false"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xs-4 lostop">
+                      <button type="button" class="btn btn-default btn-sm"  ng-show="showAddChoice(choice)" ng-click="addNewChoice()">
+                        <span class="glyphicon glyphicon-plus"></span> Agregar
+                      </button>
+                      <button type="button" class="btn btn-default btn-sm" ng-click="removeNewChoice()">
+                        <span class="glyphicon glyphicon-minus"></span> Borrar
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+                
+                <div class="row">
+                  <div class="col-xs-12">
+                    <h3>Total de horas registrdas <%choices.totalHoras%></h3>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-xs-12">
+                    <textarea  
+                      placeholder="Cometario" 
+                      style="width: 90%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;" 
+                      ng-model="choices.mensaje" ></textarea>
+                  </div>
+                </div>
+
+              
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-success" ng-hide="answered" ng-click="saveRegistry()" data-dismiss="modal">Registrar</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+              </div>
+            </div>
+
           </div>
         </div>
+      <!--FIN MODAL GUARDAR REGISTRO-->
+      
+      <!-- MODAL INFORMACION DEL REGISTRO -->
+        <div id="detallesRegistro" class="modal fade" role="dialog">
+          <div class="modal-dialog">
 
-      </div>
-      <div class="row">
-        <div class="col-xs-12">
-          <h3>Total de horas registrdas <%choices.totalHoras%></h3>
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Detalles del registro</h4>
+              </div>
+              <div class="modal-body">
+                <div data-ng-repeat="hora in horas">
+                  <p><b>Fecha: </b><% hora.fecha %> <b>Hora inicio: </b><% hora.hora_inicio %> <b>Hora fin:</b> <% hora.hora_fin %></p>
+               </div>
+                <h3>Total de horas: <%totalH%> </h3>
+                <textarea  ng-readonly="true" placeholder="Respuesta" ng-model="resumen"
+                          style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
+              
+                </textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+              </div>
+            </div>
+
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-12">
-          <textarea  
-            placeholder="Cometario" 
-            style="width: 90%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;" 
-            ng-model="choices.mensaje" ></textarea>
-        </div>
-      </div>
-
-
-      <div class="box-footer clearfix">
-        <button type="button" ng-click="saveRegistry()" class="btn btn-default" >Enviar</button>
-      </div>
+        <!--FIN MODAL INFORMACION DEL REGISTRO -->
     </div>
 
   </div>

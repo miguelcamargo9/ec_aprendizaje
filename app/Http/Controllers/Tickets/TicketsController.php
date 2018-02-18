@@ -54,7 +54,7 @@ class TicketsController extends Controller {
     $id = Input::get('id');
     $cierre = Input::get('cierre');
     if (isset($cierre)) {
-      Ticket::where('id', '=', $id)->update(array( "fecha_inicio" => $fecha_ini, "fecha_fin" => $fecha_fin));
+      Ticket::where('id', '=', $id)->update(array("fecha_inicio" => $fecha_ini, "fecha_fin" => $fecha_fin));
       //ENVIO DE CORREO
 
 
@@ -193,19 +193,22 @@ class TicketsController extends Controller {
   public function getInfoTickets($idTicket) {
     $infoTicket = Ticket::find($idTicket);
     $registrosTutor = registroTutor::where('id_caso', '=', $idTicket)->get(); //BUSCO LOS REGISROS QUE HA HECHO EL TUTOR
-
+    $horasRegistro = registroTutor::where('id_caso', '=', $idTicket)->sum('total_horas');
+    
     $client = $this->getClient($infoTicket->id_cliente);
     $child = $this->getChild($client->id_hijo);
     $parent = $this->getParent($client->users_id_padre);
     $client_name = $child->nombre . " " . $child->apellido . " - (Padre) " . $parent->name;
     $infoTicket->client_name = $client_name;
     $infoTicket->registros = $registrosTutor;
+    $infoTicket->horasRegisro = $horasRegistro;
     return view('TicketsController.info', $infoTicket->toArray());
   }
 
   /*
    * DEVUELVO LA INFORMACION DE HORAS PARA CADA REGISTRO DEL TUTOR
    */
+
   public function getDetalleRegistros() {
     $idRegistro = Input::get('idRegistro');
     $horasRegistro = horasRegistro::where('registro_tutor_id', '=', $idRegistro)->get();
@@ -215,15 +218,22 @@ class TicketsController extends Controller {
   /*
    * APROBAR LOS COMENTARIOS QUE DEJO EL TUTOR EN EL CASO
    */
+
   public function aprobarRegistro() {
     $resumen = Input::get('resumen');
     $idCaso = Input::get('idCaso');
     $idRegistro = Input::get('idRegistro');
-    registroTutor::where('id', '=', $idRegistro)->update(array("resumen" => $resumen,"aprobado"=>"S"));
-    $todosAprobados =  registroTutor::where(array("aprobado"=>'N'))->get()->count();
-    if($todosAprobados==0){
-      Ticket::where('ID', '=', $idCaso)->update(array('id_estado' => 3));
+
+    try {
+      registroTutor::where('id', '=', $idRegistro)->update(array("resumen" => $resumen, "aprobado" => "S"));
+      $todosAprobados = registroTutor::where(array("aprobado" => 'N'))->get()->count();
+      if ($todosAprobados == 0) {
+        Ticket::where('ID', '=', $idCaso)->update(array('id_estado' => 3));
+      }
+    } catch (Exception $ex) {
+      return response()->json(array('error' => array('Error al aprobar el registro')));
     }
+    return response()->json(array('success' => true, 'msj' => 'Registro aprobado'));
   }
 
   public function getClient($id_cliente) {

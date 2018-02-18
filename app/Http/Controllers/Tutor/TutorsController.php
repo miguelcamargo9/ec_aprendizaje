@@ -88,11 +88,15 @@ class TutorsController extends Controller {
 
   public function getInfoTickets($idTicket) {
     $infoTicket = Ticket::find($idTicket);
+    $registrosTutor = registroTutor::where('id_caso', '=', $idTicket)->get(); //BUSCO LOS REGISROS QUE HA HECHO EL TUTOR
+    $horasRegistro = registroTutor::where('id_caso', '=', $idTicket)->sum('total_horas');
     $client = $this->getClient($infoTicket->id_cliente);
     $child = $this->getChild($client->id_hijo);
     $parent = $this->getParent($client->users_id_padre);
     $client_name = $child->nombre . " " . $child->apellido . " - (Padre) " . $parent->name;
     $infoTicket->client_name = $client_name;
+    $infoTicket->registros = $registrosTutor;
+    $infoTicket->horasRegisro = $horasRegistro;
     return view('TutorsController.info', $infoTicket->toArray());
   }
 
@@ -138,29 +142,36 @@ class TutorsController extends Controller {
     $datosRegistro->total_horas = $totalHoras;
     $datosRegistro->resumen = $mensaje;
     $datosRegistro->fecha_creacion = $fechaCreacion;
-    $datosRegistro->save();
-    $idRegistro = $datosRegistro->id;
+  
+    try {
+      $datosRegistro->save();
+      $idRegistro = $datosRegistro->id;
+      //RECORRO TODOS LOS REGISTROS DE LAS HORAS
+      foreach ($registros as $registro) {
+        //HORA DE INICIO
+        $hI = date_create($registro['hI']);
+        $horaInicio = date_format($hI, 'H:i');
+        //HORA FIN
+        $hF = date_create($registro['hF']);
+        $horaFin = date_format($hF, 'H:i');
 
-    //RECORRO TODOS LOS REGISTROS DE LAS HORAS
-    foreach ($registros as $registro) {
-      //HORA DE INICIO
-      $hI = date_create($registro['hI']);
-      $horaInicio = date_format($hI, 'H:i');
-      //HORA FIN
-      $hF = date_create($registro['hF']);
-      $horaFin = date_format($hF, 'H:i');
-
-      // FECHA DE REGISTRO
-      $fechaR = date_create($registro['fecha']);
-      $fechaRegistro = date_format($fechaR, 'Y-m-d');
-      //GUARDO CADA REGISTRO DE HORAS
-      $datosHoraRegistro = new horasRegistro();
-      $datosHoraRegistro->registro_tutor_id = $idRegistro;
-      $datosHoraRegistro->fecha = $fechaRegistro;
-      $datosHoraRegistro->hora_inicio = $horaInicio;
-      $datosHoraRegistro->hora_fin = $horaFin;
-      $datosHoraRegistro->save();
+        // FECHA DE REGISTRO
+        $fechaR = date_create($registro['fecha']);
+        $fechaRegistro = date_format($fechaR, 'Y-m-d');
+        //GUARDO CADA REGISTRO DE HORAS
+        $datosHoraRegistro = new horasRegistro();
+        $datosHoraRegistro->registro_tutor_id = $idRegistro;
+        $datosHoraRegistro->fecha = $fechaRegistro;
+        $datosHoraRegistro->hora_inicio = $horaInicio;
+        $datosHoraRegistro->hora_fin = $horaFin;
+        $datosHoraRegistro->save();
+      }
+    } catch (Exception $ex) {
+      return response()->json(array('error' => array('Error al guardar el registro')));
     }
+    return response()->json(array('success' => true, 'msj' => 'Registro guardado'));
+
+
 
     // Ticket::where('id', '=', $idCaso)->update(array('descripcion' => $comentario, "fecha_comentario" => $fechaComentario,"id_estado" => 4));
   }

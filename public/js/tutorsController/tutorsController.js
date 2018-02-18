@@ -3,14 +3,14 @@ var app = angular.module('app', ['ui.bootstrap'], function ($interpolateProvider
   $interpolateProvider.endSymbol('%>');
 });
 
-app.controller("registrosHoras", ['$scope', 'tutorsFactory', function ($scope, tutorsFactory) {
+app.controller("registrosHoras", ['$scope', 'tutorsFactory','$timeout', function ($scope, tutorsFactory,$timeout) {
 
 
     $scope.choices = [{
         hI: new Date("8/24/2009 12:00:00:000"),
         hF: new Date("8/24/2009 12:00:00:000")
       }];
-    
+
 
 
     $scope.formats = ['yyyy-MM-dd', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
@@ -40,6 +40,7 @@ app.controller("registrosHoras", ['$scope', 'tutorsFactory', function ($scope, t
       var newItemNo = $scope.choices.length - 1;
       if (newItemNo !== 0) {
         $scope.choices.pop();
+        calcHTotal();
       }
     };
 
@@ -47,8 +48,7 @@ app.controller("registrosHoras", ['$scope', 'tutorsFactory', function ($scope, t
       return choice.id === $scope.choices[$scope.choices.length - 1].id;
     };
     var totalhoras = 0;
-    $scope.changed = function () {
-
+    var calcHTotal = function () {
       var registros = $scope.choices;
       var horas = 0;
       for (reg in registros) {
@@ -63,21 +63,36 @@ app.controller("registrosHoras", ['$scope', 'tutorsFactory', function ($scope, t
       // totalhoras++;
       $scope.choices.totalHoras = horas;
     };
+    $scope.changed = function () {
+      calcHTotal();
+    };
+    
     $scope.choices.mensaje = "";
     $scope.saveRegistry = function () {
       var totalHoras = $scope.choices.totalHoras;
       var msg = $scope.choices.mensaje;
       var id = $scope.idCaso;
       console.log($scope.choices);
-      tutorsFactory.saveRegistry($scope.choices, totalHoras, msg,id).success(function (data) {
-        if (data.success) {
-//          $scope.success = data.msj;
-//          $timeout(function () {
-//            location.reload();
-//          }, 300);
+      tutorsFactory.saveRegistry($scope.choices, totalHoras, msg, id).then(function (respuesta) {
+       rta= respuesta.data;
+        if (rta.success) {
+          $scope.success = rta.msj;
+          $timeout(function () {
+            location.reload();
+          }, 3000);
         } else {
-          //$scope.error.msjs = data;
+          $scope.error.msjs = rta;
         }
+      });
+    };
+    
+     //TRAER LOS DETALLES DE LAS HORAS DEL REGISTRO SELECCIONADO
+    $scope.getDetalesRegistro = function (idRegistro, resumen,totalHoras) {
+      $scope.resumen = resumen;
+      $scope.idRegistro = idRegistro;
+      $scope.totalH = totalHoras;
+      tutorsFactory.detalleRegistros(idRegistro).then(function (respuesta) {
+        $scope.horas = respuesta.data;
       });
     };
 
