@@ -29,6 +29,8 @@
         <link rel="stylesheet" href="/packages/adminLTE/plugins/daterangepicker/daterangepicker.css">
         <!-- bootstrap wysihtml5 - text editor -->
         <link rel="stylesheet" href="/packages/adminLTE/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+        
+        <link rel="stylesheet" href="/packages/summernote/dist/summernote.css">
 
         <link href="/packages/bootstrap/css/bootstrap.min_1.css" rel="stylesheet">
         <link href="/packages/DataTables/datatables.min.css" rel="stylesheet">
@@ -511,6 +513,8 @@ $.widget.bridge('uibutton', $.ui.button);
         <!-- AngularJs suitable for web development   -->
         <script src="/packages/angular/angular.min.js"></script>
 
+        <script src="/packages/summernote/dist/summernote.min.js"></script>
+        <script src="/packages/angular-summernote/dist/angular-summernote.min.js"></script>
         @yield('scriptsjs')
 
     </body>

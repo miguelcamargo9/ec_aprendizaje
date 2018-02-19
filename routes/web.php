@@ -20,6 +20,13 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 /* Routes Admin Controller */
 Route::get('/admin/tutors/list', array('as' => 'admin.tutors.list', 'uses' => 'Admin\TutorsController@showListTutors'))->middleware('auth');
+Route::post('/admin/tutors/getall', array('as' => 'admin.tutors.getall', 'uses' => 'Admin\TutorsController@getAllTutors'))->middleware('auth');
+Route::get('/admin/tutor/view/delete/{idTutor}', array('as' => 'admin.tutor.view.delete', 'uses' => 'Admin\TutorsController@viewDeleteTutor'))->middleware('auth');
+Route::post('/admin/tutor/delete', array('as' => 'admin.tutor.delete', 'uses' => 'Admin\TutorsController@deleteTutor'))->middleware('auth');
+Route::get('/admin/tutor/view/edit/{idTutor}', array('as' => 'admin.tutor.view.edit', 'uses' => 'Admin\TutorsController@viewEditTutor'))->middleware('auth');
+Route::post('/admin/tutor/edit', array('as' => 'admin.tutor.edit', 'uses' => 'Admin\TutorsController@editTutor'))->middleware('auth');
+Route::get('/admin/tutor/view/create', array('as' => 'admin.tutor.view.create', 'uses' => 'Admin\TutorsController@viewCreateTutor'))->middleware('auth');
+Route::post('/admin/tutor/create', array('as' => 'admin.tutor.create', 'uses' => 'Admin\TutorsController@createTutor'))->middleware('auth');
 
 /* Routes Tickets Controller */
 Route::any('/tickets/list', array('as' => 'tickets.list', 'uses' => 'Tickets\TicketsController@showListTickets'))->middleware('auth');

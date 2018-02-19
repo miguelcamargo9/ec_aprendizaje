@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ui.bootstrap'], function ($interpolateProvider) {
+var app = angular.module('app', ['ui.bootstrap', 'summernote'], function ($interpolateProvider) {
   $interpolateProvider.startSymbol('<%');
   $interpolateProvider.endSymbol('%>');
 });

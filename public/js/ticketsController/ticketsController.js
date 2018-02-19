@@ -5,7 +5,7 @@
  */
 
 
-var app = angular.module('app', ['ngSanitize', 'ui.select'], function ($interpolateProvider) {
+var app = angular.module('app', ['ngSanitize', 'ui.select', 'summernote'], function ($interpolateProvider) {
   $interpolateProvider.startSymbol('<%');
   $interpolateProvider.endSymbol('%>');
 });
