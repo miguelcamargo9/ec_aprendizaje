@@ -180,7 +180,11 @@
 
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <summernote ng-model="choices.mensaje" height="100"></summernote>
+                                  <textarea   placeholder="Respuesta" ng-model="choices.mensaje"
+                                       style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
+
+                                 </textarea>
+                                    <!--<summernote ng-model="choices.mensaje" height="100"></summernote>-->
                                 </div>
                             </div>
 
