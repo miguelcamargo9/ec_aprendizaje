@@ -12,8 +12,8 @@
         <!-- /. tools -->
     </div>
     <div class="box-body" ng-controller="tutorsCtrl">
-        <!--<form method="POST" action="/tickets/registry" >-->
-        <input type="hidden" name="_token" value="{{{ csrf_token()}}}"  />
+        <?php $semestre = (isset($semestre)) ? $semestre : 0; ?>
+        <input type="hidden" name="_token" value="{{ csrf_token()}}"  />
 
         <div class="form-group" ng-class="{'has-feedback has-error': error.name}">
             <b>Nombre:</b> 
@@ -61,7 +61,7 @@
             <b>Valor por Hora:</b> 
             <input type="text" class="form-control" placeholder="Digite el Valor por Hora del Tutor:" ng-model='valxhour' ng-change="error.valxhour = false" 
                    ng-init="valxhour = '{{$valor_hora}}'">
-            <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.semester"></span>
+            <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.$valor_hora"></span>
             <span style="color: #ff0911" ng-show="error.valxhour">Este campo es obligatorio, digite el valor por hora del tutor</span>
         </div>
         <div class="form-group" ng-class="{'has-feedback has-error': error.mobile}">
@@ -109,7 +109,7 @@
 
 <link href="/packages/ui-select-master/dist/select.css" rel="stylesheet">
 <script src="//code.angularjs.org/1.2.20/angular-sanitize.min.js"></script>
-<script src="/js/adminController/tutorsController.js"></script>
-<script src="/js/adminController/tutorsFactory.js"></script>
+<script src="/js/adminController/tutor/tutorsController.js"></script>
+<script src="/js/adminController/tutor/tutorsFactory.js"></script>
 <script src="/packages/ui-select-master/dist/select.js"></script>
 @endsection

@@ -8,4 +8,8 @@ class Father extends Model
 {
     protected $table = 'padre';
     public $timestamps = false;
+    
+    public function user() {
+        return $this->hasOne('App\Models\Usuario', 'id', 'users_id');
+    }
 }

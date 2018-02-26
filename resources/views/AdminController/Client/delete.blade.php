@@ -82,7 +82,7 @@
 
 <link href="/packages/ui-select-master/dist/select.css" rel="stylesheet">
 <script src="//code.angularjs.org/1.2.20/angular-sanitize.min.js"></script>
-<script src="/js/adminController/tutor/tutorsController.js"></script>
-<script src="/js/adminController/tutor/tutorsFactory.js"></script>
+<script src="/js/adminController/tutorsController.js"></script>
+<script src="/js/adminController/tutorsFactory.js"></script>
 <script src="/packages/ui-select-master/dist/select.js"></script>
 @endsection

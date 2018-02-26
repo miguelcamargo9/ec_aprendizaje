@@ -16,7 +16,7 @@ Route::get('/', array('as' => 'home', 'uses' => 'HomeController@index'))->middle
 Route::get('/index', array('as' => 'index', 'uses' => 'HomeController@index'))->middleware('auth');
 
 Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
+//Route::get('/home', 'HomeController@index')->name('home');
 
 /* Routes Admin Controller */
 Route::get('/admin/tutors/list', array('as' => 'admin.tutors.list', 'uses' => 'Admin\TutorsController@showListTutors'))->middleware('auth');
@@ -27,6 +27,15 @@ Route::get('/admin/tutor/view/edit/{idTutor}', array('as' => 'admin.tutor.view.e
 Route::post('/admin/tutor/edit', array('as' => 'admin.tutor.edit', 'uses' => 'Admin\TutorsController@editTutor'))->middleware('auth');
 Route::get('/admin/tutor/view/create', array('as' => 'admin.tutor.view.create', 'uses' => 'Admin\TutorsController@viewCreateTutor'))->middleware('auth');
 Route::post('/admin/tutor/create', array('as' => 'admin.tutor.create', 'uses' => 'Admin\TutorsController@createTutor'))->middleware('auth');
+
+Route::get('/admin/client/list', array('as' => 'admin.client.list', 'uses' => 'Admin\ClientsController@showListClients'))->middleware('auth');
+Route::post('/admin/client/getall', array('as' => 'admin.client.getall', 'uses' => 'Admin\ClientsController@getAllClients'))->middleware('auth');
+Route::get('/admin/client/view/delete/{idClient}', array('as' => 'admin.client.view.delete', 'uses' => 'Admin\ClientsController@viewDeleteClient'))->middleware('auth');
+Route::post('/admin/client/delete', array('as' => 'admin.client.delete', 'uses' => 'Admin\ClientsController@deleteClient'))->middleware('auth');
+Route::get('/admin/client/view/edit/{idClient}', array('as' => 'admin.client.view.edit', 'uses' => 'Admin\ClientsController@viewEditClient'))->middleware('auth');
+Route::post('/admin/client/edit', array('as' => 'admin.client.edit', 'uses' => 'Admin\ClientsController@editClient'))->middleware('auth');
+Route::get('/admin/client/view/create', array('as' => 'admin.client.view.create', 'uses' => 'Admin\ClientsController@viewCreateClient'))->middleware('auth');
+Route::post('/admin/client/create', array('as' => 'admin.client.create', 'uses' => 'Admin\ClientsController@createClient'))->middleware('auth');
 
 /* Routes Tickets Controller */
 Route::any('/tickets/list', array('as' => 'tickets.list', 'uses' => 'Tickets\TicketsController@showListTickets'))->middleware('auth');

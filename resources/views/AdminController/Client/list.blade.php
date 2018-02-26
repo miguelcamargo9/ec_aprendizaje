@@ -13,18 +13,17 @@
     <thead>
         <tr>
             <th>
-                LISTA DE TUTORES
+                LISTA DE CLIENTES
             </th>
         </tr>
     </thead>
 </table>
-<table id="tutors" class="table table-striped table-hover">
+<table id="clients" class="table table-striped table-hover">
     <thead>
         <tr>
-            <th>NOMBRE</th>
+            <th>PADRE</th>
             <th># IDENTIFICACION</th>
             <th>EMAIL</th>
-            <th>CELULAR</th>
             <th>OPCIONES</th>
         </tr>
     </thead>
@@ -33,5 +32,5 @@
 @endsection
 @section('scriptsjs')
 
-<script src="/js/adminController/tutor/tutors.js"></script>
+<script src="/js/adminController/client/client.js"></script>
 @endsection

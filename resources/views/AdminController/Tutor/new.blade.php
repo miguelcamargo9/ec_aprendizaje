@@ -3,7 +3,7 @@
 @section('contentbody')
 <div class="box box-info" ng-app="appTutor">
     <div class="box-header">
-        <i class="fa fa-ticket"></i>
+        <i class="fa fa-user-plus"></i>
 
         <h3 class="box-title">Crear Tutor</h3>
         <!-- tools box -->
@@ -13,7 +13,7 @@
     </div>
     <div class="box-body" ng-controller="tutorsCtrl">
         <!--<form method="POST" action="/tickets/registry" >-->
-        <input type="hidden" name="_token" value="{{{ csrf_token()}}}"  />
+        <input type="hidden" name="_token" value="{{ csrf_token()}}"  />
 
         <div class="form-group" ng-class="{'has-feedback has-error': error.name}">
             <b>Nombres:</b> 
@@ -23,7 +23,7 @@
         </div>
         <div class="form-group" ng-class="{'has-feedback has-error': error.lastname}">
             <b>Apellidos:</b> 
-            <input type="text" class="form-control" placeholder="Digite el Nombre del Tutor:" ng-model='lastname' ng-change="error.lastname = false">
+            <input type="text" class="form-control" placeholder="Digite el Apellido del Tutor:" ng-model='lastname' ng-change="error.lastname = false">
             <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.lastname"></span>
             <span style="color: #ff0911" ng-show="error.lastname">Este campo es obligatorio, digite los apellidos del tutor</span>
         </div>
@@ -106,7 +106,7 @@
 
 <link href="/packages/ui-select-master/dist/select.css" rel="stylesheet">
 <script src="//code.angularjs.org/1.2.20/angular-sanitize.min.js"></script>
-<script src="/js/adminController/tutorsController.js"></script>
-<script src="/js/adminController/tutorsFactory.js"></script>
+<script src="/js/adminController/tutor/tutorsController.js"></script>
+<script src="/js/adminController/tutor/tutorsFactory.js"></script>
 <script src="/packages/ui-select-master/dist/select.js"></script>
 @endsection

@@ -5,7 +5,7 @@
  */
 
 
-var appTutor = angular.module('appTutor', ['ngSanitize', 'ui.select'], function ($interpolateProvider) {
+var appClient = angular.module('appClient', ['ngSanitize', 'ui.select'], function ($interpolateProvider) {
     $interpolateProvider.startSymbol('<%');
     $interpolateProvider.endSymbol('%>');
 });
@@ -16,7 +16,7 @@ var appTutor = angular.module('appTutor', ['ngSanitize', 'ui.select'], function 
  * performs an AND between 'name: $select.search' and 'age: $select.search'.
  * We want to perform an OR.
  */
-appTutor.filter('propsFilter', function () {
+appClient.filter('propsFilter', function () {
     return function (items, props) {
         var out = [];
 
@@ -48,7 +48,28 @@ appTutor.filter('propsFilter', function () {
     };
 });
 
-appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$window', function ($scope, tutorsFactory, $timeout, $window) {
+appClient.controller('clientsCtrl', ['$scope', 'clientsFactory', '$timeout', '$window', function ($scope, clientsFactory, $timeout, $window) {
+        $scope.error = {};
+
+        $scope.children = [{
+                error: {}
+            }];
+
+        $scope.addNewChild = function () {
+            $scope.children.push({
+                error: {}
+            });
+        };
+
+        $scope.removeNewChild = function (index) {
+            if (index !== 0) {
+                $scope.children.splice(index, 1);
+            }
+        };
+
+        $scope.showAddChild = function (child) {
+            return child.id === $scope.children[$scope.children.length - 1].id;
+        };
 
         $scope.dateFormat = function (date) {
             var year = date.getFullYear();
@@ -64,14 +85,14 @@ appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$wind
 
             return year + '-' + month + '-' + dt;
         };
-        
-        $scope.createTutor = function () {
-            tutorsFactory.createTutor($scope.name, $scope.lastname, $scope.identification_number, $scope.email, $scope.university,
-                    $scope.degree, $scope.semester, $scope.valxhour, $scope.mobile, $scope.accountnumber).success(function (data) {
+
+        $scope.createClient = function () {
+            clientsFactory.createClient($scope.name, $scope.lastname, $scope.identification_number, $scope.email, $scope.namesecond,
+                    $scope.lastnamesecond, $scope.identification_number_second, $scope.email_second, $scope.children).success(function (data) {
                 if (data.success) {
                     $scope.success = data.msj;
                     $timeout(function () {
-                         $window.location.href = '/admin/tutors/list';
+                        $window.location.href = '/admin/client/list';
                     }, 2000);
                 } else {
                     $scope.error.msjs = data;
@@ -79,13 +100,26 @@ appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$wind
             });
         };
 
-        $scope.editTutor = function () {
+        $scope.editClient = function () {
             tutorsFactory.editTutor($scope.idtutor, $scope.iduser, $scope.name, $scope.identification_number, $scope.email, $scope.university,
                     $scope.degree, $scope.semester, $scope.valxhour, $scope.mobile, $scope.accountnumber).success(function (data) {
                 if (data.success) {
                     $scope.success = data.msj;
                     $timeout(function () {
-                         $window.location.href = '/admin/tutors/list';
+                        $window.location.href = '/admin/tutors/list';
+                    }, 2000);
+                } else {
+                    $scope.error.msjs = data;
+                }
+            });
+        };
+
+        $scope.deleteClient = function () {
+            tutorsFactory.deleteTutor($scope.idtutor, $scope.iduser).success(function (data) {
+                if (data.success) {
+                    $scope.success = data.msj;
+                    $timeout(function () {
+                        $window.location.href = '/admin/tutors/list';
                     }, 2000);
                 } else {
                     $scope.error.msjs = data;
@@ -100,6 +134,12 @@ appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$wind
                 $scope.error.name = true;
                 $scope.noerror = false;
             }
+            if (action === 'add') {
+                if (!$scope.lastname) {
+                    $scope.error.lastname = true;
+                    $scope.noerror = false;
+                }
+            }
             if (!$scope.identification_number) {
                 $scope.error.identification_number = true;
                 $scope.noerror = false;
@@ -108,36 +148,38 @@ appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$wind
                 $scope.error.email = true;
                 $scope.noerror = false;
             }
-            if (!$scope.university) {
-                $scope.error.university = true;
+            if (($scope.lastnamesecond || $scope.identification_number_second || $scope.email_second) && !$scope.namesecond) {
+                $scope.error.namesecond = true;
+                $scope.namesecond = false;
+            }
+            if (action === 'add') {
+                if (($scope.namesecond || $scope.identification_number_second || $scope.email_second) && !$scope.lastnamesecond) {
+                    $scope.error.lastnamesecond = true;
+                    $scope.noerror = false;
+                }
+            }
+            if (($scope.namesecond || $scope.lastnamesecond || $scope.email_second) && !$scope.identification_number_second) {
+                $scope.error.identification_number_second = true;
                 $scope.noerror = false;
             }
-            if (!$scope.degree) {
-                $scope.error.degree = true;
+            if (($scope.namesecond || $scope.lastnamesecond || $scope.identification_number_second) && !$scope.email_second) {
+                $scope.error.email_second = true;
                 $scope.noerror = false;
             }
-            if (!$scope.semester) {
-                $scope.error.semester = true;
-                $scope.noerror = false;
-            }
-            if (!$scope.valxhour) {
-                $scope.error.valxhour = true;
-                $scope.noerror = false;
-            }
-            if (!$scope.mobile) {
-                $scope.error.mobile = true;
-                $scope.noerror = false;
-            }
-            if (!$scope.accountnumber) {
-                $scope.error.accountnumber = true;
-                $scope.noerror = false;
-            }
+
+            angular.forEach($scope.children, function (child, key) {
+                if (!child.name) {
+                    child.error.name = true;
+                    child.noerror = false;
+                }
+            });
+
             if ($scope.noerror) {
                 if (action === 'add') {
-                    $scope.createTutor();
+                    $scope.createClient();
                 }
                 if (action === 'edit') {
-                    $scope.editTutor();
+                    $scope.editClient();
                 }
             }
         };
