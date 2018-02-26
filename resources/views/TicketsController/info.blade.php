@@ -107,7 +107,11 @@
                                     <p><b>Fecha: </b><% hora.fecha %> <b>Hora inicio: </b><% hora.hora_inicio %> <b>Hora fin:</b> <% hora.hora_fin %></p>
                                 </div>
                                 <h3>Total de horas: <%totalH%> </h3>
-                                <summernote ng-readonly="answered" placeholder="Respuesta" ng-model="resumen"></summernote>
+                                <textarea  ng-readonly="answered" placeholder="Respuesta" ng-model="resumen"
+                                       style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
+
+                                 </textarea>
+                                <!--<summernote ng-readonly="answered" placeholder="Respuesta" ng-model="resumen"></summernote>-->
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-success" ng-hide="answered" ng-click="aprobarRegistro()" data-dismiss="modal">Aprobar</button>
