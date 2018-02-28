@@ -1,60 +1,101 @@
 @extends('index')
 
 @section('contentbody')
-<div class="box box-info" ng-app="appTutor">
+<div class="box box-info" ng-app="appClient">
     <div class="box-header">
-        <i class="fa fa-ticket"></i>
+        <i class="fa fas fa-suitcase"></i>
 
-        <h3 class="box-title">Borrar Tutor</h3>
+        <h3 class="box-title">Eliminar Cliente</h3>
         <!-- tools box -->
         <div class="pull-right box-tools">
         </div>
         <!-- /. tools -->
     </div>
-    <div class="box-body" ng-controller="tutorsCtrl">
+    <div class="box-body" ng-controller="clientsCtrl">
         <!--<form method="POST" action="/tickets/registry" >-->
         <input type="hidden" name="_token" value="{{ csrf_token()}}"  />
-
-        <div class="form-group">
-            <b>Nombre:</b> 
-            <input type="text" class="form-control" ng-model='name' ng-init="name = '{{$user['name']}}'" readonly>
+        <div class="form-group" ng-class="{'has-feedback has-error': error.name}">
+            <b>Nombres Primer Responsable:</b> 
+            <input type="text" class="form-control" placeholder="Digite el Nombre del Primer Responsable:" ng-model='name' ng-change="error.name = false"
+                   ng-init="name = '{{$user['name']}}'" readonly>
+            <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.name"></span>
+            <span style="color: #ff0911" ng-show="error.name">Este campo es obligatorio, digite los nombres del responsable</span>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-class="{'has-feedback has-error': error.identification_number}">
             <b>Número de Indentificación:</b> 
-            <input type="text" class="form-control" ng-model='identification_number' ng-init="identification_number = '{{$user['identification_number']}}'" readonly>
+            <input type="text" class="form-control" placeholder="Digite el Número de Indentificación del Responsable:" ng-model='identification_number' 
+                   ng-change="error.identification_number = false" ng-init="identification_number = '{{$user['identification_number']}}'" readonly>
+            <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.identification_number"></span>
+            <span style="color: #ff0911" ng-show="error.identification_number">Este campo es obligatorio, digite el número de identificación del responsable</span>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-class="{'has-feedback has-error': error.email}">
             <b>Correo:</b> 
-            <input type="text" class="form-control" ng-model='email' ng-init="email = '{{$user['email']}}'" readonly>
+            <input type="text" class="form-control" placeholder="Digite el Correo del Responsable:" ng-model='email' ng-change="error.email = false"
+                   ng-init="email = '{{$user['email']}}'" readonly>
+            <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.email"></span>
+            <span style="color: #ff0911" ng-show="error.email">Este campo es obligatorio, digite el correo del responsable</span>
         </div>
-        <div class="form-group">
-            <b>Universidad:</b> 
-            <input type="text" class="form-control" ng-model='university' ng-init="university = '{{$universidad}}'" readonly>
+        <div class="form-group" ng-class="{'has-feedback has-error': error.namesecond}">
+            <b>Nombres Segundo Responsable:</b>  
+            <input readonly type="text" class="form-control" placeholder="Digite el Nombre del Segundo Responsable:" ng-model='namesecond'
+                   ng-change="error.namesecond = false" 
+                    @if(isset($usertwo))
+                        ng-init="namesecond = '{{$usertwo['name']}}'"
+                    @endif
+                    >
+            <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.namesecond"></span>
+            <span style="color: #ff0911" ng-show="error.namesecond">Este campo es obligatorio, digite el nombre del segundo responsable</span>
         </div>
-        <div class="form-group">
-            <b>Carrera:</b> 
-            <input type="text" class="form-control" ng-model='degree' ng-init="degree = '{{$carrera}}'" readonly>
+        <div class="form-group" ng-class="{'has-feedback has-error': error.identification_number_second}">
+            <b>Número de Indentificación:</b> 
+            <input readonly type="text" class="form-control" placeholder="Digite el Número de Indentificación del segundo responsable:" 
+                   ng-model='identification_number_second' ng-change="error.identification_number_second = false" 
+                    @if(isset($usertwo))
+                       ng-init="identification_number_second = '{{$usertwo['identification_number']}}'"
+                    @endif 
+                   >
+            <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.identification_number_second"></span>
+            <span style="color: #ff0911" ng-show="error.identification_number_second">
+                Este campo es obligatorio, digite el número de identificación del segundo responsable</span>
         </div>
-        <div class="form-group">
-            <b>Semestre:</b> 
-            <input type="text" class="form-control" ng-model='semester' ng-init="semester = '{{$semestre}}'" readonly>
+        <div class="form-group" ng-class="{'has-feedback has-error': error.email_second}">
+            <b>Correo:</b> 
+            <input readonly type="text" class="form-control" placeholder="Digite el Correo del segundo responsable:" ng-model='email_second' 
+                   ng-change="error.email_second = false" 
+                   @if(isset($usertwo))
+                       ng-init="email_second = '{{$usertwo['email']}}'"
+                    @endif 
+                   >
+            <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.email_second"></span>
+            <span style="color: #ff0911" ng-show="error.email_second">Este campo es obligatorio, digite el correo del segundo responsable</span>
         </div>
-        <div class="form-group">
-            <b>Valor por Hora:</b> 
-            <input type="text" class="form-control" ng-model='valxhour' ng-init="valxhour = '{{$valor_hora}}'" readonly>
+        <div class="form-group" >
+            <div class="panel panel-default">
+                <div class="panel-heading">Hijos</div>
+                <div class="panel-body" ng-init="children = {{htmlspecialchars(json_encode($children))}}">
+                    <div class="form-group" ng-repeat="child in children track by $index">               
+                        <div class="row" ng-class="{'has-feedback has-error': child.error.name}">
+                            <div class="col-xs-2">
+                                <b>Nombre Hijo:</b> 
+                            </div>
+                            <div class="col-xs-5">
+                                <input type="text" class="form-control" placeholder="Digite el Nombre del Hijo:" ng-model='child.name' 
+                                       ng-change="child.error.name = false" ng-init='child.name = child.child.nombre; child.noerror = false' readonly>
+                                <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="child.error.name"></span>
+                                <span style="color: #ff0911" ng-show="child.error.name">Este campo es obligatorio, digite el nombre del hijo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <b>Celular:</b> 
-            <input type="text" class="form-control" ng-model='mobile' ng-init="mobile = '{{$celular}}'" readonly>
-        </div>
-        <div class="form-group">
-            <b>Número de Cuenta:</b> 
-            <input type="text" class="form-control" ng-model='accountnumber' ng-init="accountnumber = '{{$numero_cuenta}}'" readonly>
-        </div>
-        <input type="hidden" ng-init="idtutor = {{$id}}" ng-model="idtutor">
+        <input type="hidden" ng-init="idfather = {{$id}}" ng-model="idfather">
         <input type="hidden" ng-init="iduser = {{$user['id']}}" ng-model="iduser">
+        @if(isset($usertwo))
+            <input type="hidden" ng-init="idusertwo = {{$usertwo['id']}}" ng-model="idusertwo">
+        @endif 
         <div class="box-footer clearfix">
-            <button type="submit" class="pull-right btn btn-danger" id="accept" ng-click="deleteTutor()">Eliminar
+            <button type="submit" class="pull-right btn btn-danger" id="accept" ng-click="deleteClient()">Eliminar
                 <i class="fa fa-arrow-circle-right"></i></button>
         </div>
         <div ng-repeat="errorObj in error.msjs">
@@ -82,7 +123,7 @@
 
 <link href="/packages/ui-select-master/dist/select.css" rel="stylesheet">
 <script src="//code.angularjs.org/1.2.20/angular-sanitize.min.js"></script>
-<script src="/js/adminController/tutorsController.js"></script>
-<script src="/js/adminController/tutorsFactory.js"></script>
+<script src="/js/adminController/client/clientsController.js"></script>
+<script src="/js/adminController/client/clientsFactory.js"></script>
 <script src="/packages/ui-select-master/dist/select.js"></script>
 @endsection

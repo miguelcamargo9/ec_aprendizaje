@@ -73,14 +73,14 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Hijos</div>
                 <div class="panel-body" ng-init="children = {{htmlspecialchars(json_encode($children))}}">
-                    <div class="form-group" ng-repeat="child in children track by $index" ng-class="{'has-feedback has-error': error.email_second}">               
-                        <div class="row">
+                    <div class="form-group" ng-repeat="child in children track by $index">               
+                        <div class="row" ng-class="{'has-feedback has-error': child.error.name}">
                             <div class="col-xs-2">
                                 <b>Nombre Hijo:</b> 
                             </div>
                             <div class="col-xs-5">
                                 <input type="text" class="form-control" placeholder="Digite el Nombre del Hijo:" ng-model='child.name' 
-                                       ng-change="child.error.name = false" ng-init='child.name = child.child.nombre'>
+                                       ng-change="child.error.name = false" ng-init='child.name = child.child.nombre; child.noerror = false'>
                                 <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="child.error.name"></span>
                                 <span style="color: #ff0911" ng-show="child.error.name">Este campo es obligatorio, digite el nombre del hijo</span>
                             </div>
@@ -97,8 +97,13 @@
                 </div>
             </div>
         </div>
+        <input type="hidden" ng-init="idfather = {{$id}}" ng-model="idfather">
+        <input type="hidden" ng-init="iduser = {{$user['id']}}" ng-model="iduser">
+        @if(isset($usertwo))
+            <input type="hidden" ng-init="idusertwo = {{$usertwo['id']}}" ng-model="idusertwo">
+        @endif 
         <div class="box-footer clearfix">
-            <button type="submit" class="pull-right btn btn-success" id="accept" ng-click="validate('add')">Crear
+            <button type="submit" class="pull-right btn btn-warning" id="accept" ng-click="validate('edit')">Editar
                 <i class="fa fa-arrow-circle-right"></i></button>
         </div>
         <div ng-repeat="errorObj in error.msjs">

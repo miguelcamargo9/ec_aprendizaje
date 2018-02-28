@@ -10,9 +10,9 @@ class Client extends Model
     public $timestamps = false;
 
     public function father() {
-        return $this->belongsTo('App\Models\Usuario', 'users_id_padre', 'id');
+        return $this->hasOne('App\Models\Usuario', 'id', 'users_id_padre');
     }
     public function child() {
-        return $this->belongsTo('App\Models\Child', 'id_hijo', 'id');
+        return $this->hasOne('App\Models\Child', 'id', 'id_hijo');
     }
 }

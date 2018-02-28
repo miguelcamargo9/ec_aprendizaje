@@ -16,6 +16,7 @@ Route::get('/', array('as' => 'home', 'uses' => 'HomeController@index'))->middle
 Route::get('/index', array('as' => 'index', 'uses' => 'HomeController@index'))->middleware('auth');
 
 Auth::routes();
+Route::get('/logout', 'Auth\LoginController@logout');
 //Route::get('/home', 'HomeController@index')->name('home');
 
 /* Routes Admin Controller */

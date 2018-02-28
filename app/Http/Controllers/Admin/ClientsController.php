@@ -31,9 +31,16 @@ class ClientsController extends Controller {
         return $result;
     }
 
-    public function viewDeleteClient($idTutor) {
-        $infoTutor = Tutor::with('user')->find($idTutor);
-        return view('AdminController.Tutor.delete', $infoTutor->toArray());
+    public function viewDeleteClient($idFather) {
+        $infoClient = Father::with("user")->find($idFather);
+        $infoClient->children = Client::with('child')->where('users_id_padre', '=', $infoClient->users_id)->get()->toArray();
+        foreach ($infoClient->children as $child) {
+            $child['name'] = $child['child']['nombre'];
+        }
+        if (isset($infoClient->children[0]['child']['id_user_segundo_responsable'])) {
+            $infoClient->usertwo = Usuario::find($infoClient->children[0]['child']['id_user_segundo_responsable'])->toArray();
+        }
+        return view('AdminController.Client.delete', $infoClient->toArray());
     }
 
     public function viewEditClient($idFather) {
@@ -42,7 +49,7 @@ class ClientsController extends Controller {
         foreach ($infoClient->children as $child) {
             $child['name'] = $child['child']['nombre'];
         }
-        if(isset($infoClient->children[0]['child']['id_user_segundo_responsable'])){
+        if (isset($infoClient->children[0]['child']['id_user_segundo_responsable'])) {
             $infoClient->usertwo = Usuario::find($infoClient->children[0]['child']['id_user_segundo_responsable'])->toArray();
         }
         return view('AdminController.Client.edit', $infoClient->toArray());
@@ -55,6 +62,7 @@ class ClientsController extends Controller {
     public function editClient(Request $request) {
         $id = Input::get('id');
         $idUser = Input::get('id_user');
+        $idUserTwo = null;
 
         $rules = $this->getClientsRules();
         $messages = $this->getClientsMessages();
@@ -62,6 +70,9 @@ class ClientsController extends Controller {
 
         if ($validator->passes()) {
             try {
+                $idUserTwo = Input::get('id_user_two');
+                $namesecond = Input::get('namesecond');
+                $children = Input::get('children');
                 Usuario::where('id', '=', $idUser)->update(
                         array(
                             'name' => Input::get('name'),
@@ -70,16 +81,68 @@ class ClientsController extends Controller {
                             'updated_at' => date("Y-m-d H:i:s"),
                         )
                 );
-                Tutor::where('id', '=', $id)->update(
-                        array(
-                            'universidad' => Input::get('university'),
-                            'carrera' => Input::get('degree'),
-                            'semestre' => Input::get('semester'),
-                            'valor_hora' => Input::get('valxhour'),
-                            'celular' => Input::get('mobile'),
-                            'numero_cuenta' => Input::get('accountnumber')
-                        )
-                );
+                if (isset($idUserTwo)) {
+                    if (isset($namesecond)) {
+                        Usuario::where('id', '=', $idUserTwo)->update(
+                                array(
+                                    'name' => Input::get('namesecond'),
+                                    'identification_number' => Input::get('identification_number_second'),
+                                    'email' => Input::get('email_second'),
+                                    'updated_at' => date("Y-m-d H:i:s"),
+                                )
+                        );
+                    } else {
+                        $father = Father::where('users_id', '=', $idUserTwo);
+                        $user = Usuario::find($idUserTwo);
+                        try {
+                            $idUserTwo = null;
+                            Child::where('id_user_primer_responsable', '=', $idUser)->update(
+                                    array(
+                                        'id_user_segundo_responsable' => null
+                                    )
+                            );
+                            $father->delete();
+                            $user->delete();
+                        } catch (Exception $ex) {
+                            return response()->json(array('error' => array('Error eliminando el tutor')));
+                        }
+                    }
+                } elseif (isset($namesecond)) {
+                    $nametwo = explode(" ", $namesecond);
+                    $idUserTwo = $this->insertUser($nametwo[0], $nametwo[1], Input::get('identification_number_second'), Input::get('email_second'));
+                    $this->insertFather($idUserTwo);
+                }
+
+                $clientchildren = Client::where('users_id_padre', '=', $idUser)->get();
+                foreach ($clientchildren as $client) {
+                    $found_key = array_search($client->id_hijo, array_column($children, 'id_hijo'));
+                    if (is_numeric($found_key)) {
+                        Child::where('id', '=', $client->id_hijo)->update(
+                                array(
+                                    'nombre' => $children[$found_key]['name'],
+                                    'id_user_segundo_responsable' => $idUserTwo
+                                )
+                        );
+                    } else {
+                        $tickets = Ticket::where('id_cliente', '=', $idUser)->count();
+                        if ($tickets > 0) {
+                            return response()->json(array('error' => array('El cliente tiene casos asignados, no se pueden eliminar hijos')));
+                        } else {
+                            $clientobj = Client::find($client->id);
+                            $clientobj->delete();
+                            $childobj = Child::find($client->id_hijo);
+                            $childobj->delete();
+                        }
+                    }
+                }
+                foreach ($children as $child) {
+                    if (!isset($child['id'])) {
+                        $id_child = $this->insertChild($child['name'], $idUser, $idUserTwo);
+                        $this->insertClient($idUser, $id_child);
+                    }
+                }
+
+
                 return response()->json(array('success' => true, 'msj' => 'Tutor Editado con Éxito'));
             } catch (Exception $ex) {
                 return response()->json(array('error' => array('Error editanto el tutor')));
@@ -106,7 +169,7 @@ class ClientsController extends Controller {
                     $this->insertFather($id_user_two);
                 }
                 foreach ($children as $key => $child) {
-                    $id_child = $this->inserChild($child['name'], $id_user, $id_user_two);
+                    $id_child = $this->insertChild($child['name'], $id_user, $id_user_two);
                     $this->insertClient($id_user, $id_child);
                 }
                 return response()->json(array('success' => true, 'msj' => 'Cliente Creado con Éxito'));
@@ -135,7 +198,7 @@ class ClientsController extends Controller {
         return $newuser->id;
     }
 
-    public function inserChild($name, $id_user, $id_user_two) {
+    public function insertChild($name, $id_user, $id_user_two) {
         $newchild = new Child;
         $newchild->nombre = $name;
         $newchild->id_user_primer_responsable = $id_user;
@@ -163,6 +226,7 @@ class ClientsController extends Controller {
     public function getClientsRules() {
         $rules = array(
             'email' => array('email'),
+            'namesecond' => array('regex:/^(.+?)\\s(.+?)(?:\\s(.+?)){1,4}?$|^(.+?)\\s(.+?)$/'),
             'email_second' => array('email')
         );
         return $rules;
@@ -171,6 +235,7 @@ class ClientsController extends Controller {
     public function getClientsMessages() {
         $messages = array(
             'email.email' => 'Formato de correo incorrecto',
+            'namesecond.regex' => 'Formato de nombre incorrecto',
             'email_second.email' => 'Formato de correo incorrecto'
         );
         return $messages;
@@ -179,21 +244,44 @@ class ClientsController extends Controller {
     public function deleteClient() {
         $id = Input::get('id');
         $idUser = Input::get('id_user');
+        $idUserTwo = Input::get('id_user_two');
 
-        $tickets = Ticket::where('users_id_tutor', '=', $idUser)->get();
-
-        if (count($tickets) > 0) {
-            return response()->json(array('error' => array('El tutor tiene casos asignados, no se puede eliminar')));
-        } else {
-            $tutor = Tutor::find($id);
-            $user = Usuario::find($idUser);
-            try {
-                $tutor->delete();
-                $user->delete();
-                return response()->json(array('success' => true, 'msj' => 'Tutor Eliminado con Éxito'));
-            } catch (Exception $ex) {
-                return response()->json(array('error' => array('Error eliminando el tutor')));
+        $clientchildren = Client::where('users_id_padre', '=', $idUser)->get();
+        foreach ($clientchildren as $client) {
+            $tickets = Ticket::where('id_cliente', '=', $idUser)->count();
+            if ($tickets > 0) {
+                return response()->json(array('error' => array('El cliente tiene casos asignados, no se puede eliminar.')));
+            } else {
+                $clientObj = Client::find($client->id);
+                $child = Child::find($client->id_hijo);
+                try {
+                    $clientObj->delete();
+                    $child->delete();
+                } catch (Exception $ex) {
+                    return response()->json(array('error' => array('Error eliminando el cliente')));
+                }
             }
+        }
+        $father = Father::find($id);
+        $user = Usuario::find($idUser);
+
+        if (isset($idUserTwo)) {
+            $fatherTwo = Father::where('users_id', '=', $idUserTwo);
+            $userTwo = Usuario::find($idUserTwo);
+        }
+
+        try {
+            $father->delete();
+            $user->delete();
+            if (isset($fatherTwo)) {
+                $fatherTwo->delete();
+            }
+            if (isset($userTwo)) {
+                $userTwo->delete();
+            }
+            return response()->json(array('success' => true, 'msj' => 'Cliente Eliminado con Éxito'));
+        } catch (Exception $ex) {
+            return response()->json(array('error' => array('Error eliminando el cliente')));
         }
     }
 

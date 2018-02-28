@@ -101,12 +101,12 @@ appClient.controller('clientsCtrl', ['$scope', 'clientsFactory', '$timeout', '$w
         };
 
         $scope.editClient = function () {
-            tutorsFactory.editTutor($scope.idtutor, $scope.iduser, $scope.name, $scope.identification_number, $scope.email, $scope.university,
-                    $scope.degree, $scope.semester, $scope.valxhour, $scope.mobile, $scope.accountnumber).success(function (data) {
+            clientsFactory.editClient($scope.idfather, $scope.iduser, $scope.idusertwo, $scope.name, $scope.lastname, $scope.identification_number, $scope.email,
+                    $scope.namesecond, $scope.lastnamesecond, $scope.identification_number_second, $scope.email_second, $scope.children).success(function (data) {
                 if (data.success) {
                     $scope.success = data.msj;
                     $timeout(function () {
-                        $window.location.href = '/admin/tutors/list';
+                        $window.location.href = '/admin/client/list';
                     }, 2000);
                 } else {
                     $scope.error.msjs = data;
@@ -115,11 +115,11 @@ appClient.controller('clientsCtrl', ['$scope', 'clientsFactory', '$timeout', '$w
         };
 
         $scope.deleteClient = function () {
-            tutorsFactory.deleteTutor($scope.idtutor, $scope.iduser).success(function (data) {
+            clientsFactory.deleteClient($scope.idfather, $scope.iduser, $scope.idusertwo).success(function (data) {
                 if (data.success) {
                     $scope.success = data.msj;
                     $timeout(function () {
-                        $window.location.href = '/admin/tutors/list';
+                        $window.location.href = '/admin/client/list';
                     }, 2000);
                 } else {
                     $scope.error.msjs = data;
@@ -165,6 +165,14 @@ appClient.controller('clientsCtrl', ['$scope', 'clientsFactory', '$timeout', '$w
             if (($scope.namesecond || $scope.lastnamesecond || $scope.identification_number_second) && !$scope.email_second) {
                 $scope.error.email_second = true;
                 $scope.noerror = false;
+            }
+            if (action === 'edit') {
+                if (!$scope.namesecond && !$scope.identification_number_second && !$scope.email_second && !$scope.lastnamesecond) {
+                    delete $scope.namesecond;
+                    delete $scope.identification_number_second;
+                    delete $scope.email_second; 
+                    delete $scope.lastnamesecond;
+                }
             }
 
             angular.forEach($scope.children, function (child, key) {
