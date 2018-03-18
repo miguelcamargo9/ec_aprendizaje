@@ -23,7 +23,8 @@ $(document).ready(function () {
       {"data": "fecha_inicio"},
       {"data": "fecha_fin"}
     ],
-    'order': [1, 'asc']
+    'order': [1, 'asc'],
+    'lengthMenu': [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "Todos"]]
   });
 
   // Handle click on "Select all" control
