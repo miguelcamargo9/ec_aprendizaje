@@ -132,11 +132,14 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
 app.controller('ticketInfoCtrl', ['$scope', 'ticketsFactory', '$timeout', function ($scope, ticketsFactory,$timeout) {
 
     //TRAER LOS DETALLES DE LAS HORAS DEL REGISTRO SELECCIONADO
-    $scope.getDetalesRegistro = function (idRegistro, resumen,totalHoras,estado) {
+    $scope.getDetalesRegistro = function (idRegistro, resumen,totalHoras,estado,comPadre) {
       $scope.resumen = resumen;
       $scope.idRegistro = idRegistro;
       $scope.totalH = totalHoras;
+      $scope.comPadre = comPadre;
       $scope.answered=(estado==='s')?true:false;
+      $scope.answeredP=(comPadre!='')?false:true;
+    
       ticketsFactory.detalleRegistros(idRegistro).then(function (respuesta) {
         $scope.horas = respuesta.data;
       });
