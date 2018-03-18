@@ -226,7 +226,7 @@ class ClientsController extends Controller {
     public function getClientsRules() {
         $rules = array(
             'email' => array('email'),
-            'namesecond' => array('regex:/^(.+?)\\s(.+?)(?:\\s(.+?)){1,4}?$|^(.+?)\\s(.+?)$/'),
+//            'namesecond' => array('regex:/^(.+?)\\s(.+?)(?:\\s(.+?)){1,4}?$|^(.+?)\\s(.+?)$/'),
             'email_second' => array('email')
         );
         return $rules;
