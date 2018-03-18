@@ -25,7 +25,8 @@ $(document).ready(function () {
       {"data": "fechaf"},
       {"data": "boton"}
     ],
-    'order': [1, 'asc']
+    'order': [1, 'asc'],
+    'lengthMenu': [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "Todos"]]
   });
   /*
    * ENVIO A GUARDAR EL COMENTARIO QUE HIZO EL PADRE
