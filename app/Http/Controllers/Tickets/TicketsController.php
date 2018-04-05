@@ -223,12 +223,12 @@ class TicketsController extends Controller {
     $resumen = Input::get('resumen');
     $idCaso = Input::get('idCaso');
     $idRegistro = Input::get('idRegistro');
-
+    $fecha = date("Y-m-d H:i:s");
     try {
-      registroTutor::where('id', '=', $idRegistro)->update(array("resumen" => $resumen, "aprobado" => "S"));
-      $todosAprobados = registroTutor::where(array("aprobado" => 'N'))->get()->count();
+      registroTutor::where('id', '=', $idRegistro)->update(array("resumen" => $resumen, "aprobado" => "S","fecha_aprobacion"=>$fecha));
+      $todosAprobados = registroTutor::where(array("aprobado" => 'N',"id_caso"=>$idCaso))->get()->count();
       if ($todosAprobados == 0) {
-        Ticket::where('ID', '=', $idCaso)->update(array('id_estado' => 3));
+        Ticket::where('id', '=', $idCaso)->update(array('id_estado' => 3));
       }
     } catch (Exception $ex) {
       return response()->json(array('error' => array('Error al aprobar el registro')));

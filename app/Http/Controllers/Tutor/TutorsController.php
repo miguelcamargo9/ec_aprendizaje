@@ -145,6 +145,7 @@ class TutorsController extends Controller {
 
         try {
             $datosRegistro->save();
+            Ticket::where('ID', '=', $idCaso)->update(array('id_estado' => 6));
             $idRegistro = $datosRegistro->id;
             //RECORRO TODOS LOS REGISTROS DE LAS HORAS
             foreach ($registros as $registro) {

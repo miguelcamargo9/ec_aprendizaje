@@ -59,14 +59,14 @@
         @if($registro->aprobado=='N')
         <?php
         $tipoPanel = "panel-warning";
-        $estado = "Pendiente por revisar";
+        $estado = "Por verificar";
         $txtBtn = "Verificar";
         $est = 'n';
         ?>
         @else
         <?php
         $tipoPanel = "panel-success";
-        $estado = "Registro revisado";
+        $estado = "Verificado";
         $txtBtn = "Ver";
         $est = 's';
         ?>

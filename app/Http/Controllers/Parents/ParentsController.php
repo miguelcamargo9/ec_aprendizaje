@@ -93,15 +93,19 @@ class ParentsController extends Controller {
     $fechaComentario = date("Y-m-d H:i:s");
     $idCaso = $request->input('idCaso');
     $idRegistro = $request->input('idRegistro');
-    $nuevoEstado = 5;
+    $nuevoEstado = 8;
     $datosUpdate = array(
         "respuesta_padre" => $comentario,
         "fecha_comentario_padre" => $fechaComentario);
     
     try {
       registroTutor::where('id', '=', $idRegistro)->update($datosUpdate);
+      $todosAprobados = registroTutor::where(array("aprobado" => 'N',"id_caso"=>$idCaso))->get()->count();
+      if ($todosAprobados == 0) {
+        Ticket::where('ID', '=', $idCaso)->update(array('id_estado' => $nuevoEstado));
+      }
     } catch (Exception $ex) {
-      return response()->json(array('error' => array('Error creando el proceso')));
+      return response()->json(array('error' => array('Error al guardar el comentario')));
     }
     return response()->json(array('success' => true, 'msj' => 'Comentario guardado'));
  
