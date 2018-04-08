@@ -58,10 +58,8 @@
             <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.initdate"></span>
             <span style="color: #ff0911" ng-show="error.initdate">Este campo es obligatorio, seleccione la fecha inicial del proceso</span>
         </div>
-        <div class="form-group" ng-class="{'has-feedback has-error': error.enddate}">
-            <b>Fecha Final;</b> <input type="date" class="form-control" id='enddate' name="enddate" placeholder="Fecha Final:" ng-model='enddate' ng-change="error.enddate = false">
-            <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.enddate"></span>
-            <span style="color: #ff0911" ng-show="error.enddate">Este campo es obligatorio, seleccione la fecha final del proceso</span>
+        <div class="form-group">
+            <b>Fecha Final;</b> <input type="date" class="form-control" id='enddate' name="enddate" placeholder="Fecha Final:" ng-model='enddate'>
         </div>
         <!--            <div>
                         <textarea name='description' class="textarea" placeholder="Message" style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;" required></textarea>

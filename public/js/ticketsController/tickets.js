@@ -5,18 +5,7 @@ $(document).ready(function () {
             "type": "POST"
         },
         "sAjaxDataProp": "",
-        'columnDefs': [{
-                'targets': 0,
-                'searchable': false,
-                'orderable': false,
-                'className': 'dt-body-center',
-                'render': function (data, type, full, meta) {
-                    return '<input type="checkbox" name="id[]" value="'
-                            + $('<div/>').text(data).html() + '">';
-                }
-            }],
         "columns": [
-            {"data": "id"},
             {"data": "id_estado"},
             {"data": "id_cliente"},
             {"data": "id_tutor"},

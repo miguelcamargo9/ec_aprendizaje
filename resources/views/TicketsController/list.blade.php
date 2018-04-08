@@ -4,6 +4,7 @@
 @section('head')
     <title>Asignacion de casos</title>
     <meta name="description" content="EC aprendizaje">
+    <meta http-equiv="refresh" content="60">
     <link href="/packages/bootstrap/css/loading.css" rel="stylesheet">
     <link href="/packages/bootstrap/css/popbox.css" media="screen" charset="utf-8" rel="stylesheet">
 @stop
@@ -33,7 +34,6 @@
         <table id="tickets" class="table table-striped table-hover">
             <thead>
             <tr>
-                <th><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
                 <th>ESTADO</th>
                 <th>ESTUDIANTE</th>
                 <th>TUTOR</th>

@@ -70,6 +70,9 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
     };
 
     $scope.createProcess = function () {
+      if(!$scope.enddate){
+        $scope.enddate = new Date(100000000000);
+      }
       ticketsFactory.createProcess($scope.cliente, $scope.tutor, $scope.dateFormat($scope.initdate), $scope.dateFormat($scope.enddate)).success(function (data) {
         if (data.success) {
           $scope.success = data.msj;
@@ -110,10 +113,6 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
       }
       if (!$scope.initdate) {
         $scope.error.initdate = true;
-        $scope.noerror = false;
-      }
-      if (!$scope.enddate) {
-        $scope.error.enddate = true;
         $scope.noerror = false;
       }
       if ($scope.noerror) {
