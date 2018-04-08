@@ -11,6 +11,8 @@ app.factory('tutorsFactory', function ($http) {
             });
         },'detalleRegistros': function (idRegistro) {
           return $http.post('/tickets/detalleRegistros', {idRegistro: idRegistro});
+        },'dateRegistry':function(){
+          return $http.get('/tutor/dateregistry');
         }
     };
 

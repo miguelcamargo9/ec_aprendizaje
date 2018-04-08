@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\Child;
 use App\Models\Usuario;
+use App\Models\Tutor;
 use App\Models\Ticket;
 use App\Models\State;
 use App\Models\registroTutor;
@@ -172,9 +173,28 @@ class TutorsController extends Controller {
         }
         return response()->json(array('success' => true, 'msj' => 'Registro guardado'));
 
-
-
-        // Ticket::where('id', '=', $idCaso)->update(array('descripcion' => $comentario, "fecha_comentario" => $fechaComentario,"id_estado" => 4));
+    }
+    //CONSULTO LA SEMANA ACTUAL PARA SABER QUE FECHAS TIENE AUTORIZADAS EL TUTOR PARA REGUSTRAR
+    //TAMBIEN CONSULTO SI EL TUTOR TIENE PERMISOS PARA HACER REGISTROS DE SEMANAS ANTERIORES
+    public function dateRegistry(){
+      ///BUSCO SI EL TUTOR TIENE PERMISOS PARA REGISTRAR SEMAMAS ANTERIORES
+      $idtutor = Session::get('user');
+      $permiso = Tutor::where('users_id', $idtutor['id'])->get(['permiso_registro']);
+      $perm = ($permiso[0]['permiso_registro']);
+      $hoy=date("Y-m-d");
+      //$hoy=date("2018-04-18");
+      
+      $diaInicio = date('N', strtotime($hoy));
+      $diaFin = 7-$diaInicio;
+      $diaInicio = $diaInicio-1;
+      $nuevoDiaIni =  strtotime($hoy."- $diaInicio days");
+      $nuevoDiaFin =  strtotime($hoy."+ $diaFin days");
+      
+      $fechaIni = date("Y/m/d",$nuevoDiaIni);
+      $fechaFin = date("Y/m/d",$nuevoDiaFin);
+      
+      $respuesta=array( "fechaIni"=>$fechaIni,"fechaFin"=>$fechaFin,"permiso"=>"$perm");
+      return json_encode($respuesta);
     }
 
 }
