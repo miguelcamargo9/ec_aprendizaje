@@ -40,9 +40,19 @@
             <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.email"></span>
             <span style="color: #ff0911" ng-show="error.email">Este campo es obligatorio, digite el correo del tutor</span>
         </div>
-        <div class="form-group" ng-class="{'has-feedback has-error': error.university}">
+<!--        <div class="form-group" ng-class="{'has-feedback has-error': error.university}">
             <b>Universidad:</b> 
             <input type="text" class="form-control" placeholder="Digite la Universidad del Tutor:" ng-model='university' ng-change="error.university = false">
+            <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.university"></span>
+            <span style="color: #ff0911" ng-show="error.university">Este campo es obligatorio, digite la universidad del tutor</span>
+        </div>-->
+        <div  class="form-group" ng-class="{'has-feedback has-error': error.university}">
+            <b>Universidad: </b> <ui-select ng-model="university" theme="bootstrap" on-select="setUniversity($select.selected)">
+                <ui-select-match placeholder="Seleccione una Universidad"><% university.universidad %></ui-select-match>
+                <ui-select-choices repeat="university in universities | filter: $select.search">
+                    <span ng-bind-html="university.universidad | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
             <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.university"></span>
             <span style="color: #ff0911" ng-show="error.university">Este campo es obligatorio, digite la universidad del tutor</span>
         </div>
