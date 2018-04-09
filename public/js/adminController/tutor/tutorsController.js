@@ -48,13 +48,30 @@ appTutor.filter('propsFilter', function () {
   };
 });
 
-appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$window', function ($scope, tutorsFactory, $timeout, $window) {
+appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$window', '$filter', function ($scope, tutorsFactory, $timeout, $window, $filter) {
     tutorsFactory.getUniversities().success(function (data) {
       $scope.universities = data;
+      console.log($scope.iduniversity);
+      $scope.university.selected = $filter('filter')($scope.universities, {id: $scope.iduniversity}, true)[0];
     });
-    
-    $scope.error = {};
 
+    $scope.university = {};
+
+    tutorsFactory.getDegrees().success(function (data) {
+      $scope.degrees = data;
+    });
+
+    tutorsFactory.getBanks().success(function (data) {
+      $scope.banks = data;
+    });
+
+    $scope.accounttypes = [
+      {id: '1', name: 'Corriente'},
+      {id: '2', name: 'Ahorros'}
+    ];
+
+    $scope.error = {};
+    
     $scope.dateFormat = function (date) {
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
@@ -69,15 +86,39 @@ appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$wind
 
       return year + '-' + month + '-' + dt;
     };
-    
+
     $scope.setUniversity = function (university) {
       $scope.error.university = false;
+      $scope.viewnewuni = false;
       $scope.university = university.id;
     };
 
+    $scope.setDegree = function (degree) {
+      $scope.error.degree = false;
+      $scope.viewnewdeg = false;
+      $scope.degree = degree.id;
+    };
+
+    $scope.setAccountType = function (accounttype) {
+      $scope.error.accounttype = false;
+      $scope.accounttype = accounttype.name;
+    };
+
+    $scope.setBank = function (bank) {
+      $scope.error.bank = false;
+      $scope.bank = bank.id;
+    };
+
     $scope.createTutor = function () {
-      tutorsFactory.createTutor($scope.name, $scope.lastname, $scope.identification_number, $scope.email, $scope.university,
-              $scope.degree, $scope.semester, $scope.valxhour, $scope.mobile, $scope.accountnumber).success(function (data) {
+      $scope.newuniversity = (!$scope.newuniversity) ? "" : $scope.newuniversity;
+      $scope.newdegree = (!$scope.newdegree) ? "" : $scope.newdegree;
+      $scope.semester = ($scope.graduate) ? 0 : $scope.semester;
+      $scope.graduate = ($scope.graduate) ? true : false;
+      $scope.pastregister = ($scope.pastregister) ? 'SI' : 'NO';
+
+      tutorsFactory.createTutor($scope.name, $scope.lastname, $scope.identification_number, $scope.email, $scope.university, $scope.newuniversity,
+              $scope.degree, $scope.newdegree, $scope.semester, $scope.graduate, $scope.mobile, $scope.pastregister, $scope.accountnumber,
+              $scope.accounttype, $scope.bank).success(function (data) {
         if (data.success) {
           $scope.success = data.msj;
           $timeout(function () {
@@ -138,20 +179,16 @@ appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$wind
         $scope.error.email = true;
         $scope.noerror = false;
       }
-      if (!$scope.university) {
+      if (!$scope.university && !$scope.newuniversity) {
         $scope.error.university = true;
         $scope.noerror = false;
       }
-      if (!$scope.degree) {
+      if (!$scope.degree && !$scope.newdegree) {
         $scope.error.degree = true;
         $scope.noerror = false;
       }
-      if (!$scope.semester) {
+      if (!$scope.graduate && !$scope.semester) {
         $scope.error.semester = true;
-        $scope.noerror = false;
-      }
-      if (!$scope.valxhour) {
-        $scope.error.valxhour = true;
         $scope.noerror = false;
       }
       if (!$scope.mobile) {
@@ -160,6 +197,14 @@ appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$wind
       }
       if (!$scope.accountnumber) {
         $scope.error.accountnumber = true;
+        $scope.noerror = false;
+      }
+      if (!$scope.accounttype) {
+        $scope.error.accounttype = true;
+        $scope.noerror = false;
+      }
+      if (!$scope.bank) {
+        $scope.error.bank = true;
         $scope.noerror = false;
       }
       if ($scope.noerror) {

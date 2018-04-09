@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\Usuario;
 use App\Models\Universities;
+use App\Models\Degrees;
+use App\Models\Banks;
 
 class ResourcesController extends Controller {
 
@@ -19,6 +21,14 @@ class ResourcesController extends Controller {
     
     public function getUniversities() {
         return Universities::all();
+    }
+    
+    public function getDegrees() {
+        return Degrees::all();
+    }
+    
+    public function getBanks() {
+        return Banks::all();
     }
 
 }

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Tutor;
 use App\Models\Usuario;
 use App\Models\Ticket;
+use App\Models\Universities;
+use App\Models\Degrees;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -88,7 +90,18 @@ class TutorsController extends Controller {
         if ($validator->passes()) {
             try {
                 $id_user = $this->insertUser(Input::get('name'), Input::get('lastname'), Input::get('identification_number'), Input::get('email'));
-                $this->insertTutor($id_user, Input::get('university'), Input::get('degree'), Input::get('semester'), Input::get('valxhour'), Input::get('mobile'), Input::get('accountnumber'));
+                if(Input::get('newuniversity') != ""){
+                  $id_university = $this->insertUniversity(Input::get('newuniversity'));
+                } else {
+                  $id_university = Input::get('university');
+                }
+                if(Input::get('newdegree') != ""){
+                  $id_degree = $this->insertDegree(Input::get('newdegree'));
+                } else {
+                  $id_degree = Input::get('degree');
+                }
+                $this->insertTutor($id_user, $id_university, $id_degree, Input::get('semester'), Input::get('graduate'), Input::get('mobile'), 
+                        Input::get('accountnumber'), Input::get('accounttype'), Input::get('bank'));
                 return response()->json(array('success' => true, 'msj' => 'Tutor Creado con Éxito'));
             } catch (Exception $ex) {
                 return response()->json(array('error' => array('Error creando el tutor')));
@@ -115,14 +128,32 @@ class TutorsController extends Controller {
         return $newuser->id;
     }
     
-    public function insertTutor($id, $university, $degree, $semester, $valxhour, $mobile, $accountnumber) {
+    public function insertUniversity($name) {
+        $newuniversity = new Universities;
+        $newuniversity->universidad = $name;
+
+        $newuniversity->save();
+        return $newuniversity->id;
+    }
+    
+    public function insertDegree($name) {
+        $newdegree = new Degrees();
+        $newdegree->carrera = $name;
+
+        $newdegree->save();
+        return $newdegree->id;
+    }
+    
+    public function insertTutor($id, $university, $degree, $semester, $graduate, $mobile, $accountnumber, $accounttype, $bank ) {
         $newtutor = new Tutor;
-        $newtutor->universidad = "$university";
-        $newtutor->carrera = "$degree";
+        $newtutor->universidad_id = $university;
+        $newtutor->carrera_id = $degree;
         $newtutor->semestre = $semester;
-        $newtutor->valor_hora = "$valxhour";
+        $newtutor->graduado = (int)$graduate;
         $newtutor->celular = "$mobile";
         $newtutor->numero_cuenta = "$accountnumber";
+        $newtutor->tipo_cuenta = $accounttype;
+        $newtutor->banco_id = $bank;
         $newtutor->users_id = $id;
 
         $newtutor->save();
@@ -131,8 +162,7 @@ class TutorsController extends Controller {
     public function getTutorsRules() {
         $rules = array(
             'identification_number' => array('numeric', 'min:5'),
-            'email' => array('email'),
-            'semester' => array('numeric', 'min:1', 'max:30')
+            'email' => array('email')
         );
         return $rules;
     }
@@ -141,7 +171,6 @@ class TutorsController extends Controller {
         $messages = array(
             'identification_number.numeric' => 'El campo número de identifiación debe ser númerico',
             'email.email' => 'Formato de correo incorrecto',
-            'semester.numeric' => 'El campo semestre debe ser númerico',
             'valxhour.numeric' => 'El campo valor por hora debe ser númerico',
             'mobile.numeric' => 'El campo celular debe ser númerico',
             'accountnumber.numeric' => 'El campo número de cuenta debe ser númerico'

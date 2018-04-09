@@ -62,7 +62,9 @@ Route::get('/tutor/dateregistry', array('as' => 'tutor.dateregistry', 'uses' => 
 /*Routers Resources */
 Route::post('/resources/getClients', array('as' => 'resources.getclients', 'uses' => 'Resources\ResourcesController@getClients'))->middleware('auth');
 Route::post('/resources/getTutors', array('as' => 'resources.gettutors', 'uses' => 'Resources\ResourcesController@getTutors'))->middleware('auth');
-Route::post('/resources/getUniversities', array('as' => 'resources.gettutors', 'uses' => 'Resources\ResourcesController@getUniversities'))->middleware('auth');
+Route::post('/resources/getUniversities', array('as' => 'resources.getuniversities', 'uses' => 'Resources\ResourcesController@getUniversities'))->middleware('auth');
+Route::post('/resources/getDegrees', array('as' => 'resources.getdegrees', 'uses' => 'Resources\ResourcesController@getDegrees'))->middleware('auth');
+Route::post('/resources/getBanks', array('as' => 'resources.getbanks', 'uses' => 'Resources\ResourcesController@getBanks'))->middleware('auth');
 
 /* Routes Parents Controller */
 Route::get('/parents/list', array('as' => 'tickets.list.parents', 'uses' => 'Parents\ParentsController@showListTickets'))->middleware('auth');
