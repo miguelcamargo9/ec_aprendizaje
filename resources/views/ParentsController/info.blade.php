@@ -72,7 +72,7 @@
         <?php $txtBtn =($registro->respuesta_padre=="")?"Comentar":"Ver"; ?>
       <div class="col-xs-12">
         <div class="panel panel-default {{$tipoPanel}}">
-          <div class="panel-heading">Resumen del registro</div>
+          <div class="panel-heading">Resumen del registro. <b>Fecha:</b> {{date("Y-m-d",strtotime($registro->fecha_creacion))}}</div>
           <div class="panel-body">
             {{$registro->resumen}}
 

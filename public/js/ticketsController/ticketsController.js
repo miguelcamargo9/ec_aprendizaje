@@ -49,6 +49,15 @@ app.filter('propsFilter', function () {
 });
 
 app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function ($scope, ticketsFactory, $timeout) {
+
+    $scope.factura = {
+      nombre: "",
+      direccion: "",
+      nit: "",
+      telefono: "",
+      ciudad: ""
+    };//GUARDO LOS DATOS DE FACTURACION
+    
     ticketsFactory.getClients().success(function (data) {
       $scope.clients = data;
     });
@@ -70,10 +79,12 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
     };
 
     $scope.createProcess = function () {
-      if(!$scope.enddate){
+      if (!$scope.enddate) {
         $scope.enddate = new Date(100000000000);
       }
-      ticketsFactory.createProcess($scope.cliente, $scope.tutor, $scope.dateFormat($scope.initdate), $scope.dateFormat($scope.enddate)).success(function (data) {
+      console.log($scope.factura);
+      ticketsFactory.createProcess($scope.cliente, $scope.tutor, $scope.dateFormat($scope.initdate), $scope.dateFormat($scope.enddate), $scope.factura
+              ).success(function (data) {
         if (data.success) {
           $scope.success = data.msj;
           $timeout(function () {
@@ -101,6 +112,7 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
     };
 
     $scope.validate = function (action) {
+      
       $scope.error = {};
       $scope.noerror = true;
       if (!$scope.cliente) {
@@ -115,12 +127,29 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
         $scope.error.initdate = true;
         $scope.noerror = false;
       }
-      if ($scope.noerror) {
-        if (action == 'add') {
-          $scope.createProcess();
+      
+      //RECORRO LOS DATOS DE LA FACTURA PARA VERIFICAR QUE NO ESTE VACIOS
+      angular.forEach($scope.factura, function (value, key) {
+        
+        //EXCLUYO LOS CAMPOS QUE NO QUIERO VERIFICAR
+        if(key!=="telefono" && key!=="email"){
+          if (value==="") {
+            $scope.error[key] = true;
+            $scope.noerror = false;
+          }
         }
-        if (action == 'edit') {
-          $scope.editProcess();
+      });
+      if ($scope.noerror) {
+     
+        switch (action){
+          case"add":
+            $scope.createProcess();
+            break;
+          case"edit":
+            $scope.editProcess();
+            break;
+          default :
+            console.log("Accion no encontrada");
         }
       }
     };
@@ -128,17 +157,17 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
 
 //CONTROLADOR PARA LOS DETALLES DE CADA REGISTRO DEL TUTOR 
 
-app.controller('ticketInfoCtrl', ['$scope', 'ticketsFactory', '$timeout', function ($scope, ticketsFactory,$timeout) {
+app.controller('ticketInfoCtrl', ['$scope', 'ticketsFactory', '$timeout', function ($scope, ticketsFactory, $timeout) {
 
     //TRAER LOS DETALLES DE LAS HORAS DEL REGISTRO SELECCIONADO
-    $scope.getDetalesRegistro = function (idRegistro, resumen,totalHoras,estado,comPadre) {
+    $scope.getDetalesRegistro = function (idRegistro, resumen, totalHoras, estado, comPadre) {
       $scope.resumen = resumen;
       $scope.idRegistro = idRegistro;
       $scope.totalH = totalHoras;
       $scope.comPadre = comPadre;
-      $scope.answered=(estado==='s')?true:false;
-      $scope.answeredP=(comPadre!='')?false:true;
-    
+      $scope.answered = (estado === 's') ? true : false;
+      $scope.answeredP = (comPadre != '') ? false : true;
+
       ticketsFactory.detalleRegistros(idRegistro).then(function (respuesta) {
         $scope.horas = respuesta.data;
       });
@@ -149,8 +178,8 @@ app.controller('ticketInfoCtrl', ['$scope', 'ticketsFactory', '$timeout', functi
       var idRegistro = $scope.idRegistro;
       var resumen = $scope.resumen;
       var idCaso = $scope.idCaso;
-      ticketsFactory.aprobarRegistro(idRegistro,resumen,idCaso).then(function (respuesta) {
-        rta= respuesta.data;
+      ticketsFactory.aprobarRegistro(idRegistro, resumen, idCaso).then(function (respuesta) {
+        rta = respuesta.data;
         if (rta.success) {
           $scope.success = rta.msj;
           $timeout(function () {

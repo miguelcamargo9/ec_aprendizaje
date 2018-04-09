@@ -53,17 +53,87 @@
             <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.tutor"></span>
             <span style="color: #ff0911" ng-show="error.tutor">Este campo es obligatorio, seleccione un tutor</span>
         </div>
-        <div class="form-group" ng-class="{'has-feedback has-error': error.initdate}">
-            <b>Fecha Inicial: </b> <input type="date" class="form-control" id='initdate' name="initdate" placeholder="Fecha Inicial:" ng-model='initdate' ng-change="error.initdate = false">
-            <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.initdate"></span>
-            <span style="color: #ff0911" ng-show="error.initdate">Este campo es obligatorio, seleccione la fecha inicial del proceso</span>
+        
+        <!--fecha de inicio i finalizacion-->
+        <div class="row">
+          <!--fecha de inicio-->
+          <div class="col-xs-6">
+            <div class="form-group" ng-class="{'has-feedback has-error': error.initdate}">
+                <b>Fecha Inicial: </b> <input type="date" class="form-control" id='initdate' name="initdate" placeholder="Fecha Inicial:" ng-model='initdate' ng-change="error.initdate = false">
+                <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.initdate"></span>
+                <span style="color: #ff0911" ng-show="error.initdate">Este campo es obligatorio, seleccione la fecha inicial del proceso</span>
+            </div>
+          </div>
+          <!--fecha de fin-->
+          <div class="col-xs-6">
+            <div class="form-group">
+                <b>Fecha Final;</b> <input type="date" class="form-control" id='enddate' name="enddate" placeholder="Fecha Final:" ng-model='enddate'>
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-            <b>Fecha Final;</b> <input type="date" class="form-control" id='enddate' name="enddate" placeholder="Fecha Final:" ng-model='enddate'>
+        
+        <!--DATOS DE FACTURACION-->
+        <h2>Datos de cobro</h2>
+        
+        <div class="row">
+          <!--NOMBRE FACTURA-->
+          <div class="col-xs-6">
+            <div class="form-group" ng-class="{'has-feedback has-error': error.nombre}">
+                <b>Factura a nombre de Natural/Empresa </b> 
+                <input type="text" class="form-control" id='nombre' name="nombre"  ng-model='factura.nombre' ng-change="error.nombre = false">
+                <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.nombre"></span>
+                <span style="color: #ff0911" ng-show="error.nombre">Este campo es obligatorio, seleccione la fecha inicial del proceso</span>
+            </div>
+          </div>
+          <!--DIRECCION FACTURA-->
+          <div class="col-xs-6">
+            <div class="form-group" ng-class="{'has-feedback has-error': error.direccion}">
+                <b>Direccion de la factura Persona/Empresa</b> 
+                <input type="text" class="form-control" id='direccion' name="direccion"  ng-model='factura.direccion' ng-change="error.direccion = false">
+                       <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.direccion"></span>
+                <span style="color: #ff0911" ng-show="error.direccion">Este campo es obligatorio</span>
+            </div>
+          </div>
         </div>
-        <!--            <div>
-                        <textarea name='description' class="textarea" placeholder="Message" style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;" required></textarea>
-                    </div>-->
+        
+        <div class="row">
+          <!--NOMBRE FACTURA-->
+          <div class="col-xs-6">
+            <div class="form-group" ng-class="{'has-feedback has-error': error.nit}">
+                <b>NIT o cédula de factura </b> 
+                <input type="text" class="form-control" id='nit' name="nit"  ng-model='factura.nit' ng-change="error.nit = false">
+                <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.nit_factura"></span>
+                <span style="color: #ff0911" ng-show="error.nit">Este campo es obligatorio</span>
+            </div>
+          </div>
+          <!--DIRECCION FACTURA-->
+          <div class="col-xs-6">
+            <div class="form-group">
+                <b>Teléfono fijo</b> 
+                <input type="text" class="form-control" id='telefono_factura' name="telefono_factura"  ng-model='factura.telefono'>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <!--NOMBRE FACTURA-->
+          <div class="col-xs-6">
+            <div class="form-group" ng-class="{'has-feedback has-error': error.ciudad}">
+                <b>Ciudad </b> 
+                <input type="text" class="form-control" id='ciudad' name="ciudad"  ng-model='factura.ciudad' ng-change="error.ciudad = false">
+                <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.ciudad_factura"></span>
+                <span style="color: #ff0911" ng-show="error.ciudad">Este campo es obligatorio</span>
+            </div>
+          </div>
+          <!--DIRECCION FACTURA-->
+          <div class="col-xs-6">
+            <div class="form-group">
+                <b>Correo electronico</b> 
+                <input type="email" class="form-control" id='email_factura' name="email_factura"  ng-model='factura.email'>
+            </div>
+          </div>
+        </div>
+        
         <div class="box-footer clearfix">
             <button type="submit" class="pull-right btn btn-success" id="accept" ng-click="validate('add')">Crear
                 <i class="fa fa-arrow-circle-right"></i></button>

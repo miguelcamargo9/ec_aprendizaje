@@ -80,6 +80,9 @@
 
       <!--PINTO TODOS LOS REGISTROS QUE HA HECHO EL USUARIO-->
       <div class="row">
+        <pre>
+        
+        </pre>
         @foreach ($registros as $registro)
         @if($registro->aprobado=='N')
         <?php
@@ -97,7 +100,7 @@
 
         <div class="col-xs-12">
           <div class="panel panel-default {{$tipoPanel}}">
-            <div class="panel-heading">Resumen del registro - {{$estado}}</div>
+            <div class="panel-heading">Resumen del registro - {{$estado}} <b>Fecha:</b> {{date("Y-m-d",strtotime($registro->fecha_creacion))}}</div>
             <div class="panel-body">
               {{$registro->resumen}}
 
@@ -105,7 +108,7 @@
             <div class="panel-footer">
               <button type="button" 
                       class="btn btn-info" 
-                      ng-click="getDetalesRegistro('{{$registro->id}}','{{$registro->resumen}}','{{$registro->total_horas}}')" 
+                      ng-click="getDetalesRegistro('{{$registro->id}}','{{$registro->resumen}}','{{$registro->total_horas}}','{{$registro->respuesta_padre}}')" 
                       data-toggle="modal" 
                       data-target="#detallesRegistro"> ver </button> 
             </div>
@@ -220,6 +223,14 @@
                          style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
 
               </textarea>
+              <!--comemtario del padre-->
+              <div ng-hide="answeredP">
+                  <h3>Comentario padre:</h3>
+                  <textarea  ng-readonly="true"  ng-model="comPadre"
+                             style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
+
+                  </textarea>
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>

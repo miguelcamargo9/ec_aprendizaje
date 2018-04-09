@@ -116,10 +116,13 @@ app.controller("registrosHoras", ['$scope', 'tutorsFactory', '$timeout', functio
     };
 
     //TRAER LOS DETALLES DE LAS HORAS DEL REGISTRO SELECCIONADO
-    $scope.getDetalesRegistro = function (idRegistro, resumen, totalHoras) {
+    $scope.getDetalesRegistro = function (idRegistro, resumen, totalHoras,comPadre) {
       $scope.resumen = resumen;
       $scope.idRegistro = idRegistro;
       $scope.totalH = totalHoras;
+      $scope.comPadre = comPadre;
+      $scope.answeredP=(comPadre!=='')?false:true;
+      
       tutorsFactory.detalleRegistros(idRegistro).then(function (respuesta) {
         $scope.horas = respuesta.data;
       });

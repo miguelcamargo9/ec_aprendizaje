@@ -11,6 +11,7 @@ use App\Models\Child;
 use App\Models\Usuario;
 use App\Models\registroTutor;
 use App\Models\horasRegistro;
+use App\Models\Bills;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
@@ -30,7 +31,9 @@ class TicketsController extends Controller {
     $fechaFin = Input::get('enddate');
     $id_cliente = Input::get('cliente');
     $id_tutor = Input::get('tutor');
-
+    
+    $datosFactura = Input::get('datosFactura');
+   
     $datosCaso = new Ticket();
     $datosCaso->id_estado = 1;
     $datosCaso->id_cliente = $id_cliente;
@@ -41,6 +44,13 @@ class TicketsController extends Controller {
     $datosCaso->users_id_creator = Session::get('user')->id;
     try {
       $datosCaso->save();
+      $idCaso= $datosCaso->id;
+      $nuevaFactura = new Bills();
+      $nuevaFactura->caso_id=$idCaso;
+      foreach ($datosFactura as $campoFac => $valor) {
+        $nuevaFactura->$campoFac = $valor;
+      }
+      $nuevaFactura->save();
     } catch (Exception $ex) {
       return response()->json(array('error' => array('Error creando el proceso')));
     }
