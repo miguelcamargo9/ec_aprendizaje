@@ -40,10 +40,10 @@
       <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.email"></span>
       <span style="color: #ff0911" ng-show="error.email">Este campo es obligatorio, digite el correo del tutor</span>
     </div>
-    <div  class="form-group row" ng-class="{'has-feedback has-error': error.university}">
-      <div class="col-xs-9">
-        <b>Universidad: </b> <ui-select ng-model="university" theme="bootstrap" on-select="setUniversity($select.selected)">
-          <ui-select-match placeholder="Seleccione una Universidad"><% university.universidad %></ui-select-match>
+    <div  class="form-group row">
+      <div class="col-xs-9" ng-class="{'has-feedback has-error': error.university}">
+        <b>Universidad: </b> <ui-select ng-model="university.selected" theme="bootstrap" on-select="setUniversity($select.selected)">
+          <ui-select-match placeholder="Seleccione una Universidad"><% university.selected.universidad %></ui-select-match>
           <ui-select-choices repeat="university in universities | filter: $select.search">
             <span ng-bind-html="university.universidad | highlight: $select.search"></span>
           </ui-select-choices>
@@ -64,10 +64,10 @@
       <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.university"></span>
       <span style="color: #ff0911" ng-show="error.university">Este campo es obligatorio, digite la universidad del tutor</span>
     </div>
-    <div  class="form-group row" ng-class="{'has-feedback has-error': error.degree}">
-      <div class="col-xs-9">
-        <b>Carrera: </b> <ui-select ng-model="degree" theme="bootstrap" on-select="setDegree($select.selected)">
-          <ui-select-match placeholder="Seleccione una Carrera"><% degree.carrera %></ui-select-match>
+    <div  class="form-group row">
+      <div class="col-xs-9" ng-class="{'has-feedback has-error': error.degree}">
+        <b>Carrera: </b> <ui-select ng-model="degree.selected" theme="bootstrap" on-select="setDegree($select.selected)">
+          <ui-select-match placeholder="Seleccione una Carrera"><% degree.selected.carrera %></ui-select-match>
           <ui-select-choices repeat="degree in degrees | filter: $select.search">
             <span ng-bind-html="degree.carrera | highlight: $select.search"></span>
           </ui-select-choices>
@@ -120,8 +120,8 @@
       </div>
       <div class="col-xs-4" ng-class="{'has-feedback has-error': error.accounttype}">
         <b>Tipo de Cuenta:</b> 
-        <ui-select ng-model="accounttype" theme="bootstrap" on-select="setAccountType($select.selected)">
-          <ui-select-match placeholder="Seleccione un Tipo de Cuenta"><% accounttype.name %></ui-select-match>
+        <ui-select ng-model="accounttype.selected" theme="bootstrap" on-select="setAccountType($select.selected)">
+          <ui-select-match placeholder="Seleccione un Tipo de Cuenta"><% accounttype.selected.name %></ui-select-match>
           <ui-select-choices repeat="accounttype in accounttypes | filter: $select.search">
             <span ng-bind-html="accounttype.name | highlight: $select.search"></span>
           </ui-select-choices>
@@ -131,8 +131,8 @@
       </div>
       <div class="col-xs-4" ng-class="{'has-feedback has-error': error.bank}">
         <b>Banco: </b> 
-        <ui-select ng-model="bank" theme="bootstrap" on-select="setBank($select.selected)">
-          <ui-select-match placeholder="Seleccione un Banco"><% bank.banco %></ui-select-match>
+        <ui-select ng-model="bank.selected" theme="bootstrap" on-select="setBank($select.selected)">
+          <ui-select-match placeholder="Seleccione un Banco"><% bank.selected.banco %></ui-select-match>
           <ui-select-choices repeat="bank in banks | filter: $select.search">
             <span ng-bind-html="bank.banco | highlight: $select.search"></span>
           </ui-select-choices>

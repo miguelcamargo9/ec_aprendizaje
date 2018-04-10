@@ -5,7 +5,7 @@
   <div class="box-header">
     <i class="fa fa-ticket"></i>
 
-    <h3 class="box-title">Borrar Tutor</h3>
+    <h3 class="box-title">Activar Tutor</h3>
     <!-- tools box -->
     <div class="pull-right box-tools">
     </div>
@@ -70,7 +70,7 @@
     <input type="hidden" ng-init="idtutor = {{$id}}" ng-model="idtutor">
     <input type="hidden" ng-init="iduser = {{$user['id']}}" ng-model="iduser">
     <div class="box-footer clearfix">
-      <button type="submit" class="pull-right btn btn-danger" id="accept" ng-click="deleteTutor()">Eliminar
+      <button type="submit" class="pull-right btn btn-success" id="accept" ng-click="activateTutor()">Activar
         <i class="fa fa-arrow-circle-right"></i></button>
     </div>
     <div ng-repeat="errorObj in error.msjs">

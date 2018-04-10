@@ -31,10 +31,10 @@
       <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.email"></span>
       <span style="color: #ff0911" ng-show="error.email">Este campo es obligatorio, digite el correo del tutor</span>
     </div>
-    <div  class="form-group row" ng-class="{'has-feedback has-error': error.university}">
-      <div class="col-xs-9">
+    <div  class="form-group row" ng-init="iduniversity = {{$universidad_id}}">
+      <div class="col-xs-9" ng-class="{'has-feedback has-error': error.university}">
         <b>Universidad: </b>
-        <ui-select ng-model="university.selected" theme="bootstrap" on-select="setUniversity($select.selected)" ng-init="iduniversity = {{$universidad_id}}">
+        <ui-select ng-model="university.selected" theme="bootstrap" on-select="setUniversity($select.selected)" >
           <ui-select-match placeholder="Seleccione una Universidad"><% university.selected.universidad %></ui-select-match>
           <ui-select-choices repeat="university in universities | filter: $select.search">
             <span ng-bind-html="university.universidad | highlight: $select.search"></span>
@@ -56,40 +56,84 @@
       <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.university"></span>
       <span style="color: #ff0911" ng-show="error.university">Este campo es obligatorio, digite la universidad del tutor</span>
     </div>
-<!--    <div class="form-group" ng-class="{'has-feedback has-error': error.university}">
-      <b>Universidad:</b> 
-      <input type="text" class="form-control" placeholder="Digite la Universidad del Tutor:" ng-model='university' ng-change="error.university = false" 
-             ng-init="university = '{{$universidad}}'">
-      <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.university"></span>
-      <span style="color: #ff0911" ng-show="error.university">Este campo es obligatorio, digite la universidad del tutor</span>
-    </div>-->
-    <div class="form-group" ng-class="{'has-feedback has-error': error.degree}">
-      <b>Carrera:</b> 
-      <input type="text" class="form-control" placeholder="Digite la Carrera del Tutor:" ng-model='degree' ng-change="error.degree = false" 
-             ng-init="degree = '{{$carrera}}'">
+    <div  class="form-group row" ng-init="iddegree = {{$carrera_id}}">
+      <div class="col-xs-9" ng-class="{'has-feedback has-error': error.degree}">
+        <b>Carrera: </b> <ui-select ng-model="degree.selected" theme="bootstrap" on-select="setDegree($select.selected)">
+          <ui-select-match placeholder="Seleccione una Carrera"><% degree.selected.carrera %></ui-select-match>
+          <ui-select-choices repeat="degree in degrees | filter: $select.search">
+            <span ng-bind-html="degree.carrera | highlight: $select.search"></span>
+          </ui-select-choices>
+        </ui-select>
+        <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.degree"></span>
+        <span style="color: #ff0911" ng-show="error.degree">Este campo es obligatorio, seleccione la carrera del tutor</span>
+      </div>
+      <div class="col-xs-1">
+        <b>Adicionar: </b>
+        <button class="btn btn-info form-control" ng-click="viewnewdeg = true">
+          <i class="fa fa-plus-circle"></i>
+        </button>
+      </div>
+    </div>
+    <div class="form-group" ng-class="{'has-feedback has-error': error.degree}" ng-show="viewnewdeg">
+      <b>Nueva Carrera:</b> 
+      <input type="text" class="form-control" placeholder="Digite la Carrera del Tutor:" ng-model='newdegree' ng-change="error.degree = false">
       <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.degree"></span>
       <span style="color: #ff0911" ng-show="error.degree">Este campo es obligatorio, digite la carrera del tutor</span>
     </div>
-    <div class="form-group" ng-class="{'has-feedback has-error': error.semester}">
-      <b>Semestre:</b> 
-      <input type="number" class="form-control" placeholder="Digite el Semestre del Tutor:" ng-model='semester' ng-change="error.semester = false" 
-             ng-init="semester = {{$semestre}}" min="1" max="20">
-      <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.semester"></span>
-      <span style="color: #ff0911" ng-show="error.semester">Este campo es obligatorio, digite el semestre del tutor</span>
+    <div class="form-group row">
+      <div class="col-xs-1">
+        <b>Graduado:</b> 
+        <input type="checkbox" class="form-check-input" ng-model='graduate' ng-init="graduate = @if ($graduado === 1) true @else false @endif">
+      </div>
+      <div class="col-xs-2" ng-show="!graduate" ng-class="{'has-feedback has-error': error.semester}">
+        <b>Semestre:</b> 
+        <input type="number" class="form-control" placeholder="Digite el Semestre del Tutor:" ng-model='semester' ng-change="error.semester = false" 
+               ng-init="semester = {{$semestre}}" min="1" max="20">
+        <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.semester"></span>
+        <span style="color: #ff0911" ng-show="error.semester">Este campo es obligatorio, digite el semestre del tutor</span>
+      </div>
+      <div class="col-xs-5" ng-class="{'has-feedback has-error': error.mobile}">
+        <b>Celular:</b> 
+        <input type="text" class="form-control" placeholder="Digite el Celular del Tutor:" ng-model='mobile' ng-change="error.mobile = false"
+               ng-init="mobile = '{{$celular}}'">
+        <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.mobile"></span>
+        <span style="color: #ff0911" ng-show="error.mobile">Este campo es obligatorio, digite el celular del tutor<               /span>
+      </div             >
+      <div class="col-xs-2">
+        <b>Permitir Registro Pasado:</b> 
+        <input type="checkbox" class="form-check-input" ng-model='pastregister' ng-init="pastregister = @if ($permiso_registro === 'SI') true @else false @endif">
+      </div>
     </div>
-    <div class="form-group" ng-class="{'has-feedback has-error': error.mobile}">
-      <b>Celular:</b> 
-      <input type="text" class="form-control" placeholder="Digite el Celular del Tutor:" ng-model='mobile' ng-change="error.mobile = false" 
-             ng-init="mobile = '{{$celular}}'">
-      <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.mobile"></span>
-      <span style="color: #ff0911" ng-show="error.mobile">Este campo es obligatorio, digite el celular del tutor</span>
-    </div>
-    <div class="form-group" ng-class="{'has-feedback has-error': error.accountnumber}">
-      <b>Número de Cuenta:</b> 
-      <input type="text" class="form-control" placeholder="Digite el Número de Cuenta del Tutor:" ng-model='accountnumber' ng-change="error.accountnumber = false" 
-             ng-init="accountnumber = '{{$numero_cuenta}}'">
-      <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.accountnumber"></span>
-      <span style="color: #ff0911" ng-show="error.accountnumber">Este campo es obligatorio, digite el Número de Cuenta del tutor</span>
+    <div class="form-group row">
+      <div class="col-xs-4" ng-class="{'has-feedback has-error': error.accountnumber}">
+        <b>Número de Cuenta:</b> 
+        <input type="text" class="form-control" placeholder="Digite el Número de Cuenta del Tutor:" ng-model='accountnumber' ng-change="error.accountnumber = false"
+               ng-init="accountnumber = '{{$numero_cuenta}}'">
+        <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.accountnumber"></span>
+        <span style="color: #ff0911" ng-show="error.accountnumber">Este campo es obligatorio, digite el número de cuenta del tutor</span>     
+      </div>
+      <div class="col-xs-4" ng-class="{'has-feedback has-error': error.accounttype}" ng-init="idaccounttype = '{{$tipo_cuenta}}'">
+        <b>Tipo de Cuenta:</b> 
+        <ui-select ng-model="accounttype.selected" theme="bootstrap" on-select="setAccountType($select.selected)">
+          <ui-select-match placeholder="Seleccione un Tipo de Cuenta"><% accounttype.selected.name %></ui-select-match>
+          <ui-select-choices repeat="accounttype in accounttypes | filter: $select.search">
+            <span ng-bind-html="accounttype.name | highlight: $select.search"></span>
+          </ui-select-choices>
+        </ui-select>
+        <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.accounttype"></span>
+        <span style="color: #ff0911" ng-show="error.accounttype">Este campo es obligatorio, seleccione el tipo de cuenta del tutor</span>   
+      </div>
+      <div class="col-xs-4" ng-class="{'has-feedback has-error': error.bank}" ng-init="idbank = {{$banco_id}}">
+        <b>Banco: </b> 
+        <ui-select ng-model="bank.selected" theme="bootstrap" on-select="setBank($select.selected)">
+          <ui-select-match placeholder="Seleccione un Banco"><% bank.selected.banco %></ui-select-match>
+          <ui-select-choices repeat="bank in banks | filter: $select.search">
+            <span ng-bind-html="bank.banco | highlight: $select.search"></span>
+          </ui-select-choices>
+        </ui-select>
+        <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.bank"></span>
+        <span style="color: #ff0911" ng-show="error.bank">Este campo es obligatorio, seleccione el banco</span>
+      </div>
     </div>
     <input type="hidden" ng-init="idtutor = {{$id}}" ng-model="idtutor">
     <input type="hidden" ng-init="iduser = {{$user['id']}}" ng-model="iduser">

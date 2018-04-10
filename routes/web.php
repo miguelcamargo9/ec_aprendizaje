@@ -26,6 +26,10 @@ Route::get('/admin/tutor/view/delete/{idTutor}', array('as' => 'admin.tutor.view
 Route::post('/admin/tutor/delete', array('as' => 'admin.tutor.delete', 'uses' => 'Admin\TutorsController@deleteTutor'))->middleware('auth');
 Route::get('/admin/tutor/view/edit/{idTutor}', array('as' => 'admin.tutor.view.edit', 'uses' => 'Admin\TutorsController@viewEditTutor'))->middleware('auth');
 Route::post('/admin/tutor/edit', array('as' => 'admin.tutor.edit', 'uses' => 'Admin\TutorsController@editTutor'))->middleware('auth');
+Route::get('/admin/tutor/view/inactivate/{idTutor}', array('as' => 'admin.tutor.view.inactivate', 'uses' => 'Admin\TutorsController@viewInactivateTutor'))->middleware('auth');
+Route::post('/admin/tutor/inactivate', array('as' => 'admin.tutor.inactivate', 'uses' => 'Admin\TutorsController@inactivateTutor'))->middleware('auth');
+Route::get('/admin/tutor/view/activate/{idTutor}', array('as' => 'admin.tutor.view.activate', 'uses' => 'Admin\TutorsController@viewActivateTutor'))->middleware('auth');
+Route::post('/admin/tutor/activate', array('as' => 'admin.tutor.activate', 'uses' => 'Admin\TutorsController@activateTutor'))->middleware('auth');
 Route::get('/admin/tutor/view/create', array('as' => 'admin.tutor.view.create', 'uses' => 'Admin\TutorsController@viewCreateTutor'))->middleware('auth');
 Route::post('/admin/tutor/create', array('as' => 'admin.tutor.create', 'uses' => 'Admin\TutorsController@createTutor'))->middleware('auth');
 

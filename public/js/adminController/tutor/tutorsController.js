@@ -49,20 +49,33 @@ appTutor.filter('propsFilter', function () {
 });
 
 appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$window', '$filter', function ($scope, tutorsFactory, $timeout, $window, $filter) {
+    $scope.university = {};
+    $scope.degree = {};
+    $scope.bank = {};
+    $scope.accounttype = {};
+
     tutorsFactory.getUniversities().success(function (data) {
       $scope.universities = data;
-      console.log($scope.iduniversity);
-      $scope.university.selected = $filter('filter')($scope.universities, {id: $scope.iduniversity}, true)[0];
+      if ($scope.iduniversity) {
+        $scope.university.selected = $filter('filter')($scope.universities, {id: $scope.iduniversity}, true)[0];
+      }
     });
-
-    $scope.university = {};
 
     tutorsFactory.getDegrees().success(function (data) {
       $scope.degrees = data;
+      if ($scope.iddegree) {
+        $scope.degree.selected = $filter('filter')($scope.degrees, {id: $scope.iddegree}, true)[0];
+      }
     });
 
     tutorsFactory.getBanks().success(function (data) {
       $scope.banks = data;
+      if ($scope.idaccounttype) {
+        $scope.accounttype.selected = $filter('filter')($scope.accounttypes, {name: $scope.idaccounttype}, true)[0];
+      }
+      if ($scope.idbank) {
+        $scope.bank.selected = $filter('filter')($scope.banks, {id: $scope.idbank}, true)[0];
+      }
     });
 
     $scope.accounttypes = [
@@ -71,7 +84,7 @@ appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$wind
     ];
 
     $scope.error = {};
-    
+
     $scope.dateFormat = function (date) {
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
@@ -90,23 +103,27 @@ appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$wind
     $scope.setUniversity = function (university) {
       $scope.error.university = false;
       $scope.viewnewuni = false;
-      $scope.university = university.id;
+      $scope.university.selected = university;
+      $scope.iduniversity = university.id;
     };
 
     $scope.setDegree = function (degree) {
       $scope.error.degree = false;
       $scope.viewnewdeg = false;
-      $scope.degree = degree.id;
+      $scope.degree.selected = degree;
+      $scope.iddegree = degree.id;
     };
 
     $scope.setAccountType = function (accounttype) {
       $scope.error.accounttype = false;
-      $scope.accounttype = accounttype.name;
+      $scope.accounttype.selected = accounttype;
+      $scope.idaccounttype = accounttype.name;
     };
 
     $scope.setBank = function (bank) {
       $scope.error.bank = false;
-      $scope.bank = bank.id;
+      $scope.bank.selected = bank;
+      $scope.idbank = bank.id;
     };
 
     $scope.createTutor = function () {
@@ -116,9 +133,9 @@ appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$wind
       $scope.graduate = ($scope.graduate) ? true : false;
       $scope.pastregister = ($scope.pastregister) ? 'SI' : 'NO';
 
-      tutorsFactory.createTutor($scope.name, $scope.lastname, $scope.identification_number, $scope.email, $scope.university, $scope.newuniversity,
-              $scope.degree, $scope.newdegree, $scope.semester, $scope.graduate, $scope.mobile, $scope.pastregister, $scope.accountnumber,
-              $scope.accounttype, $scope.bank).success(function (data) {
+      tutorsFactory.createTutor($scope.name, $scope.lastname, $scope.identification_number, $scope.email, $scope.iduniversity, $scope.newuniversity,
+              $scope.iddegree, $scope.newdegree, $scope.semester, $scope.graduate, $scope.mobile, $scope.pastregister, $scope.accountnumber,
+              $scope.idaccounttype, $scope.idbank).success(function (data) {
         if (data.success) {
           $scope.success = data.msj;
           $timeout(function () {
@@ -131,8 +148,15 @@ appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$wind
     };
 
     $scope.editTutor = function () {
-      tutorsFactory.editTutor($scope.idtutor, $scope.iduser, $scope.name, $scope.identification_number, $scope.email, $scope.university,
-              $scope.degree, $scope.semester, $scope.valxhour, $scope.mobile, $scope.accountnumber).success(function (data) {
+      $scope.newuniversity = (!$scope.newuniversity) ? "" : $scope.newuniversity;
+      $scope.newdegree = (!$scope.newdegree) ? "" : $scope.newdegree;
+      $scope.semester = ($scope.graduate) ? 0 : $scope.semester;
+      $scope.graduate = ($scope.graduate) ? true : false;
+      $scope.pastregister = ($scope.pastregister) ? 'SI' : 'NO';
+      
+      tutorsFactory.editTutor($scope.idtutor, $scope.iduser, $scope.name, $scope.identification_number, $scope.email, $scope.iduniversity, $scope.newuniversity,
+              $scope.iddegree, $scope.newdegree, $scope.semester, $scope.graduate, $scope.mobile, $scope.pastregister, $scope.accountnumber,
+              $scope.idaccounttype, $scope.idbank).success(function (data) {
         if (data.success) {
           $scope.success = data.msj;
           $timeout(function () {
@@ -144,9 +168,34 @@ appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$wind
       });
     };
 
-
     $scope.deleteTutor = function () {
       tutorsFactory.deleteTutor($scope.idtutor, $scope.iduser).success(function (data) {
+        if (data.success) {
+          $scope.success = data.msj;
+          $timeout(function () {
+            $window.location.href = '/admin/tutors/list';
+          }, 2000);
+        } else {
+          $scope.error.msjs = data;
+        }
+      });
+    };
+    
+    $scope.activateTutor = function () {
+      tutorsFactory.activateTutor($scope.idtutor, $scope.iduser).success(function (data) {
+        if (data.success) {
+          $scope.success = data.msj;
+          $timeout(function () {
+            $window.location.href = '/admin/tutors/list';
+          }, 2000);
+        } else {
+          $scope.error.msjs = data;
+        }
+      });
+    };
+    
+    $scope.inactivateTutor = function () {
+      tutorsFactory.inactivateTutor($scope.idtutor, $scope.iduser).success(function (data) {
         if (data.success) {
           $scope.success = data.msj;
           $timeout(function () {
@@ -179,11 +228,11 @@ appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$wind
         $scope.error.email = true;
         $scope.noerror = false;
       }
-      if (!$scope.university && !$scope.newuniversity) {
+      if (!$scope.university.selected && !$scope.newuniversity) {
         $scope.error.university = true;
         $scope.noerror = false;
       }
-      if (!$scope.degree && !$scope.newdegree) {
+      if (!$scope.degree.selected && !$scope.newdegree) {
         $scope.error.degree = true;
         $scope.noerror = false;
       }
@@ -199,11 +248,11 @@ appTutor.controller('tutorsCtrl', ['$scope', 'tutorsFactory', '$timeout', '$wind
         $scope.error.accountnumber = true;
         $scope.noerror = false;
       }
-      if (!$scope.accounttype) {
+      if (!$scope.accounttype.selected) {
         $scope.error.accounttype = true;
         $scope.noerror = false;
       }
-      if (!$scope.bank) {
+      if (!$scope.bank.selected) {
         $scope.error.bank = true;
         $scope.noerror = false;
       }
