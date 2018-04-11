@@ -6,8 +6,8 @@
 
 
 var appClient = angular.module('appClient', ['ngSanitize', 'ui.select'], function ($interpolateProvider) {
-    $interpolateProvider.startSymbol('<%');
-    $interpolateProvider.endSymbol('%>');
+  $interpolateProvider.startSymbol('<%');
+  $interpolateProvider.endSymbol('%>');
 });
 
 /**
@@ -17,180 +17,210 @@ var appClient = angular.module('appClient', ['ngSanitize', 'ui.select'], functio
  * We want to perform an OR.
  */
 appClient.filter('propsFilter', function () {
-    return function (items, props) {
-        var out = [];
+  return function (items, props) {
+    var out = [];
 
-        if (angular.isArray(items)) {
-            var keys = Object.keys(props);
+    if (angular.isArray(items)) {
+      var keys = Object.keys(props);
 
-            items.forEach(function (item) {
-                var itemMatches = false;
+      items.forEach(function (item) {
+        var itemMatches = false;
 
-                for (var i = 0; i < keys.length; i++) {
-                    var prop = keys[i];
-                    var text = props[prop].toLowerCase();
-                    if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
-                        itemMatches = true;
-                        break;
-                    }
-                }
-
-                if (itemMatches) {
-                    out.push(item);
-                }
-            });
-        } else {
-            // Let the output be the input untouched
-            out = items;
+        for (var i = 0; i < keys.length; i++) {
+          var prop = keys[i];
+          var text = props[prop].toLowerCase();
+          if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+            itemMatches = true;
+            break;
+          }
         }
 
-        return out;
-    };
+        if (itemMatches) {
+          out.push(item);
+        }
+      });
+    } else {
+      // Let the output be the input untouched
+      out = items;
+    }
+
+    return out;
+  };
 });
 
 appClient.controller('clientsCtrl', ['$scope', 'clientsFactory', '$timeout', '$window', function ($scope, clientsFactory, $timeout, $window) {
-        $scope.error = {};
+    $scope.error = {};
 
-        $scope.children = [{
-                error: {}
-            }];
+    $scope.children = [{
+        error: {}
+      }];
 
-        $scope.addNewChild = function () {
-            $scope.children.push({
-                error: {}
-            });
-        };
+    $scope.addNewChild = function () {
+      $scope.children.push({
+        error: {}
+      });
+    };
 
-        $scope.removeNewChild = function (index) {
-            if (index !== 0) {
-                $scope.children.splice(index, 1);
-            }
-        };
+    $scope.calculateAge = function (child) {
+      var ageDifMs = Date.now() - child.burndate.getTime();
+      var ageDate = new Date(ageDifMs);
+      child.age = Math.abs(ageDate.getUTCFullYear() - 1970);
+    };
 
-        $scope.showAddChild = function (child) {
-            return child.id === $scope.children[$scope.children.length - 1].id;
-        };
+    $scope.removeNewChild = function (index) {
+      if (index !== 0) {
+        $scope.children.splice(index, 1);
+      }
+    };
 
-        $scope.dateFormat = function (date) {
-            var year = date.getFullYear();
-            var month = date.getMonth() + 1;
-            var dt = date.getDate();
+    $scope.showAddChild = function (child) {
+      return child.id === $scope.children[$scope.children.length - 1].id;
+    };
 
-            if (dt < 10) {
-                dt = '0' + dt;
-            }
-            if (month < 10) {
-                month = '0' + month;
-            }
+    $scope.dateFormat = function (date) {
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      var dt = date.getDate();
 
-            return year + '-' + month + '-' + dt;
-        };
+      if (dt < 10) {
+        dt = '0' + dt;
+      }
+      if (month < 10) {
+        month = '0' + month;
+      }
 
-        $scope.createClient = function () {
-            clientsFactory.createClient($scope.name, $scope.lastname, $scope.identification_number, $scope.email, $scope.namesecond,
-                    $scope.lastnamesecond, $scope.identification_number_second, $scope.email_second, $scope.children).success(function (data) {
-                if (data.success) {
-                    $scope.success = data.msj;
-                    $timeout(function () {
-                        $window.location.href = '/admin/client/list';
-                    }, 2000);
-                } else {
-                    $scope.error.msjs = data;
-                }
-            });
-        };
+      return year + '-' + month + '-' + dt;
+    };
 
-        $scope.editClient = function () {
-            clientsFactory.editClient($scope.idfather, $scope.iduser, $scope.idusertwo, $scope.name, $scope.lastname, $scope.identification_number, $scope.email,
-                    $scope.namesecond, $scope.lastnamesecond, $scope.identification_number_second, $scope.email_second, $scope.children).success(function (data) {
-                if (data.success) {
-                    $scope.success = data.msj;
-                    $timeout(function () {
-                        $window.location.href = '/admin/client/list';
-                    }, 2000);
-                } else {
-                    $scope.error.msjs = data;
-                }
-            });
-        };
+    $scope.Date = function (arg) {
+      return new Date(arg);
+    };
 
-        $scope.deleteClient = function () {
-            clientsFactory.deleteClient($scope.idfather, $scope.iduser, $scope.idusertwo).success(function (data) {
-                if (data.success) {
-                    $scope.success = data.msj;
-                    $timeout(function () {
-                        $window.location.href = '/admin/client/list';
-                    }, 2000);
-                } else {
-                    $scope.error.msjs = data;
-                }
-            });
-        };
+    $scope.createClient = function () {
+      clientsFactory.createClient($scope.name, $scope.lastname, $scope.identification_number, $scope.email, $scope.namesecond,
+              $scope.lastnamesecond, $scope.identification_number_second, $scope.email_second, $scope.children).success(function (data) {
+        if (data.success) {
+          $scope.success = data.msj;
+          $timeout(function () {
+            $window.location.href = '/admin/client/list';
+          }, 2000);
+        } else {
+          $scope.error.msjs = data;
+        }
+      });
+    };
 
-        $scope.validate = function (action) {
-            $scope.error = {};
-            $scope.noerror = true;
-            if (!$scope.name) {
-                $scope.error.name = true;
-                $scope.noerror = false;
-            }
-            if (action === 'add') {
-                if (!$scope.lastname) {
-                    $scope.error.lastname = true;
-                    $scope.noerror = false;
-                }
-            }
-            if (!$scope.identification_number) {
-                $scope.error.identification_number = true;
-                $scope.noerror = false;
-            }
-            if (!$scope.email) {
-                $scope.error.email = true;
-                $scope.noerror = false;
-            }
-            if (($scope.lastnamesecond || $scope.identification_number_second || $scope.email_second) && !$scope.namesecond) {
-                $scope.error.namesecond = true;
-                $scope.namesecond = false;
-            }
-            if (action === 'add') {
-                if (($scope.namesecond || $scope.identification_number_second || $scope.email_second) && !$scope.lastnamesecond) {
-                    $scope.error.lastnamesecond = true;
-                    $scope.noerror = false;
-                }
-            }
-            if (($scope.namesecond || $scope.lastnamesecond || $scope.email_second) && !$scope.identification_number_second) {
-                $scope.error.identification_number_second = true;
-                $scope.noerror = false;
-            }
-            if (($scope.namesecond || $scope.lastnamesecond || $scope.identification_number_second) && !$scope.email_second) {
-                $scope.error.email_second = true;
-                $scope.noerror = false;
-            }
-            if (action === 'edit') {
-                if (!$scope.namesecond && !$scope.identification_number_second && !$scope.email_second && !$scope.lastnamesecond) {
-                    delete $scope.namesecond;
-                    delete $scope.identification_number_second;
-                    delete $scope.email_second; 
-                    delete $scope.lastnamesecond;
-                }
-            }
+    $scope.editClient = function () {
+      clientsFactory.editClient($scope.idfather, $scope.iduser, $scope.idusertwo, $scope.name, $scope.lastname, $scope.identification_number, $scope.email,
+              $scope.namesecond, $scope.lastnamesecond, $scope.identification_number_second, $scope.email_second, $scope.children).success(function (data) {
+        if (data.success) {
+          $scope.success = data.msj;
+          $timeout(function () {
+            $window.location.href = '/admin/client/list';
+          }, 2000);
+        } else {
+          $scope.error.msjs = data;
+        }
+      });
+    };
 
-            angular.forEach($scope.children, function (child, key) {
-                if (!child.name) {
-                    child.error.name = true;
-                    child.noerror = false;
-                }
-            });
+    $scope.deleteClient = function () {
+      clientsFactory.deleteClient($scope.idfather, $scope.iduser, $scope.idusertwo).success(function (data) {
+        if (data.success) {
+          $scope.success = data.msj;
+          $timeout(function () {
+            $window.location.href = '/admin/client/list';
+          }, 2000);
+        } else {
+          $scope.error.msjs = data;
+        }
+      });
+    };
 
-            if ($scope.noerror) {
-                if (action === 'add') {
-                    $scope.createClient();
-                }
-                if (action === 'edit') {
-                    $scope.editClient();
-                }
-            }
-        };
-    }]);
+    $scope.validate = function (action) {
+      $scope.error = {};
+      $scope.noerror = true;
+      if (!$scope.name) {
+        $scope.error.name = true;
+        $scope.noerror = false;
+      }
+      if (action === 'add') {
+        if (!$scope.lastname) {
+          $scope.error.lastname = true;
+          $scope.noerror = false;
+        }
+      }
+      if (!$scope.identification_number) {
+        $scope.error.identification_number = true;
+        $scope.noerror = false;
+      }
+      if (!$scope.email) {
+        $scope.error.email = true;
+        $scope.noerror = false;
+      }
+      if (($scope.lastnamesecond || $scope.identification_number_second || $scope.email_second) && !$scope.namesecond) {
+        $scope.error.namesecond = true;
+        $scope.namesecond = false;
+      }
+      if (action === 'add') {
+        if (($scope.namesecond || $scope.identification_number_second || $scope.email_second) && !$scope.lastnamesecond) {
+          $scope.error.lastnamesecond = true;
+          $scope.noerror = false;
+        }
+      }
+      if (($scope.namesecond || $scope.lastnamesecond || $scope.email_second) && !$scope.identification_number_second) {
+        $scope.error.identification_number_second = true;
+        $scope.noerror = false;
+      }
+      if (($scope.namesecond || $scope.lastnamesecond || $scope.identification_number_second) && !$scope.email_second) {
+        $scope.error.email_second = true;
+        $scope.noerror = false;
+      }
+      if (action === 'edit') {
+        if (!$scope.namesecond && !$scope.identification_number_second && !$scope.email_second && !$scope.lastnamesecond) {
+          delete $scope.namesecond;
+          delete $scope.identification_number_second;
+          delete $scope.email_second;
+          delete $scope.lastnamesecond;
+        }
+      }
+
+      angular.forEach($scope.children, function (child, key) {
+        if (!child.name) {
+          child.error.name = true;
+          $scope.noerror = false;
+        }
+        if (!child.school) {
+          child.error.school = true;
+          $scope.noerror = false;
+        }
+        if (!child.calendar) {
+          child.error.calendar = true;
+          $scope.noerror = false;
+        }
+        if (!child.course) {
+          child.error.course = true;
+          $scope.noerror = false;
+        }
+        if (!child.burndate) {
+          child.error.burndate = true;
+          $scope.noerror = false;
+        }
+        if (!child.burndate) {
+          child.error.burndate = true;
+          $scope.noerror = false;
+        }
+      });
+
+      if ($scope.noerror) {
+        if (action === 'add') {
+          $scope.createClient();
+        }
+        if (action === 'edit') {
+          $scope.editClient();
+        }
+      }
+    };
+  }]);
 
 

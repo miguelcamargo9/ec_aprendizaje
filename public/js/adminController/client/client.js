@@ -22,7 +22,7 @@ $(document).ready(function () {
         ],
         'order': [0, 'asc'],
         "language": {
-            "zeroRecords": "NO EXISTEN TUTORES."
+            "zeroRecords": "NO EXISTEN CLIENTES."
         },
         dom: '<B><"row"><lftip>',
         buttons: [
