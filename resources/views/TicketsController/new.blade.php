@@ -64,29 +64,33 @@
     <!--fecha de inicio y finalizacion-->
     <div class="row">
       <!--fecha de inicio-->
-      <div class="col-xs-3">
+      <div class="col-xs-4">
         <div class="form-group" ng-class="{'has-feedback has-error': error.initdate}">
           <b>Fecha Inicial: </b> 
-
-<!--<input type="date" class="form-control" id='initdate' name="initdate" placeholder="Fecha Inicial:" ng-model='initdate' ng-change="error.initdate = false">-->
-
-          <input type="text" class="form-control" id='initdate' name="initdate" placeholder="Fecha Inicial:"  uib-datepicker-popup="<%format%>" ng-model="initdate" 
-                 is-open="opened" datepicker-options="dateOptions" ng-readonly="true" 
-                 close-text="Cerrar"
-                 ng-required="true" alt-input-formats="altInputFormats"
-                 ng-change="error.initdate = false" />
-          
-            <button type="button" class="btn btn-default" ng-click="open()"><i class="glyphicon glyphicon-calendar"></i></button>
-          
-
+          <p class="input-group">
+            <input type="text" class="form-control" id='initdate' name="initdate" placeholder="Fecha Inicial:"  uib-datepicker-popup="<%format%>" 
+                   ng-model="initdate" is-open="popupinitdate.opened" datepicker-options="dateOptions" close-text="Cerrar" alt-input-formats="altInputFormats"
+                   ng-change="error.initdate = false" ng-readonly="true"/>
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="openinitdate()"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </p>
           <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.initdate"></span>
           <span style="color: #ff0911" ng-show="error.initdate">Este campo es obligatorio, seleccione la fecha inicial del proceso</span>
         </div>
       </div>
       <!--fecha de fin-->
-      <div class="col-xs-6">
+      <div class="col-xs-4">
         <div class="form-group">
-          <b>Fecha Final;</b> <input type="date" class="form-control" id='enddate' name="enddate" placeholder="Fecha Final:" ng-model='enddate'>
+          <b>Fecha Final;</b>
+          <p class="input-group">
+            <input type="text" class="form-control" id='enddate' name="enddate" placeholder="Fecha Final:"  uib-datepicker-popup="<%format%>" 
+                   ng-model="enddate" is-open="popupenddate.opened" datepicker-options="dateOptions" close-text="Cerrar" alt-input-formats="altInputFormats"
+                   ng-readonly="true"/>
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="openenddate()"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </p>
         </div>
       </div>
     </div>

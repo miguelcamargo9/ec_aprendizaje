@@ -33,13 +33,15 @@ class TicketsController extends Controller {
     $id_tutor = Input::get('tutor');
     
     $datosFactura = Input::get('datosFactura');
+    
+    $fechaFin = ($fechaFin == "1973-03-03") ? null : $fechaFin;
    
     $datosCaso = new Ticket();
     $datosCaso->id_estado = 1;
     $datosCaso->id_cliente = $id_cliente;
     $datosCaso->users_id_tutor = $id_tutor;
     $datosCaso->fecha_inicio = "$fechaIni";
-    $datosCaso->fecha_fin = "$fechaFin";
+    $datosCaso->fecha_fin = $fechaFin;
     $datosCaso->fecha_creacion = Date("Y-m-d H:i:s");
     $datosCaso->users_id_creator = Session::get('user')->id;
     try {

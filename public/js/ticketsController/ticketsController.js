@@ -5,7 +5,7 @@
  */
 
 
-var app = angular.module('app', ['ngSanitize', 'ui.select', 'summernote'], function ($interpolateProvider) {
+var app = angular.module('app', ['ui.bootstrap', 'ngSanitize', 'ui.select', 'summernote'], function ($interpolateProvider) {
   $interpolateProvider.startSymbol('<%');
   $interpolateProvider.endSymbol('%>');
 });
@@ -161,12 +161,45 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
     $scope.altInputFormats = ['M!/d!/yyyy'];
     /////ABRIR EL CALENDARIO
 
-
-    $scope.open = function () {
-      console.log("Que pasa men");
-      $scope.opened = true;
+    $scope.dateOptions = {
+      dateDisabled: disabled,
+      formatYear: 'yy',
+      maxDate: new Date(2020, 5, 22),
+      minDate: new Date(),
+      startingDay: 1
     };
-    $scope.opened = false;
+
+    $scope.today = function () {
+      $scope.dt = new Date();
+    };
+    $scope.today();
+
+    $scope.clear = function () {
+      $scope.dt = null;
+    };
+
+    // Disable weekend selection
+    function disabled(data) {
+      var date = data.date,
+              mode = data.mode;
+      return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+    }
+
+    $scope.openinitdate = function () {
+      $scope.popupinitdate.opened = true;
+    };
+    
+    $scope.openenddate = function () {
+      $scope.popupenddate.opened = true;
+    };
+
+    $scope.popupinitdate = {
+      opened: false
+    };
+
+    $scope.popupenddate = {
+      opened: false
+    };
   }]);
 
 //CONTROLADOR PARA LOS DETALLES DE CADA REGISTRO DEL TUTOR 
