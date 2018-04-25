@@ -24,6 +24,7 @@
     </div>
     <!--<form method="POST" action="/tickets/registry" >-->
     <input type="hidden" name="_token" value="{{{ csrf_token()}}}"  />
+    <!--SELECCIONAR EL ESTUDIANTE-->
     <div  class="form-group" ng-class="{'has-feedback has-error': error.client}">
       <b>Estudiante: </b> <ui-select ng-model="client" theme="bootstrap" on-select="setClient($select.selected)">
         <ui-select-match placeholder="Seleccione un Estudiante"><% client.child.nombre %> <% client.child.apellido %> - (Padre) <% client.father.name %></ui-select-match>
@@ -35,6 +36,8 @@
       <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.client"></span>
       <span style="color: #ff0911" ng-show="error.client">Este campo es obligatorio, seleccione un estudiante</span>
     </div>
+
+    <!--SELECCIONAR EL TUTOR-->
     <div  class="form-group" ng-class="{'has-feedback has-error': error.tutor}">
       <b>Tutor</b> <ui-select ng-model="tutor" theme="bootstrap" on-select="setTutor($select.selected)">
         <ui-select-match placeholder="Seleccione un Tutor"><% tutor.name %> - <% tutor.email %></ui-select-match>
@@ -47,12 +50,24 @@
       <span style="color: #ff0911" ng-show="error.tutor">Este campo es obligatorio, seleccione un tutor</span>
     </div>
 
-    <!--fecha de inicio i finalizacion-->
+    <!--fecha de inicio y finalizacion-->
     <div class="row">
       <!--fecha de inicio-->
       <div class="col-xs-6">
         <div class="form-group" ng-class="{'has-feedback has-error': error.initdate}">
-          <b>Fecha Inicial: </b> <input type="date" class="form-control" id='initdate' name="initdate" placeholder="Fecha Inicial:" ng-model='initdate' ng-change="error.initdate = false">
+          <b>Fecha Inicial: </b> 
+
+<!--<input type="date" class="form-control" id='initdate' name="initdate" placeholder="Fecha Inicial:" ng-model='initdate' ng-change="error.initdate = false">-->
+
+          <input type="text" class="form-control" id='initdate' name="initdate" placeholder="Fecha Inicial:"  uib-datepicker-popup="<%format%>" ng-model="initdate" 
+                 is-open="opened" datepicker-options="dateOptions" ng-readonly="true" 
+                 close-text="Cerrar"
+                 ng-required="true" alt-input-formats="altInputFormats"
+                 ng-change="error.initdate = false" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+
           <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.initdate"></span>
           <span style="color: #ff0911" ng-show="error.initdate">Este campo es obligatorio, seleccione la fecha inicial del proceso</span>
         </div>
@@ -142,7 +157,7 @@
 @section('scriptsjs')
 <!-- AdminLTE for demo purposes -->
 <script src="/packages/adminLTE/dist/js/demo.js"></script>
-
+<script src="/packages/ui-bootstrap/ui-bootstrap-tpls-2.5.0.min.js"></script>
 <link href="/packages/ui-select-master/dist/select.css" rel="stylesheet">
 <script src="//code.angularjs.org/1.2.20/angular-sanitize.min.js"></script>
 <script src="/js/ticketsController/ticketsController.js"></script>

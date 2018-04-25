@@ -57,7 +57,7 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
       telefono: "",
       ciudad: ""
     };//GUARDO LOS DATOS DE FACTURACION
-    
+
     ticketsFactory.getClients().success(function (data) {
       $scope.clients = data;
     });
@@ -112,7 +112,7 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
     };
 
     $scope.validate = function (action) {
-      
+
       $scope.error = {};
       $scope.noerror = true;
       if (!$scope.cliente) {
@@ -127,21 +127,21 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
         $scope.error.initdate = true;
         $scope.noerror = false;
       }
-      
+
       //RECORRO LOS DATOS DE LA FACTURA PARA VERIFICAR QUE NO ESTE VACIOS
       angular.forEach($scope.factura, function (value, key) {
-        
+
         //EXCLUYO LOS CAMPOS QUE NO QUIERO VERIFICAR
-        if(key!=="telefono" && key!=="email"){
-          if (value==="") {
+        if (key !== "telefono" && key !== "email") {
+          if (value === "") {
             $scope.error[key] = true;
             $scope.noerror = false;
           }
         }
       });
       if ($scope.noerror) {
-     
-        switch (action){
+
+        switch (action) {
           case"add":
             $scope.createProcess();
             break;
@@ -152,6 +152,20 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
             console.log("Accion no encontrada");
         }
       }
+
+      ///CONFIGURACION PARA EL CALENDARIO DE SELECCIONAR LA FECHA
+      
+      //////FORMATOS DE LA FECHA
+      $scope.formats = ['yyyy-MM-dd', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+      $scope.format = $scope.formats[0];
+      $scope.altInputFormats = ['M!/d!/yyyy'];
+      /////ABRIR EL CALENDARIO
+      $scope.open1 = function () {
+        $scope.opened = true;
+      };
+      $scope.popup1 = {
+        opened: false
+      };
     };
   }]);
 
