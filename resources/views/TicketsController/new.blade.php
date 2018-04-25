@@ -1,7 +1,18 @@
 @extends('index')
 
 @section('contentbody')
-
+<style>
+  .full button span {
+    background-color: limegreen;
+    border-radius: 32px;
+    color: black;
+  }
+  .partially button span {
+    background-color: orange;
+    border-radius: 32px;
+    color: black;
+  }
+</style>
 <div class="box box-info" ng-app="app">
   <div class="box-header">
     <i class="fa fa-ticket"></i>
@@ -53,7 +64,7 @@
     <!--fecha de inicio y finalizacion-->
     <div class="row">
       <!--fecha de inicio-->
-      <div class="col-xs-6">
+      <div class="col-xs-5">
         <div class="form-group" ng-class="{'has-feedback has-error': error.initdate}">
           <b>Fecha Inicial: </b> 
 
