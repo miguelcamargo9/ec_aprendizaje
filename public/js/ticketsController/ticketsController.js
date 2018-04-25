@@ -152,22 +152,21 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
             console.log("Accion no encontrada");
         }
       }
-
-      ///CONFIGURACION PARA EL CALENDARIO DE SELECCIONAR LA FECHA
-      
-      //////FORMATOS DE LA FECHA
-      $scope.formats = ['yyyy-MM-dd', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-      $scope.format = $scope.formats[0];
-      $scope.altInputFormats = ['M!/d!/yyyy'];
-      /////ABRIR EL CALENDARIO
-      
-      
-      $scope.open = function () {
-        console.log("Que pasa men");
-        $scope.opened = true;
-      };
-      $scope.opened = false;
     };
+    ///CONFIGURACION PARA EL CALENDARIO DE SELECCIONAR LA FECHA
+
+    //////FORMATOS DE LA FECHA
+    $scope.formats = ['yyyy-MM-dd', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+    $scope.format = $scope.formats[0];
+    $scope.altInputFormats = ['M!/d!/yyyy'];
+    /////ABRIR EL CALENDARIO
+
+
+    $scope.open = function () {
+      console.log("Que pasa men");
+      $scope.opened = true;
+    };
+    $scope.opened = false;
   }]);
 
 //CONTROLADOR PARA LOS DETALLES DE CADA REGISTRO DEL TUTOR 
