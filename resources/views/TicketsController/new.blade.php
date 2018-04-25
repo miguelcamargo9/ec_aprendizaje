@@ -75,9 +75,9 @@
                  close-text="Cerrar"
                  ng-required="true" alt-input-formats="altInputFormats"
                  ng-change="error.initdate = false" />
-          <span class="input-group-btn">
+          
             <button type="button" class="btn btn-default" ng-click="open()"><i class="glyphicon glyphicon-calendar"></i></button>
-          </span>
+          
 
           <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.initdate"></span>
           <span style="color: #ff0911" ng-show="error.initdate">Este campo es obligatorio, seleccione la fecha inicial del proceso</span>
