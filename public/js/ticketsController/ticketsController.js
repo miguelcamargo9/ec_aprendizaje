@@ -161,6 +161,7 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
       $scope.altInputFormats = ['M!/d!/yyyy'];
       /////ABRIR EL CALENDARIO
       $scope.open = function () {
+        console.log("Que pasa men");
         $scope.opened = true;
       };
       $scope.opened = false;
