@@ -183,7 +183,7 @@ class TutorsController extends Controller {
     $newtutor->numero_cuenta = "$accountnumber";
     $newtutor->tipo_cuenta = $accounttype;
     $newtutor->banco_id = $bank;
-    $newtutor->pastregister = $pastregister;
+    $newtutor->permiso_registro = $pastregister;
     $newtutor->users_id = $id;
 
     $newtutor->save();
