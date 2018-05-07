@@ -141,6 +141,7 @@
 @section('scriptsjs')
 
 <script src="/js/ticketsController/tickets.js"></script>
+<script src="/packages/ui-bootstrap/ui-bootstrap-tpls-2.5.0.min.js"></script>
 <script src="//code.angularjs.org/1.2.20/angular-sanitize.min.js"></script>
 <script src="/js/ticketsController/ticketsController.js"></script>
 <script src="/js/ticketsController/ticketsFactory.js"></script>

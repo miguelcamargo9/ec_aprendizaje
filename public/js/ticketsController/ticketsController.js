@@ -170,6 +170,7 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
     $scope.today = function () {
       $scope.dt = new Date();
     };
+    
     $scope.today();
 
     $scope.clear = function () {
@@ -177,11 +178,11 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
     };
 
     // Disable weekend selection
-    function disabled(data) {
-      var date = data.date,
-              mode = data.mode;
-      return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
-    }
+//    function disabled(data) {
+//      var date = data.date,
+//              mode = data.mode;
+//      return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+//    }
 
     $scope.openinitdate = function () {
       $scope.popupinitdate.opened = true;
