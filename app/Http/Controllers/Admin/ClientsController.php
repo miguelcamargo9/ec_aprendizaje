@@ -19,15 +19,14 @@ class ClientsController extends Controller {
   }
 
   public function getAllClients() {
-    $result = Father::with("user")->get();
+    $result = Father::with("user")->where("segundo_padre", "=", "N")->get();
     foreach ($result as $value) {
-      $ruta = "/admin/client/view/edit/{$value->id}";
-      $boton = "<a href='$ruta' alt='Editar Cliente {$value->user->name}'>Editar <i class='fa fa-edit'></i></a>  ";
-      $ruta = "/admin/client/view/delete/{$value->id}";
-      $boton .= "<a href='$ruta' alt='Eliminar Cliente {$value->user->name}'>Eliminar <i class='fa fa-minus-circle'></i></a>";
-      $value->opciones = $boton;
+        $ruta = "/admin/client/view/edit/{$value->id}";
+        $boton = "<a href='$ruta' alt='Editar Cliente {$value->user->name}'>Editar <i class='fa fa-edit'></i></a>  ";
+        $ruta = "/admin/client/view/delete/{$value->id}";
+        $boton .= "<a href='$ruta' alt='Eliminar Cliente {$value->user->name}'>Eliminar <i class='fa fa-minus-circle'></i></a>";
+        $value->opciones = $boton;
     }
-
     return $result;
   }
 
@@ -110,7 +109,7 @@ class ClientsController extends Controller {
         } elseif (isset($namesecond)) {
           $nametwo = explode(" ", $namesecond);
           $idUserTwo = $this->insertUser($nametwo[0], $nametwo[1], Input::get('identification_number_second'), Input::get('email_second'));
-          $this->insertFather($idUserTwo);
+          $this->insertFather($idUserTwo, "Y");
         }
 
         $clientchildren = Client::where('users_id_padre', '=', $idUser)->get();
@@ -175,7 +174,7 @@ class ClientsController extends Controller {
         $this->insertFather($id_user);
         if (isset($namesecond)) {
           $id_user_two = $this->insertUser(Input::get('namesecond'), Input::get('lastnamesecond'), Input::get('identification_number_second'), Input::get('email_second'));
-          $this->insertFather($id_user_two);
+          $this->insertFather($id_user_two, "Y");
         }
         foreach ($children as $key => $child) {
           $burndate = substr($child['burndate'], 0, 10);
@@ -233,9 +232,10 @@ class ClientsController extends Controller {
     $newclient->save();
   }
 
-  public function insertFather($id) {
+  public function insertFather($id, $second = "N") {
     $newfather = new Father;
     $newfather->users_id = $id;
+    $newfather->segundo_padre = $second;
 
     $newfather->save();
   }
