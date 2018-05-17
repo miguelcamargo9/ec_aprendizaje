@@ -69,15 +69,11 @@
               <div class="form-group row">
                 <div class="col-xs-2">
                   <b>Curso:</b> 
-                  <input type="number" class="form-control"  ng-model='child.course' ng-init='child.course = child.child.curso;' readonly>
+                  <input type="text" class="form-control"  ng-model='child.course' ng-init='child.course = child.child.curso;' readonly>
                 </div>
                 <div class="col-xs-3">
                   <b>Fecha de Nacimiento:</b>
                   <input type="date" class="form-control"  ng-model='child.burndate' ng-init='child.burndate = Date(child.child.fecha_nacimiento);' readonly>
-                </div>
-                <div class="col-xs-2">
-                  <b>Hora de Nacimiento:</b> 
-                  <input type="time" class="form-control"  ng-model='child.burntime' ng-init='child.burntime = Date(child.child.hora_nacimiento);' readonly>
                 </div>
                 <div class="col-xs-2">
                   <b>Edad:</b> 

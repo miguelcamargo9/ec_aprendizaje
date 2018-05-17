@@ -100,7 +100,7 @@
             <div class="form-group row">
               <div class="col-xs-2" ng-class="{'has-feedback has-error': child.error.course}">
                 <b>Curso:</b> 
-                <input type="number" class="form-control"  ng-model='child.course' ng-change="child.error.course = false"
+                <input type="text" class="form-control"  ng-model='child.course' ng-change="child.error.course = false"
                        ng-init='child.course = child.child.curso;'>
                 <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="child.error.course"></span>
                 <span style="color: #ff0911" ng-show="child.error.course">Este campo es obligatorio, digite el curso.</span>
@@ -111,10 +111,6 @@
                        ng-init='child.burndate = Date(child.child.fecha_nacimiento);'>
                 <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="child.error.burndate"></span>
                 <span style="color: #ff0911" ng-show="child.error.burndate">Este campo es obligatorio, seleccione la fecha de nacimeinto.</span>
-              </div>
-              <div class="col-xs-2">
-                <b>Hora de Nacimiento:</b> 
-                <input type="time" class="form-control"  ng-model='child.burntime' ng-init='child.burntime = Date(child.child.hora_nacimiento);'>
               </div>
               <div class="col-xs-2">
                 <b>Edad:</b> 
