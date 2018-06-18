@@ -75,3 +75,6 @@ Route::get('/parents/list', array('as' => 'tickets.list.parents', 'uses' => 'Par
 Route::get('/parents/getbyparent', array('as' => 'tickets.by.parent', 'uses' => 'Parents\ParentsController@getTicketsByParent'))->middleware('auth');
 Route::get('/parents/ticketinfo/{idTicket}', array('as' => 'tickets.info', 'uses' => 'Parents\ParentsController@getInfoTickets'))->middleware('auth');
 Route::post('/parents/addcommentary', array('as' => 'parent.commentary', 'uses' => 'Parents\ParentsController@addCommentary'))->middleware('auth');
+
+/* Routes InsertInfo Controller */
+Route::get('/insertinfo/clients', array('as' => 'insertinfo.clients', 'uses' => 'InsertInfo\InsertInfoController@insertClients'))->middleware('auth');
