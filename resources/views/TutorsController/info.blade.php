@@ -22,6 +22,18 @@
   <!--<span class="sr-only">Error:</span>-->
   <strong>Comentario guardado</strong>
 </div>
+
+@if(isset($documentos) && $documentos=='ok')
+  <div class="alert alert-success" id="msg-done" role="alert" >
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <!--<span class="sr-only">Error:</span>-->
+    <strong>Documentos guardados</strong>
+  </div>
+  <script>
+    setTimeout(function(){ window.location = "/tutor/tickets/ticketinfo/{{$id}}" }, 2000);
+  </script>
+@endif
 <div class="box box-info" ng-app="app">
   <div class="box-header">
     <i class="fa fa-ticket"></i>
@@ -52,13 +64,53 @@
         <span class="sr-only">Éxito:</span>
         <strong><%success%></strong>
       </div>
-      <input type="hidden"  ng-model="idCaso"  ng-init="idCaso={{$id}}" ng-value="{{$id}}"  />
+      
       <input type="hidden" name="_token" id="_token" value="{{csrf_token()}}"  />
       <div class="form-group">
         Cliente <input disabled type="text" class="form-control" value="{{$client_name}}" >
       </div>
       <div class="form-group">
         Fecha Inicial <input disabled id="fecha_ini" type="date" class="form-control" value="{{$fecha_inicio}}" >
+      </div>
+      
+      <!--SECCION PARA AGREGAR COMENTARIOS-->
+      <h4>Agregar Documentos</h4>
+      <div class="row">
+        <form method="post" action="/tutor/guardarDoc" enctype="multipart/form-data">
+          <input type="hidden" name="idCaso" value="{{$id}}" ng-model="idCaso"  ng-init="idCaso={{$id}}" ng-value="{{$id}}"  />
+          <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
+          <div class="col-xs-3">
+            <div class="form-group">
+              <input  type="file" name="documentos[]" class="form-control" multiple>
+            </div>
+          </div>
+          <div class="col-xs-2">
+            <select name="mes_documento" class="form-control">
+              <option value="01">Enero</option>
+              <option value="02">Febrero</option>
+              <option value="03">Marzo</option>
+              <option value="04">Abril</option>
+              <option value="05">Mayo</option>
+              <option value="06">Junio</option>
+              <option value="07">Julio</option>
+              <option value="08">Agosto</option>
+              <option value="09">Septiembre</option>
+              <option value="10">Octubre</option>
+              <option value="11">Noviembre</option>
+              <option value="12">Diciembre</option>
+            </select>
+          </div>
+          <div class="col-xs-2" >
+            <?php
+              $anio = date('Y');
+            ?>
+            <input type="text" name="anio_documento" value="{{$anio}}" class="form-control">
+
+          </div>
+          <div class="col-xs-2">
+            <button type="submit" class="btn btn-info " > Guardar </button> 
+          </div>
+        </form>
       </div>
       <!--BOTON PARA AGREGAR UN NUEVO REGISTRO-->
       <div class="row">
@@ -80,9 +132,7 @@
 
       <!--PINTO TODOS LOS REGISTROS QUE HA HECHO EL USUARIO-->
       <div class="row">
-        <pre>
-        
-        </pre>
+ 
         @foreach ($registros as $registro)
         @if($registro->aprobado=='N')
         <?php
