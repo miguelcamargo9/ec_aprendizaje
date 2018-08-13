@@ -9,6 +9,7 @@ use App\Models\Child;
 use App\Models\Usuario;
 use App\Models\Tutor;
 use App\Models\Ticket;
+use App\Models\TicketTutores;
 use App\Models\State;
 use App\Models\registroTutor;
 use App\Models\horasRegistro;
@@ -37,17 +38,10 @@ class TutorsController extends Controller {
 
   public function getAllTickets() {
     //$result = Ticket::with('tutor', 'state', 'client')->get();
-    $result = Ticket::with('tutor', 'state', 'client')->where('id_estado', '1')->get();
+    $result = Ticket::with('state', 'client')->where('id_estado', '1')->get();
 
     foreach ($result as $value) {
-      $value->descripcion = $value->descripcion;
-      if (count($value->tutor) > 0) {
-        foreach ($value->tutor as $tutor) {
-          $value->id_tutor = $tutor->name;
-        }
-      } else {
-        $value->id_tutor = "No Asignado";
-      }
+      $value->descripcion = $this->convertUtf8($value->descripcion);
       foreach ($value->client as $client) {
         $value->id_cliente = $client->child->nombre . " " . $client->child->apellido;
       }
@@ -63,17 +57,17 @@ class TutorsController extends Controller {
 
   public function getMyTickets() {
     $idtutor = Session::get('user');
-    $result = Ticket::with('tutor', 'state', 'client')->where('users_id_tutor', $idtutor['id'])->get();
+    $myTickets = TicketTutores::where('users_id_tutor', $idtutor['id'])->get();
+
+    $result = Array();
+    
+    foreach ($myTickets as $myTicket) {
+      $ticket = Ticket::with('state', 'client')->find($myTicket->caso_id);
+      $result[] = $ticket;
+    }
 
     foreach ($result as $value) {
-      $value->descripcion = $value->descripcion;
-      if (count($value->tutor) > 0) {
-        foreach ($value->tutor as $tutor) {
-          $value->id_tutor = $tutor->name;
-        }
-      } else {
-        $value->id_tutor = "No Asignado";
-      }
+      $value->descripcion = $this->convertUtf8($value->descripcion);
       foreach ($value->client as $client) {
         $value->id_cliente = $client->child->nombre . " " . $client->child->apellido;
       }
@@ -87,7 +81,7 @@ class TutorsController extends Controller {
     return $result;
   }
 
-  public function getInfoTickets($idTicket,$documentos=false) {
+  public function getInfoTickets($idTicket, $documentos = false) {
     $infoTicket = Ticket::find($idTicket);
     $registrosTutor = registroTutor::where('id_caso', '=', $idTicket)->get(); //BUSCO LOS REGISROS QUE HA HECHO EL TUTOR
     $horasRegistro = registroTutor::where('id_caso', '=', $idTicket)->sum('total_horas');
@@ -98,7 +92,7 @@ class TutorsController extends Controller {
     $infoTicket->client_name = $client_name;
     $infoTicket->registros = $registrosTutor;
     $infoTicket->horasRegisro = $horasRegistro;
-    $infoTicket->documentos = ($documentos)?"ok":"false";
+    $infoTicket->documentos = ($documentos) ? "ok" : "false";
     return view('TutorsController.info', $infoTicket->toArray());
   }
 
@@ -212,7 +206,11 @@ class TutorsController extends Controller {
       ///RUTA DONDE VOY A GUARDAR LOS DOCUMENTOS
       $documento->move("$idTutor/$anio/$mes/$idTicket", "$nombre");
     }
-    return $this->getInfoTickets($idTicket,true);
+    return $this->getInfoTickets($idTicket, true);
+  }
+
+  public function convertUtf8($value) {
+    return mb_detect_encoding($value, mb_detect_order(), true) === 'UTF-8' ? $value : mb_convert_encoding($value, 'UTF-8');
   }
 
 }

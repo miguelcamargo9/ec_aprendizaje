@@ -25,7 +25,7 @@
         <thead>
         <tr>
             <th>
-                LISTA DE CASOS
+                LISTA DE PROCESOS
             </th>
         </tr>
         </thead>
@@ -36,10 +36,8 @@
             <tr>
                 <th>ESTADO</th>
                 <th>ESTUDIANTE</th>
-                <th>TUTOR</th>
                 <th>FECHA DE INICIO</th>
-                <th>FECHA DE FINALIZACION</th>
-                <th>VER</th>
+                <th>OPCIONES</th>
             </tr>
             </thead>
         </table>

@@ -49,16 +49,37 @@
     </div>
 
     <!--SELECCIONAR EL TUTOR-->
-    <div  class="form-group" ng-class="{'has-feedback has-error': error.tutor}">
-      <b>Tutor</b> <ui-select ng-model="tutor" theme="bootstrap" on-select="setTutor($select.selected)">
-        <ui-select-match placeholder="Seleccione un Tutor"><% tutor.name %> - <% tutor.email %></ui-select-match>
-        <ui-select-choices repeat="tutor in tutors | filter: $select.search">
-          <span ng-bind-html="tutor.name | highlight: $select.search"></span>
-          <small ng-bind-html="tutor.email | highlight: $select.search"></small>
-        </ui-select-choices>
-      </ui-select>
-      <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.tutor"></span>
-      <span style="color: #ff0911" ng-show="error.tutor">Este campo es obligatorio, seleccione un tutor</span>
+    <div  class="form-group">
+      <div class="panel panel-default">
+        <div class="panel-heading">Tutores</div>
+        <div class="panel-body">
+          <div class="form-group" ng-repeat="mytutor in tutorsselected track by $index">
+            <div class="form-group row">
+              <div class="col-xs-6" ng-class="{'has-feedback has-error': mytutor.error.name}">
+                <b>Seleccion a un tutor:</b> 
+                <ui-select ng-model="$parent.mytutor.tutor" theme="bootstrap" on-select="$parent.mytutor.error.name = false">
+                  <ui-select-match placeholder="Seleccione un Tutor"><% mytutor.tutor.name %> - <% mytutor.tutor.email %></ui-select-match>
+                  <ui-select-choices repeat="tutor in tutors | filter: $select.search">
+                    <span ng-bind-html="tutor.name | highlight: $select.search"></span>
+                    <small ng-bind-html="tutor.email | highlight: $select.search"></small>
+                  </ui-select-choices>
+                </ui-select>
+                <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="mytutor.error.name"></span>
+                <span style="color: #ff0911" ng-show="mytutor.error.name">Este campo es obligatorio, seleccione un tutor</span>
+              </div>
+              <div class="col-xs-3 lostop">
+                <br>
+                <button type="button" class="btn btn-default btn-sm"  ng-show="showAddTutor(mytutor)" ng-click="addNewTutor()">
+                  <span class="glyphicon glyphicon-plus"></span> Agregar
+                </button>
+                <button type="button" class="btn btn-default btn-sm" ng-click="removeNewTutor($index)">
+                  <span class="glyphicon glyphicon-minus"></span> Borrar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!--fecha de inicio y finalizacion-->
@@ -77,20 +98,6 @@
           </p>
           <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="error.initdate"></span>
           <span style="color: #ff0911" ng-show="error.initdate">Este campo es obligatorio, seleccione la fecha inicial del proceso</span>
-        </div>
-      </div>
-      <!--fecha de fin-->
-      <div class="col-xs-4">
-        <div class="form-group">
-          <b>Fecha Final;</b>
-          <p class="input-group">
-            <input type="text" class="form-control" id='enddate' name="enddate" placeholder="Fecha Final:"  uib-datepicker-popup="<%format%>" 
-                   ng-model="enddate" is-open="popupenddate.opened" datepicker-options="dateOptions" close-text="Cerrar" alt-input-formats="altInputFormats"
-                   ng-readonly="true"/>
-            <span class="input-group-btn">
-              <button type="button" class="btn btn-default" ng-click="openenddate()"><i class="glyphicon glyphicon-calendar"></i></button>
-            </span>
-          </p>
         </div>
       </div>
     </div>

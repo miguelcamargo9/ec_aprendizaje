@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tickets;
 use App\Http\Controllers\Controller;
 use App\Models\State;
 use App\Models\Ticket;
+use App\Models\TicketTutores;
 use App\Models\Tutor;
 use App\Models\Client;
 use App\Models\Child;
@@ -28,31 +29,32 @@ class TicketsController extends Controller {
 
   public function createNewTicket() {
     $fechaIni = Input::get('initdate');
-    $fechaFin = Input::get('enddate');
     $id_cliente = Input::get('cliente');
-    $id_tutor = Input::get('tutor');
-    
+
     $datosFactura = Input::get('datosFactura');
-    
-    $fechaFin = ($fechaFin == "1973-03-03") ? null : $fechaFin;
-   
+    $tutores = Input::get('tutors');
+
     $datosCaso = new Ticket();
     $datosCaso->id_estado = 1;
     $datosCaso->id_cliente = $id_cliente;
-    $datosCaso->users_id_tutor = $id_tutor;
     $datosCaso->fecha_inicio = "$fechaIni";
-    $datosCaso->fecha_fin = $fechaFin;
     $datosCaso->fecha_creacion = Date("Y-m-d H:i:s");
     $datosCaso->users_id_creator = Session::get('user')->id;
     try {
       $datosCaso->save();
-      $idCaso= $datosCaso->id;
+      $idCaso = $datosCaso->id;
       $nuevaFactura = new Bills();
-      $nuevaFactura->caso_id=$idCaso;
+      $nuevaFactura->caso_id = $idCaso;
       foreach ($datosFactura as $campoFac => $valor) {
         $nuevaFactura->$campoFac = $valor;
       }
       $nuevaFactura->save();
+      foreach ($tutores as $tutor) {
+        $ticketTutores = new TicketTutores();
+        $ticketTutores->caso_id = $idCaso;
+        $ticketTutores->users_id_tutor = $tutor['tutor']['id'];
+        $ticketTutores->save();
+      }
     } catch (Exception $ex) {
       return response()->json(array('error' => array('Error creando el proceso')));
     }
@@ -122,26 +124,21 @@ class TicketsController extends Controller {
   }
 
   public function getAllTickets() {
-    $result = Ticket::with('tutor', 'state', 'client')->get();
+    $result = Ticket::with('state', 'client')->get();
 
     foreach ($result as $value) {
       //$value->id_cliente = empty($value->id_cliente) ? "N/A" : $value->id_cliente;
       //$value->id_tutor = empty($value->id_tutor) ? "N/A" : $value->id_tutor;
       $value->descripcion = $this->convertUtf8($value->descripcion);
-      if (count($value->tutor) > 0) {
-        foreach ($value->tutor as $tutor) {
-          $value->id_tutor = $tutor->name;
-        }
-      } else {
-        $value->id_tutor = "No Asignado";
-      }
       foreach ($value->client as $client) {
         $value->id_cliente = $client->child->nombre . " " . $client->child->apellido;
       }
       $value->id_estado = $this->getState($value->id_estado);
       $idTicket = $value->id;
       $ruta = "/tickets/ticketinfo/$idTicket";
-      $boton = "<a href='$ruta'><i class='fa fa-eye' aria-hidden='true'></i></a>";
+      $boton = "<a href='$ruta' alt='Ver Proceso {$idTicket}'>Ver <i class='fa fa-eye'></i></a>";
+      $ruta = "/tickets/editticket/$idTicket";
+      $boton .= "<a href='$ruta' alt='Editar Proceso {$idTicket}'>Editar <i class='fa fa-edit'></i></a>";
       $value->ver = $boton;
     }
 
@@ -206,7 +203,7 @@ class TicketsController extends Controller {
     $infoTicket = Ticket::find($idTicket);
     $registrosTutor = registroTutor::where('id_caso', '=', $idTicket)->get(); //BUSCO LOS REGISROS QUE HA HECHO EL TUTOR
     $horasRegistro = registroTutor::where('id_caso', '=', $idTicket)->sum('total_horas');
-    
+
     $client = $this->getClient($infoTicket->id_cliente);
     $child = $this->getChild($client->id_hijo);
     $parent = $this->getParent($client->users_id_padre);
@@ -237,8 +234,8 @@ class TicketsController extends Controller {
     $idRegistro = Input::get('idRegistro');
     $fecha = date("Y-m-d H:i:s");
     try {
-      registroTutor::where('id', '=', $idRegistro)->update(array("resumen" => $resumen, "aprobado" => "S","fecha_aprobacion"=>$fecha));
-      $todosAprobados = registroTutor::where(array("aprobado" => 'N',"id_caso"=>$idCaso))->get()->count();
+      registroTutor::where('id', '=', $idRegistro)->update(array("resumen" => $resumen, "aprobado" => "S", "fecha_aprobacion" => $fecha));
+      $todosAprobados = registroTutor::where(array("aprobado" => 'N', "id_caso" => $idCaso))->get()->count();
       if ($todosAprobados == 0) {
         Ticket::where('id', '=', $idCaso)->update(array('id_estado' => 3));
       }

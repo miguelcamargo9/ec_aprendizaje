@@ -2,7 +2,7 @@
 
 
 @section('head')
-    <title>Asignacion de casos</title>
+    <title>Mis Procesos</title>
     <meta name="description" content="EC aprendizaje">
     <link href="/packages/bootstrap/css/loading.css" rel="stylesheet">
     <link href="/packages/bootstrap/css/popbox.css" media="screen" charset="utf-8" rel="stylesheet">
@@ -26,7 +26,7 @@
         <thead>
         <tr>
             <th>
-                MIS CASOS
+                MIS PROCESOS
             </th>
         </tr>
         </thead>
@@ -35,12 +35,9 @@
         <table id="tickets" class="table table-striped table-hover">
             <thead>
             <tr>
-                <th><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
                 <th>ESTADO</th>
                 <th>ESTUDIANTE</th>
-                <th>TUTOR</th>
                 <th>FECHA DE INICIO</th>
-                <th>FECHA DE FINALIZACION</th>
                 <th>VER</th>
             </tr>
             </thead>

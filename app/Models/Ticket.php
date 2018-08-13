@@ -12,9 +12,6 @@ class Ticket extends Model
     public function client() {
         return $this->hasMany('App\Models\Client', 'id', 'id_cliente');
     }
-    public function tutor() {
-        return $this->hasMany('App\Models\Usuario', 'id', 'users_id_tutor');
-    }
     public function state() {
         return $this->hasMany('App\Models\State', 'id', 'id_estado');
     }

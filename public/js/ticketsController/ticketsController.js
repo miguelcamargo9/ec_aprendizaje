@@ -58,6 +58,26 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
       ciudad: ""
     };//GUARDO LOS DATOS DE FACTURACION
 
+    $scope.tutorsselected = [{
+        error: {}
+      }];
+
+    $scope.addNewTutor = function () {
+      $scope.tutorsselected.push({
+        error: {}
+      });
+    };
+
+    $scope.removeNewTutor = function (index) {
+      if (index !== 0) {
+        $scope.tutorsselected.splice(index, 1);
+      }
+    };
+
+    $scope.showAddTutor = function (tutor) {
+      return tutor.id === $scope.tutorsselected[$scope.tutorsselected.length - 1].id;
+    };
+
     ticketsFactory.getClients().success(function (data) {
       $scope.clients = data;
     });
@@ -73,17 +93,8 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
       $scope.cliente = client.id;
     };
 
-    $scope.setTutor = function (tutor) {
-      $scope.error.tutor = false;
-      $scope.tutor = tutor.id;
-    };
-
     $scope.createProcess = function () {
-      if (!$scope.enddate) {
-        $scope.enddate = new Date(100000000000);
-      }
-      console.log($scope.factura);
-      ticketsFactory.createProcess($scope.cliente, $scope.tutor, $scope.dateFormat($scope.initdate), $scope.dateFormat($scope.enddate), $scope.factura
+      ticketsFactory.createProcess($scope.cliente, $scope.tutorsselected, $scope.dateFormat($scope.initdate), $scope.factura
               ).success(function (data) {
         if (data.success) {
           $scope.success = data.msj;
@@ -119,14 +130,22 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
         $scope.error.client = true;
         $scope.noerror = false;
       }
-      if (!$scope.tutor) {
-        $scope.error.tutor = true;
-        $scope.noerror = false;
-      }
       if (!$scope.initdate) {
         $scope.error.initdate = true;
         $scope.noerror = false;
       }
+
+      console.log($scope.noerror);
+
+      angular.forEach($scope.tutorsselected, function (mytutor) {
+        if (!mytutor.tutor) {
+          mytutor.error.name = true;
+          $scope.noerror = false;
+        }
+      });
+
+
+      console.log($scope.noerror);
 
       //RECORRO LOS DATOS DE LA FACTURA PARA VERIFICAR QUE NO ESTE VACIOS
       angular.forEach($scope.factura, function (value, key) {
@@ -139,6 +158,9 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
           }
         }
       });
+
+      console.log($scope.noerror);
+
       if ($scope.noerror) {
 
         switch (action) {
@@ -170,7 +192,7 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
     $scope.today = function () {
       $scope.dt = new Date();
     };
-    
+
     $scope.today();
 
     $scope.clear = function () {
@@ -187,7 +209,7 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
     $scope.openinitdate = function () {
       $scope.popupinitdate.opened = true;
     };
-    
+
     $scope.openenddate = function () {
       $scope.popupenddate.opened = true;
     };
