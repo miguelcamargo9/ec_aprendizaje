@@ -37,8 +37,8 @@
     <input type="hidden" name="_token" value="{{{ csrf_token()}}}"  />
     <!--SELECCIONAR EL ESTUDIANTE-->
     <div  class="form-group" ng-class="{'has-feedback has-error': error.client}">
-      <b>Estudiante: </b> <ui-select ng-model="client" theme="bootstrap" on-select="setClient($select.selected)">
-        <ui-select-match placeholder="Seleccione un Estudiante"><% client.child.nombre %> <% client.child.apellido %> - (Padre) <% client.father.name %></ui-select-match>
+      <b>Estudiante: </b> <ui-select ng-model="client.selected" theme="bootstrap" on-select="setClient($select.selected)">
+        <ui-select-match placeholder="Seleccione un Estudiante"><% client.selected.child.nombre %> <% client.selected.child.apellido %> - (Padre) <% client.selected.father.name %></ui-select-match>
         <ui-select-choices repeat="client in clients | filter: $select.search">
           <span ng-bind-html="client.child.nombre | highlight: $select.search"></span> <span ng-bind-html="client.child.apellido | highlight: $select.search"></span> - (Padre) 
           <small ng-bind-html="client.father.name | highlight: $select.search"></small>

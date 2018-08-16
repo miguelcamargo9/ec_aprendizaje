@@ -39,10 +39,7 @@
         Cliente <input disabled type="text" class="form-control" value="{{$client_name}}" >
       </div>
       <div class="form-group">
-        Fecha Inicial <input id="fecha_ini" type="date" class="form-control" value="{{$fecha_inicio}}" >
-      </div>
-      <div class="form-group">
-        Fecha Final <input id="fecha_fin" type="date" class="form-control" value="{{$fecha_fin}}" >
+        Fecha Inicial <input id="fecha_ini" type="date" class="form-control" value="{{$fecha_inicio}}" readonly>
       </div>
       <div class="row">
         <div class="col-xs-12">

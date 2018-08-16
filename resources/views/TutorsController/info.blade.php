@@ -39,12 +39,6 @@
     <i class="fa fa-ticket"></i>
 
     <h3 class="box-title">Informacion del proceso</h3>
-    <!-- tools box -->
-    <div class="pull-right box-tools">
-      <button type="button" class="btn btn-info btn-sm" data-widget="remove" data-toggle="tooltip" title="Remove">
-        <i class="fa fa-times"></i></button>
-    </div>
-    <!-- /. tools -->
   </div>
   <div class="box-body">
     <div ng-controller="registrosHoras" >

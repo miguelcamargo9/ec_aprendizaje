@@ -48,7 +48,9 @@ app.filter('propsFilter', function () {
   };
 });
 
-app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function ($scope, ticketsFactory, $timeout) {
+app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', '$filter', function ($scope, ticketsFactory, $timeout, $filter) {
+
+    $scope.client = {};
 
     $scope.factura = {
       nombre: "",
@@ -80,6 +82,9 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
 
     ticketsFactory.getClients().success(function (data) {
       $scope.clients = data;
+      if ($scope.idclient) {
+        $scope.client.selected = $filter('filter')($scope.clients, {id: $scope.idclient}, true)[0];
+      }
     });
 
     $scope.error = {};
@@ -88,14 +93,35 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
       $scope.tutors = data;
     });
 
+    $scope.setSelectTutor = function (idTutor) {
+      ticketsFactory.getTutorById(idTutor).success(function (data) {
+        $scope.tutorjson = data;
+      });
+    };
+
     $scope.setClient = function (client) {
       $scope.error.client = false;
-      $scope.cliente = client.id;
+      $scope.client.selected = client;
+      $scope.idclient = client.id;
     };
 
     $scope.createProcess = function () {
       ticketsFactory.createProcess($scope.cliente, $scope.tutorsselected, $scope.dateFormat($scope.initdate), $scope.factura
               ).success(function (data) {
+        if (data.success) {
+          $scope.success = data.msj;
+          $timeout(function () {
+            location.reload();
+          }, 300);
+        } else {
+          $scope.error.msjs = data;
+        }
+      });
+    };
+
+    $scope.editProcess = function () {
+      console.log("EDITANTIO");
+      ticketsFactory.editProcess($scope.casoId, $scope.tutorsselected, $scope.factura).success(function (data) {
         if (data.success) {
           $scope.success = data.msj;
           $timeout(function () {
@@ -123,19 +149,17 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
     };
 
     $scope.validate = function (action) {
-
       $scope.error = {};
       $scope.noerror = true;
-      if (!$scope.cliente) {
+
+      if (!$scope.cliente && action === "add") {
         $scope.error.client = true;
         $scope.noerror = false;
       }
-      if (!$scope.initdate) {
+      if (!$scope.initdate && action === "add") {
         $scope.error.initdate = true;
         $scope.noerror = false;
       }
-
-      console.log($scope.noerror);
 
       angular.forEach($scope.tutorsselected, function (mytutor) {
         if (!mytutor.tutor) {
@@ -143,13 +167,9 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
           $scope.noerror = false;
         }
       });
-
-
-      console.log($scope.noerror);
-
+      
       //RECORRO LOS DATOS DE LA FACTURA PARA VERIFICAR QUE NO ESTE VACIOS
       angular.forEach($scope.factura, function (value, key) {
-
         //EXCLUYO LOS CAMPOS QUE NO QUIERO VERIFICAR
         if (key !== "telefono" && key !== "email") {
           if (value === "") {
@@ -159,15 +179,12 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', function (
         }
       });
 
-      console.log($scope.noerror);
-
       if ($scope.noerror) {
-
         switch (action) {
-          case"add":
+          case "add":
             $scope.createProcess();
             break;
-          case"edit":
+          case "edit":
             $scope.editProcess();
             break;
           default :

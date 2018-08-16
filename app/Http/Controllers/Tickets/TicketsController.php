@@ -61,6 +61,32 @@ class TicketsController extends Controller {
     return response()->json(array('success' => true, 'msj' => 'Proceso Creado con Exito'));
   }
 
+  public function editInfoTicket() {
+    $id = Input::get('id');
+    $datosFactura = Input::get('datosFactura');
+    $tutores = Input::get('tutors');
+
+    try {
+      TicketTutores::where('caso_id', '=', $id)->delete();
+
+      $invoice = Bills::where('caso_id', '=', $id)->first();
+      foreach ($datosFactura as $campoFac => $valor) {
+        $invoice->$campoFac = $valor;
+      }
+      $invoice->save();
+
+      foreach ($tutores as $tutor) {
+        $ticketTutores = new TicketTutores();
+        $ticketTutores->caso_id = $id;
+        $ticketTutores->users_id_tutor = $tutor['tutor']['id'];
+        $ticketTutores->save();
+      }
+    } catch (Exception $ex) {
+      return response()->json(array('error' => array('Error editando el proceso')));
+    }
+    return response()->json(array('success' => true, 'msj' => 'Proceso Editado con Exito'));
+  }
+
   public function editTicket() {
     //$comentario = Input::get('comentario');
     $fecha_ini = Input::get('fecha_ini');
@@ -119,7 +145,7 @@ class TicketsController extends Controller {
 
       mail($para, $titulo, $mensaje, $cabeceras);
     } else {
-      Ticket::where('id', '=', $id)->update(array('descripcion' => $comentario, "fecha_inicio" => $fecha_ini, "fecha_fin" => $fecha_fin));
+      Ticket::where('id', '=', $id)->update(array('descripcion' => $comentario, "fecha_inicio" => $fecha_ini));
     }
   }
 
@@ -137,7 +163,7 @@ class TicketsController extends Controller {
       $idTicket = $value->id;
       $ruta = "/tickets/ticketinfo/$idTicket";
       $boton = "<a href='$ruta' alt='Ver Proceso {$idTicket}'>Ver <i class='fa fa-eye'></i></a>";
-      $ruta = "/tickets/editticket/$idTicket";
+      $ruta = "/tickets/view/edit/$idTicket";
       $boton .= "<a href='$ruta' alt='Editar Proceso {$idTicket}'>Editar <i class='fa fa-edit'></i></a>";
       $value->ver = $boton;
     }
@@ -255,6 +281,16 @@ class TicketsController extends Controller {
 
   public function getParent($id_parent) {
     return Usuario::find($id_parent);
+  }
+
+  public function viewEditTicket($idTicket) {
+    $infoTicket = Ticket::find($idTicket);
+    $infoTicket->tutors = TicketTutores::where('caso_id', '=', $idTicket)->get();
+    $infoTicket->invoice = Bills::where('caso_id', '=', $idTicket)->first();
+    foreach ($infoTicket->tutors as $tutor) {
+      $tutor->user = Usuario::find($tutor->users_id_tutor);
+    }
+    return view('TicketsController.edit', $infoTicket->toArray());
   }
 
 }

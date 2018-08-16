@@ -6,23 +6,10 @@ $(document).ready(function () {
       "type": "GET"
     },
     "sAjaxDataProp": "",
-//        'columnDefs': [{
-//            'targets': 0,
-//            'searchable': false,
-//            'orderable': false,
-//            'className': 'dt-body-center',
-//            'render': function (data, type, full, meta) {
-//                return '<input type="checkbox" name="id[]" value="'
-//                    + $('<div/>').text(data).html() + '">';
-//            }
-//        }],
     "columns": [
-      //{"data": "id"},
       {"data": "estado"},
       {"data": "estudiante"},
-      {"data": "tutor"},
       {"data": "fechai"},
-      {"data": "fechaf"},
       {"data": "boton"}
     ],
     'order': [1, 'asc'],
@@ -47,7 +34,7 @@ $(document).ready(function () {
       }
     }).done(function () {
       $("#msg-done").show();
-      window.location="";
+      window.location = "";
       //$("#comentario").attr('disabled', 'disabled');
     });
   });

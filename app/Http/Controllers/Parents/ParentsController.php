@@ -35,11 +35,10 @@ class ParentsController extends Controller {
     $childByParent = Client::where('users_id_padre', '=', $idParentUser)->pluck("id")->toArray();
     //var_dump($childByParent);
     $ticketsByParent = Ticket::whereIn("id_cliente", $childByParent)
-                    ->leftJoin('users', 'caso.users_id_tutor', '=', 'users.id')
                     ->leftJoin('cliente', 'caso.id_cliente', '=', 'cliente.id')
                     ->leftJoin('hijo', 'cliente.id_hijo', '=', 'hijo.id')
                     ->leftJoin('estado', 'caso.id_estado', '=', 'estado.id')
-                    ->select('estado.estado as estado', 'hijo.nombre as estudiante', 'users.name AS tutor', 'caso.fecha_inicio as fechai', 'caso.fecha_fin as fechaf', 'caso.descripcion as desc', 'caso.id as id')->get();
+                    ->select('estado.estado as estado', 'hijo.nombre as estudiante', 'caso.fecha_inicio as fechai', 'caso.descripcion as desc', 'caso.id as id')->get();
 
     $respuesta = array();
     foreach ($ticketsByParent->toArray() as $ticket) {
@@ -59,9 +58,9 @@ class ParentsController extends Controller {
 
   public function getInfoTickets($idTicket) {
     $infoTicket = Ticket::find($idTicket);
-    $registrosTutor = registroTutor::where([['id_caso', '=', $idTicket],['aprobado','=','S']])->get(); //BUSCO LOS REGISROS QUE HA HECHO EL TUTOR
+    $registrosTutor = registroTutor::where([['id_caso', '=', $idTicket], ['aprobado', '=', 'S']])->get(); //BUSCO LOS REGISROS QUE HA HECHO EL TUTOR
     $horasRegistro = registroTutor::where('id_caso', '=', $idTicket)->sum('total_horas');
-    
+
     $client = $this->getClient($infoTicket->id_cliente);
     $child = $this->getChild($client->id_hijo);
     $parent = $this->getParent($client->users_id_padre);
@@ -97,10 +96,10 @@ class ParentsController extends Controller {
     $datosUpdate = array(
         "respuesta_padre" => $comentario,
         "fecha_comentario_padre" => $fechaComentario);
-    
+
     try {
       registroTutor::where('id', '=', $idRegistro)->update($datosUpdate);
-      $todosAprobados = registroTutor::where(array("aprobado" => 'N',"id_caso"=>$idCaso))->get()->count();
+      $todosAprobados = registroTutor::where(array("aprobado" => 'N', "id_caso" => $idCaso))->get()->count();
       if ($todosAprobados == 0) {
         Ticket::where('ID', '=', $idCaso)->update(array('id_estado' => $nuevoEstado));
       }
@@ -108,8 +107,6 @@ class ParentsController extends Controller {
       return response()->json(array('error' => array('Error al guardar el comentario')));
     }
     return response()->json(array('success' => true, 'msj' => 'Comentario guardado'));
- 
-    
   }
 
   public function sendEamil() {

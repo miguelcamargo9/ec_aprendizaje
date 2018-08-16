@@ -12,40 +12,31 @@
     <i class="fa fa-ticket"></i>
 
     <h3 class="box-title">Información del proceso</h3>
-    <!-- tools box -->
-    <div class="pull-right box-tools">
-      <button type="button" class="btn btn-info btn-sm" data-widget="remove" data-toggle="tooltip" title="Remove">
-        <i class="fa fa-times"></i></button>
-    </div>
-    <!-- /. tools -->
   </div>
-  
+
   <div class="box-body" ng-controller="ticketInfoCtrl" >
     <!--mensaje de error-->
     <div ng-repeat="errorObj in error.msjs">
       <div class="alert alert-danger" role="alert" ng-repeat="msj in errorObj">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-          <span class="sr-only">Error:</span>
-          <strong><%msj%></strong>
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        <strong><%msj%></strong>
       </div>
     </div>
     <!--mensaje de exito-->
     <div class="alert alert-success" role="alert" ng-show="success">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
-        <span class="sr-only">Éxito:</span>
-        <strong><%success%></strong>
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+      <span class="sr-only">Éxito:</span>
+      <strong><%success%></strong>
     </div>
-    
+
     <div class="form-group">
       Estudiante <input disabled type="text" class="form-control" value="{{$client_name}}" >
     </div>
     <div class="form-group">
       Fecha Inicial <input disabled type="date" class="form-control" value="{{$fecha_inicio}}" >
-    </div>
-    <div class="form-group">
-      Fecha Final <input disabled type="date" class="form-control" value="{{$fecha_fin}}" >
     </div>
     <div class="row">
       <div class="col-xs-12">
@@ -58,29 +49,29 @@
       <!--PINTO TODOS LOS REGISTROS QUE HA HECHO EL TUTOR-->
 
       @foreach ($registros as $registro)
-        @if($registro->aprobado=='N')
-          <?php
-            $tipoPanel = "panel-warning";
-            $estado = "Pendiente por revisar";
-          ?>
-          @else
-            <?php
-              $tipoPanel = "panel-success";
-              $estado = "Registro revisado";
-            ?>
-        @endif
-        <?php $txtBtn =($registro->respuesta_padre=="")?"Comentar":"Ver"; ?>
+      @if($registro->aprobado=='N')
+      <?php
+      $tipoPanel = "panel-warning";
+      $estado = "Pendiente por revisar";
+      ?>
+      @else
+      <?php
+      $tipoPanel = "panel-success";
+      $estado = "Registro revisado";
+      ?>
+      @endif
+      <?php $txtBtn = ($registro->respuesta_padre == "") ? "Comentar" : "Ver"; ?>
       <div class="col-xs-12">
         <div class="panel panel-default {{$tipoPanel}}">
-          <div class="panel-heading">Resumen del registro. <b>Fecha:</b> {{date("Y-m-d",strtotime($registro->fecha_creacion))}}</div>
+          <div class="panel-heading">Resumen del registro. <b>Fecha:</b> {{date("Y-m-d", strtotime($registro -> fecha_creacion))}}</div>
           <div class="panel-body">
-            {{$registro->resumen}}
+            {{$registro -> resumen}}
 
           </div>
           <div class="panel-footer">
             <button type="button" 
                     class="btn btn-info" 
-                    ng-click="getDetalesRegistro({{$registro->id}},'{{$registro->resumen}}',{{$registro->total_horas}},'{{$registro->respuesta_padre}}')" 
+                    ng-click="getDetalesRegistro({{$registro -> id}},'{{$registro -> resumen}}',{{$registro -> total_horas}},'{{$registro -> respuesta_padre}}')" 
                     data-toggle="modal" data-target="#detallesRegistro"> {{$txtBtn}} </button> 
           </div>
         </div>

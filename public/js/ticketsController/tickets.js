@@ -82,7 +82,6 @@ $(document).ready(function () {
   $("#editar").click(function () {
     var comentario = $("#comentario_tutor").val();
     var fecha_ini = $("#fecha_ini").val();
-    var fecha_fin = $("#fecha_fin").val();
     var idCaso = $("#idCaso").val();
     var _token = $("#_token").val();
     $.ajax({
@@ -91,7 +90,6 @@ $(document).ready(function () {
       data: {
         comentario: comentario,
         fecha_ini: fecha_ini,
-        fecha_fin: fecha_fin,
         id: idCaso,
         _token: _token
       }
@@ -103,7 +101,6 @@ $(document).ready(function () {
   $("#completar").click(function () {
     var comentario = $("#comentario_tutor").val();
     var fecha_ini = $("#fecha_ini").val();
-    var fecha_fin = $("#fecha_fin").val();
     var idCaso = $("#idCaso").val();
     var _token = $("#_token").val();
     $.ajax({
@@ -113,7 +110,6 @@ $(document).ready(function () {
         comentario: comentario,
         cierre: true,
         fecha_ini: fecha_ini,
-        fecha_fin: fecha_fin,
         id: idCaso,
         _token: _token
       }

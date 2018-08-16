@@ -46,6 +46,8 @@ Route::post('/admin/client/create', array('as' => 'admin.client.create', 'uses' 
 Route::any('/tickets/list', array('as' => 'tickets.list', 'uses' => 'Tickets\TicketsController@showListTickets'))->middleware('auth');
 Route::get('/tickets/new', array('as' => 'tickets.new', 'uses' => 'Tickets\TicketsController@showNewTicket'))->middleware('auth');
 Route::post('/tickets/registry', array('as' => 'tickets.registry', 'uses' => 'Tickets\TicketsController@createNewTicket'))->middleware('auth');
+Route::get('/tickets/view/edit/{idTicket}', array('as' => 'tickets.registry', 'uses' => 'Tickets\TicketsController@viewEditTicket'))->middleware('auth');
+Route::post('/tickets/editTicket', array('as' => 'tickets.editticket', 'uses' => 'Tickets\TicketsController@editInfoTicket'))->middleware('auth');
 Route::post('/tickets/edit', array('as' => 'tickets.edit', 'uses' => 'Tickets\TicketsController@editTicket'))->middleware('auth');
 Route::post('/tickets/getall', array('as' => 'tickets.getall', 'uses' => 'Tickets\TicketsController@getAllTickets'))->middleware('auth');
 Route::any('/tickets/updatestate', array('as' => 'tickets.updatestate', 'uses' => 'Tickets\TicketsController@updateState'))->middleware('auth');
@@ -67,6 +69,7 @@ Route::post('/tutor/guardarDoc', array('as' => 'tutor.guardar.doc', 'uses' => 'T
 /*Routers Resources */
 Route::post('/resources/getClients', array('as' => 'resources.getclients', 'uses' => 'Resources\ResourcesController@getClients'))->middleware('auth');
 Route::post('/resources/getTutors', array('as' => 'resources.gettutors', 'uses' => 'Resources\ResourcesController@getTutors'))->middleware('auth');
+Route::post('/resources/getTutorById', array('as' => 'resources.gettutorbyid', 'uses' => 'Resources\ResourcesController@getTutorById'))->middleware('auth');
 Route::post('/resources/getUniversities', array('as' => 'resources.getuniversities', 'uses' => 'Resources\ResourcesController@getUniversities'))->middleware('auth');
 Route::post('/resources/getDegrees', array('as' => 'resources.getdegrees', 'uses' => 'Resources\ResourcesController@getDegrees'))->middleware('auth');
 Route::post('/resources/getBanks', array('as' => 'resources.getbanks', 'uses' => 'Resources\ResourcesController@getBanks'))->middleware('auth');
