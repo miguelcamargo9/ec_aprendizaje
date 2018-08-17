@@ -152,7 +152,7 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', '$filter',
       $scope.error = {};
       $scope.noerror = true;
 
-      if (!$scope.cliente && action === "add") {
+      if (!$scope.client.selected && action === "add") {
         $scope.error.client = true;
         $scope.noerror = false;
       }
