@@ -106,7 +106,7 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', '$filter',
     };
 
     $scope.createProcess = function () {
-      ticketsFactory.createProcess($scope.cliente, $scope.tutorsselected, $scope.dateFormat($scope.initdate), $scope.factura
+      ticketsFactory.createProcess($scope.client.selected.id, $scope.tutorsselected, $scope.dateFormat($scope.initdate), $scope.factura
               ).success(function (data) {
         if (data.success) {
           $scope.success = data.msj;
