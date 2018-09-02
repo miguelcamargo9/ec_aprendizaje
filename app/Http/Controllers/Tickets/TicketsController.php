@@ -368,13 +368,13 @@ class TicketsController extends Controller {
                     $horaIni = $hora->hora_inicio;
                     $horaFin = $hora->hora_fin;
                    $mensaje .= "<tr>
-                      <td colspan='4'>
+                      <td>
                         Fecha: $fecha
                       </td>
-                      <td colspan='4'>
+                      <td >
                         Hora de inicio: $horaIni
                       </td>
-                      <td colspan='4'>
+                      <td>
                         Hora de fin: $horaFin
                       </td>
                     </tr>";
