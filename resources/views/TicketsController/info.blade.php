@@ -102,6 +102,8 @@
                 <div data-ng-repeat="hora in horas">
                   <p><b>Fecha: </b><% hora.fecha %> <b>Hora inicio: </b><% hora.hora_inicio %> <b>Hora fin:</b> <% hora.hora_fin %></p>
                 </div>
+                <label>Documento adjunto: </label>
+                <a href="<%enlace%>" target="_blank"><%nombreEnlace%></a>
                 <h3>Total de horas: <%totalH%> </h3>
                 <div>
                   <h3>Comentario tutor:</h3>

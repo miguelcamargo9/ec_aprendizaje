@@ -94,7 +94,6 @@ class TicketsController extends Controller {
     $id = Input::get('id');
     $cierre = Input::get('cierre');
     if (isset($cierre)) {
-      Ticket::where('id', '=', $id)->update(array("fecha_inicio" => $fecha_ini, "fecha_fin" => $fecha_fin));
       //ENVIO DE CORREO
 
 
@@ -102,16 +101,27 @@ class TicketsController extends Controller {
       $cabeceras .= 'Content-type: text/html; charset=utf-8' . "\r\n";
       $cabeceras .= 'From: Emocion Creativa <info@emocioncreativa.com>' . "\r\n";
 
-      $para = "andre0190@gmail.com";
-
       $titulo = "Caso verificado";
 
       $ticket = Ticket::where("caso.id", "=", $id)
-                      ->leftJoin('users', 'caso.users_id_tutor', '=', 'users.id')
                       ->leftJoin('cliente', 'caso.id_cliente', '=', 'cliente.id')
                       ->leftJoin('hijo', 'cliente.id_hijo', '=', 'hijo.id')
                       ->leftJoin('estado', 'caso.id_estado', '=', 'estado.id')
-                      ->select('estado.estado as estado', 'hijo.nombre as hijoName', 'hijo.apellido as estudianteAp', 'users.name as tutor')->first();
+                      ->select('estado.estado as estado', 'hijo.nombre as hijoName', 'hijo.apellido as estudianteAp', 'cliente.users_id_padre as clientid')->first();
+
+      $cliente = Usuario::find($ticket->clientid);
+      $para = "andre0190@gmail.com";
+//      $para = $cliente->email;
+
+      $tutors = TicketTutores::where('caso_id', '=', $id)->get();
+      $nombreturores = "";
+
+      foreach ($tutors as $tutor) {
+        $mistutor = Usuario::find($tutor->users_id_tutor);
+        $nombreturores .= $mistutor->name . ", ";
+      }
+
+      $nombreturores = substr($nombreturores, 0, -2);
       $ticket->toArray();
       $estudiante = "{$ticket['hijoName']} {$ticket['estudianteAp']}";
       $tutor = $ticket['tutor'];
@@ -128,7 +138,7 @@ class TicketsController extends Controller {
               <table width='700' border='0' align='center' cellpadding='0' cellspacing='0' style='font-family: Verdana, Geneva, sans-serif; text-align: center; background-color: white;'>
                  <tr>
                    <td colspan='4'>
-                     el caso del estudiante:$estudiante con el tutro: $tutor ya se encuentra en el estado $estado
+                     el caso del estudiante:$estudiante con el tutro: $nombreturores ya se encuentra en el estado $estado
                    </td>
                  </tr>
 
@@ -246,7 +256,17 @@ class TicketsController extends Controller {
 
   public function getDetalleRegistros() {
     $idRegistro = Input::get('idRegistro');
+    $idCaso = Input::get('idCaso');
     $horasRegistro = horasRegistro::where('registro_tutor_id', '=', $idRegistro)->get();
+    //BUSCO LOS ARCHIVOS QUE HAYA CARGADO EL TUTOR PARA ESE REGISTRO
+    $ruta = public_path("$idCaso/$idRegistro");
+    $directorio = opendir($ruta); //ruta actual
+    while ($archivo = readdir($directorio)) { //obtenemos un archivo y luego otro sucesivamente
+      if (!is_dir($archivo)) {//verificamos si es o no un directorio
+        $horasRegistro["nombreEnlace"] = $archivo;
+        $horasRegistro["enlace"] = url("/$idCaso/$idRegistro/$archivo");
+      }
+    }
     return $horasRegistro->toJson();
   }
 
@@ -259,12 +279,38 @@ class TicketsController extends Controller {
     $idCaso = Input::get('idCaso');
     $idRegistro = Input::get('idRegistro');
     $fecha = date("Y-m-d H:i:s");
+    ///TRAIGO LA INFORMACION PARA ENVIAR EL CORREO
+    $ticket = Ticket::where("caso.id", "=", $idCaso)
+                    ->leftJoin('cliente', 'caso.id_cliente', '=', 'cliente.id')
+                    ->leftJoin('hijo', 'cliente.id_hijo', '=', 'hijo.id')
+                    ->leftJoin('estado', 'caso.id_estado', '=', 'estado.id')
+                    ->select('estado.estado as estado', 'hijo.nombre as hijoName', 'cliente.users_id_padre as clientid')->first();
+    $cliente = Usuario::find($ticket->clientid);
+    $para = "andre0190@gmail.com";
+//    $para = $cliente->email;
+    
+    $tutors = TicketTutores::where('caso_id', '=', $idCaso)->get();
+    $nombreturores = "";
+
+
+    ///TUTOR DEL CASO
+    foreach ($tutors as $tutor) {
+      $mistutor = Usuario::find($tutor->users_id_tutor);
+      $nombreturores .= $mistutor->name . ", ";
+    }
+
+    //HORAS DEL REGISTRO
+    $horasRegistro = horasRegistro::where('registro_tutor_id', '=', $idRegistro)->get();
+    foreach ($horasRegistro as $hora) {
+      echo $hora->fecha;
+    }
     try {
       registroTutor::where('id', '=', $idRegistro)->update(array("resumen" => $resumen, "aprobado" => "S", "fecha_aprobacion" => $fecha));
       $todosAprobados = registroTutor::where(array("aprobado" => 'N', "id_caso" => $idCaso))->get()->count();
       if ($todosAprobados == 0) {
         Ticket::where('id', '=', $idCaso)->update(array('id_estado' => 3));
       }
+      $this->email($para, $horasRegistro, $nombreturores, $resumen);
     } catch (Exception $ex) {
       return response()->json(array('error' => array('Error al aprobar el registro')));
     }
@@ -291,6 +337,68 @@ class TicketsController extends Controller {
       $tutor->user = Usuario::find($tutor->users_id_tutor);
     }
     return view('TicketsController.edit', $infoTicket->toArray());
+  }
+
+  /*
+   * FUNCION CON EL CUERPO DEL EMAIL QUE SE ENVIA AL PADRE CUANDO SE APRUEBA UN REGISTRO DEL TUTOR
+   */
+
+  private function email($para,$horas,$tutor,$resumen) {
+    $cabeceras = 'MIME-Version: 1.0' . "\r\n";
+    $cabeceras .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+    $cabeceras .= 'From: Emocion Creativa <info@emocioncreativa.com>' . "\r\n";
+
+    $titulo = "Nuevo comentario en el caso de tutoria";
+    $mensaje = "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+              <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en'>
+              <head>
+                      <meta http-equiv='Content-Type' content='text/html;charset=UTF-8'>
+                      <title>Caso verificado</title>
+                      <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
+              </head>
+              <body style='background-color: #f6f6f6'>
+              <table width='700' border='0' align='center' cellpadding='0' cellspacing='0' style='font-family: Verdana, Geneva, sans-serif; text-align: center; background-color: white;'>
+                 <tr>
+                   <td colspan='4'>
+                     El tutor $tutor agrego un nuevo registro de la tutoria
+                   </td>
+                 </tr>";
+                 foreach ($horas as $hora) {
+                    $fecha = $hora->fecha;
+                    $horaIni = $hora->hora_inicio;
+                    $horaFin = $hora->hora_fin;
+                   $mensaje .= "<tr>
+                      <td colspan='4'>
+                        Fecha: $fecha
+                      </td>
+                      <td colspan='4'>
+                        Hora de inicio: $horaIni
+                      </td>
+                      <td colspan='4'>
+                        Hora de fin: $horaFin
+                      </td>
+                    </tr>";
+                  }
+                 
+
+      $mensaje .= "
+                <tr>
+                   <td>
+                     <h3>Comentario: </h3>
+                     <p>$resumen</p>
+                   </td>
+                </tr>
+                <tr>
+                  <td height='60'></td>
+                </tr>
+                <tr style='background-color: #f7f7f7; color: #79797d;'>
+                  <td colspan='4'><p style='font-size: 12px; margin: 30px;'>Copyright © 2018 Emoción creativa </p></td>
+                </tr>
+              </table>
+              </body>
+              </html>";
+
+    mail($para, $titulo, $mensaje, $cabeceras);
   }
 
 }

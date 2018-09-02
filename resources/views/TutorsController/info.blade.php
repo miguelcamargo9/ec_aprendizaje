@@ -68,10 +68,11 @@
       </div>
       
       <!--SECCION PARA AGREGAR COMENTARIOS-->
-      <h4>Agregar Documentos</h4>
-      <div class="row">
+      <!--<h4>Agregar Documentos</h4>-->
+      <input type="hidden" name="idCaso" value="{{$id}}" ng-model="idCaso"  ng-init="idCaso={{$id}}" ng-value="{{$id}}"  />
+<!--      <div class="row">
         <form method="post" action="/tutor/guardarDoc" enctype="multipart/form-data">
-          <input type="hidden" name="idCaso" value="{{$id}}" ng-model="idCaso"  ng-init="idCaso={{$id}}" ng-value="{{$id}}"  />
+          
           <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
           <div class="col-xs-3">
             <div class="form-group">
@@ -105,7 +106,7 @@
             <button type="submit" class="btn btn-info " > Guardar </button> 
           </div>
         </form>
-      </div>
+      </div>-->
       <!--BOTON PARA AGREGAR UN NUEVO REGISTRO-->
       <div class="row">
         <div class="col-xs-12">
@@ -219,7 +220,20 @@
                 </div>
 
               </div>
-
+              <!--ADJUNTAR DOCUMETNOS-->
+              <div class="col-xs-6">
+                <div class="form-group">
+                  <label for="documentos">Adjuntar archivos</label>
+                  <input  type="file" name="documentos" accept="image/*"
+                          class="form-control" 
+                           onchange="angular.element(this).scope().getFileDetails(this)" >
+<!--                  <input accept="image/*" name="file" ng-value="fileToUpload"
+                          value="{%fileToUpload%}" file-model="fileToUpload"
+                          set-file-data="fileToUpload = value;" 
+                          type="file" id="my_file" />-->
+                </div>
+              </div>
+              
               <div class="row">
                 <div class="col-xs-12">
                   <h3>Total de horas registrdas <%choices.totalHoras%></h3>

@@ -247,12 +247,12 @@
                 <section class="content-header">
                     @if ($view == 'index')
                     <h1>
-                        Dashboard
-                        <small>Control panel</small>
+                        Inicio
+                        <small>Home</small>
                     </h1>
                     <ol class="breadcrumb">
                         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li class="active">Dashboard</li>
+                        <li class="active">Pagina de Inicio</li>
                     </ol>
                     @else
                         @if (isset($keyfather))

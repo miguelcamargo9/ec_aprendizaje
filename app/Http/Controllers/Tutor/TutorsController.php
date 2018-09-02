@@ -123,12 +123,19 @@ class TutorsController extends Controller {
    * GUARDAR EL COMENTARIO DEL TUTOR
    */
 
-  public function addCommentary() {
+  public function addCommentary(Request $params) {
 //        $comentario = trim($request->input('comentario'));
 //        $fechaComentario = date("Y-m-d H:i:s");
 //        $idCaso = $request->input('id');
-    $registros = Input::get('registros');
+    $documento = $params->file('documentos');
     $mensaje = Input::get('msg');
+    $registros = Input::get('registros');
+    $registros = json_decode($registros,true);
+      //NOMBRES
+      $nombre = $documento->getClientOriginalName();
+      ///RUTA DONDE VOY A GUARDAR LOS DOCUMENTOS
+      //$documento->move("$idTutor/$anio/$mes/$idTicket", "$nombre");
+    
     $totalHoras = Input::get('totalH');
     $idCaso = Input::get('idCaso');
     $fechaCreacion = date('Y-m-d H:i:s');
@@ -143,6 +150,8 @@ class TutorsController extends Controller {
       $datosRegistro->save();
       Ticket::where('ID', '=', $idCaso)->update(array('id_estado' => 6));
       $idRegistro = $datosRegistro->id;
+      //GUARDO EL DOCUMENTO QUE ADJUNTO EL TUTOR
+      $documento->move("$idCaso/$idRegistro", "$nombre");
       //RECORRO TODOS LOS REGISTROS DE LAS HORAS
       foreach ($registros as $registro) {
         //HORA DE INICIO
@@ -193,7 +202,7 @@ class TutorsController extends Controller {
   }
 
   public function guardarDocumentos(Request $params) {
-    //GUARDAR EL VIDEO DEL USUARIO
+    //GUARDAR LOS DOCUMENTOS QUE ADJUNTE EL TUTOR
     $tutorSession = Session::get('user');
     $idTutor = $tutorSession['id'];
     $documentos = $params->file('documentos');

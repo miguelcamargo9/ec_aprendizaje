@@ -2,6 +2,7 @@
 
 @section('contentbody')
 <!-- Small boxes (Stat box) -->
+ @if ( Session::get('profile')  == 'Administrador')
 <div class="row">
     <div class="col-lg-3 col-xs-6">
         <!-- small box -->
@@ -491,7 +492,34 @@
     </section>
     <!-- right col -->
 </div>
+@else
+  <div class="row row-bienvenido">
+    <div class="col-xs-12" style="text-align: center" >
+      <h1 class="msg-bienvenido">Bienvenido</h1>
+    </div>
+  </div>
+  <div class="row" style="background: white">
+    <img class="img-log" src="{{ URL::to('/') }}/img/logo.jpeg" />
+  </div>
+@endif
 <!-- /.row (main row) -->
+<style type="text/css">
+  .msg-bienvenido{
+    font-family: "intelo-bold", sans-serif;
+    font-weight: normal;
+    margin: 0;
+    line-height: 1;
+    color: #2B2E39;
+  }
+  .img-log{
+    display: block;
+    margin: 0 auto;
+  }
+  .row-bienvenido{
+   // background-image: linear-gradient(to bottom, #3df2ff 0%, #2d8bff 100%);
+   padding: 10px;
+  }
+</style>
 @endsection
 
 @section('scriptsjs')

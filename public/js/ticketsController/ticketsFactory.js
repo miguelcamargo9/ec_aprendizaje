@@ -17,8 +17,8 @@ app.factory('ticketsFactory', function ($http) {
     'editProcess': function (id, tutors, datosFactura) {
       return $http.post('/tickets/editTicket', {id: id, tutors: tutors, datosFactura: datosFactura});
     },
-    'detalleRegistros': function (idRegistro) {
-      return $http.post('/tickets/detalleRegistros', {idRegistro: idRegistro});
+    'detalleRegistros': function (idRegistro,idCaso) {
+      return $http.post('/tickets/detalleRegistros', {idRegistro: idRegistro,idCaso:idCaso});
     },
     'aprobarRegistro': function (idRegistro, resumen, idCaso) {
       return $http.post('/tickets/aprobarRegistro', {idRegistro: idRegistro, resumen: resumen, idCaso: idCaso});

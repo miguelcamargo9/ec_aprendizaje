@@ -33,21 +33,21 @@ app.controller("registrosHoras", ['$scope', 'tutorsFactory', '$timeout', functio
     $scope.dateOptions = {
       startingDay: 1
     };
-    $scope.validaFecha = function (_this,fecha) {
+    $scope.validaFecha = function (_this, fecha) {
       //TRAIGO LAS FECHAS VALIDAD PARA SELECCIONAR EN EL REGISTO
       tutorsFactory.dateRegistry().then(function (datos) {
         var fechas = datos.data;
         var permiso = fechas.permiso;
-        var index =(_this.$index);
+        var index = (_this.$index);
         if (permiso === "NO") {
           var fechaIni = new Date(fechas.fechaIni);
           var fechaFin = new Date(fechas.fechaFin);
 
           if (fecha.getTime() < fechaIni.getTime()) {
             alert("No puedes seleccionar fechas de una semana anterior \n Por facor comunicate con el administrador.");
-            $scope.choices[index]['fecha']=null;
+            $scope.choices[index]['fecha'] = null;
           }
-          
+
           if (fecha.getTime() > fechaFin.getTime()) {
             alert("No puedes seleccionar fechas superiores a esta semana");
           }
@@ -101,33 +101,60 @@ app.controller("registrosHoras", ['$scope', 'tutorsFactory', '$timeout', functio
       var totalHoras = $scope.choices.totalHoras;
       var msg = $scope.choices.mensaje;
       var id = $scope.idCaso;
-     
-      tutorsFactory.saveRegistry($scope.choices, totalHoras, msg, id).then(function (respuesta) {
-        rta = respuesta.data;
-        if (rta.success) {
-          $scope.success = rta.msj;
-          $timeout(function () {
-            location.reload();
-          }, 3000);
-        } else {
-          $scope.error.msjs = rta;
+      var data = new FormData();
+      var adjuntoFoto = ( typeof $scope.files ==="undefined")?false:true;
+      if (!adjuntoFoto) {
+        alert("Debes adjuntar un registro");
+      } else {
+        for (var i in $scope.files) {
+          console.log($scope.files[i]);
+          data.append("documentos", $scope.files[i]);
         }
-      });
+        var registros = JSON.stringify($scope.choices);
+        data.append("registros", registros);
+        data.append("totalH", totalHoras);
+        data.append("msg", msg);
+        data.append("idCaso", id);
+        console.log(id);
+        tutorsFactory.saveRegistry(data).then(function (respuesta) {
+          rta = respuesta.data;
+          if (rta.success) {
+            $scope.success = rta.msj;
+            $timeout(function () {
+              location.reload();
+            }, 3000);
+          } else {
+            $scope.error.msjs = rta;
+          }
+        });
+      }
     };
 
     //TRAER LOS DETALLES DE LAS HORAS DEL REGISTRO SELECCIONADO
-    $scope.getDetalesRegistro = function (idRegistro, resumen, totalHoras,comPadre) {
+    $scope.getDetalesRegistro = function (idRegistro, resumen, totalHoras, comPadre) {
       $scope.resumen = resumen;
       $scope.idRegistro = idRegistro;
       $scope.totalH = totalHoras;
       $scope.comPadre = comPadre;
-      $scope.answeredP=(comPadre!=='')?false:true;
-      
+      $scope.answeredP = (comPadre !== '') ? false : true;
+
       tutorsFactory.detalleRegistros(idRegistro).then(function (respuesta) {
         $scope.horas = respuesta.data;
       });
     };
 
+    //CARGAR LOS DOCUMENTOS QUE ADJUNTE EL TUTOR
+    $scope.getFileDetails = function (e) {
+
+      $scope.files = [];
+      $scope.$apply(function () {
+
+        // STORE THE FILE OBJECT IN AN ARRAY.
+        for (var i = 0; i < e.files.length; i++) {
+          $scope.files.push(e.files[i]);
+        }
+
+      });
+    };
+
   }]);
-
-
