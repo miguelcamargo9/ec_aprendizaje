@@ -362,7 +362,7 @@ class TicketsController extends Controller {
                   </td>
                  </tr>
                   <tr>
-                   <td colspan='4'>
+                   <td>
                      El tutor $tutor agrego un nuevo registro de la tutoria
                    </td>
                  </tr><tr><td><h3>Registros: </h3></td></tr>";
