@@ -301,9 +301,7 @@ class TicketsController extends Controller {
 
     //HORAS DEL REGISTRO
     $horasRegistro = horasRegistro::where('registro_tutor_id', '=', $idRegistro)->get();
-    foreach ($horasRegistro as $hora) {
-      echo $hora->fecha;
-    }
+    
     try {
       registroTutor::where('id', '=', $idRegistro)->update(array("resumen" => $resumen, "aprobado" => "S", "fecha_aprobacion" => $fecha));
       $todosAprobados = registroTutor::where(array("aprobado" => 'N', "id_caso" => $idCaso))->get()->count();
@@ -359,10 +357,16 @@ class TicketsController extends Controller {
               <body style='background-color: #f6f6f6'>
               <table width='700' border='0' align='center' cellpadding='0' cellspacing='0' style='font-family: Verdana, Geneva, sans-serif; text-align: center; background-color: white;'>
                  <tr>
+                  <td>
+                    <img src='".url("/img/logo.jpeg")."'/>
+                  </td>
+                 </tr>
+                  <tr>
                    <td colspan='4'>
+                   <br>
                      El tutor $tutor agrego un nuevo registro de la tutoria
                    </td>
-                 </tr>";
+                 </tr><tr>td><h3>Registros: </h3></td></tr>";
                  foreach ($horas as $hora) {
                     $fecha = $hora->fecha;
                     $horaIni = $hora->hora_inicio;
