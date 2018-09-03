@@ -363,10 +363,9 @@ class TicketsController extends Controller {
                  </tr>
                   <tr>
                    <td colspan='4'>
-                   <br>
                      El tutor $tutor agrego un nuevo registro de la tutoria
                    </td>
-                 </tr><tr>td><h3>Registros: </h3></td></tr>";
+                 </tr><tr><td><h3>Registros: </h3></td></tr>";
                  foreach ($horas as $hora) {
                     $fecha = $hora->fecha;
                     $horaIni = $hora->hora_inicio;
