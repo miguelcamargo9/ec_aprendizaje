@@ -286,8 +286,8 @@ class TicketsController extends Controller {
                     ->leftJoin('estado', 'caso.id_estado', '=', 'estado.id')
                     ->select('estado.estado as estado', 'hijo.nombre as hijoName', 'cliente.users_id_padre as clientid')->first();
     $cliente = Usuario::find($ticket->clientid);
-//    $para = "andre0190@gmail.com";
-    $para = $cliente->email;
+    $para = "andre0190@gmail.com";
+//    $para = $cliente->email;
     
     $tutors = TicketTutores::where('caso_id', '=', $idCaso)->get();
     $nombreturores = "";
@@ -308,7 +308,17 @@ class TicketsController extends Controller {
       if ($todosAprobados == 0) {
         Ticket::where('id', '=', $idCaso)->update(array('id_estado' => 3));
       }
-      $this->email($para, $horasRegistro, $nombreturores, $resumen);
+      ///ENVIO EL CORREO AL PADRE
+      $imgRegistroTutor = Array();
+      $ruta = public_path("$idCaso/$idRegistro");
+      $directorio = opendir($ruta); //ruta actual
+      while ($archivo = readdir($directorio)) { //obtenemos un archivo y luego otro sucesivamente
+        if (!is_dir($archivo)) {//verificamos si es o no un directorio
+          $imgRegistroTutor["nombreEnlace"] = $archivo;
+          $imgRegistroTutor["enlace"] = url("/$idCaso/$idRegistro/$archivo");
+        }
+      }
+      $this->email($para, $horasRegistro, $nombreturores, $resumen,$imgRegistroTutor);
     } catch (Exception $ex) {
       return response()->json(array('error' => array('Error al aprobar el registro')));
     }
@@ -341,7 +351,7 @@ class TicketsController extends Controller {
    * FUNCION CON EL CUERPO DEL EMAIL QUE SE ENVIA AL PADRE CUANDO SE APRUEBA UN REGISTRO DEL TUTOR
    */
 
-  private function email($para,$horas,$tutor,$resumen) {
+  private function email($para,$horas,$tutor,$resumen,$imgRegistroTutor) {
     $cabeceras = 'MIME-Version: 1.0' . "\r\n";
     $cabeceras .= 'Content-type: text/html; charset=utf-8' . "\r\n";
     $cabeceras .= 'From: Emocion Creativa <info@emocioncreativa.com>' . "\r\n";
@@ -382,8 +392,19 @@ class TicketsController extends Controller {
                       </td>
                     </tr>";
                   }
-                 
-
+                 if(!empty($imgRegistroTutor)){
+                   $mensaje.="<tr>"
+                            . "<td>"
+                              . "<h3>Archivo de registro: </h3>"
+                            . "</td>"
+                           . "</tr>"
+                           . "<tr>"
+                            . "<td>"
+                              . "<a href='{$imgRegistroTutor['enlace']}'>{$imgRegistroTutor['nombreEnlace']}</a>"
+                            . "</td>"
+                           . "</tr>";
+                 }
+                  
       $mensaje .= "
                 <tr>
                    <td>
