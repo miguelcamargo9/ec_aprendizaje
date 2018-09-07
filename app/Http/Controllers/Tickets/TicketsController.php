@@ -286,8 +286,8 @@ class TicketsController extends Controller {
                     ->leftJoin('estado', 'caso.id_estado', '=', 'estado.id')
                     ->select('estado.estado as estado', 'hijo.nombre as hijoName', 'cliente.users_id_padre as clientid')->first();
     $cliente = Usuario::find($ticket->clientid);
-    $para = "andre0190@gmail.com";
-//    $para = $cliente->email;
+//    $para = "andre0190@gmail.com";
+    $para = $cliente->email;
     
     $tutors = TicketTutores::where('caso_id', '=', $idCaso)->get();
     $nombreturores = "";
