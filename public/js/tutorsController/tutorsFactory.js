@@ -9,8 +9,8 @@ app.factory('tutorsFactory', function ($http) {
             ,{
               headers: {'Content-Type': undefined }
             });
-        },'detalleRegistros': function (idRegistro) {
-          return $http.post('/tickets/detalleRegistros', {idRegistro: idRegistro});
+        },'detalleRegistros': function (idRegistro,idCaso) {
+          return $http.post('/tickets/detalleRegistros', {idRegistro: idRegistro,idCaso:idCaso});
         },'dateRegistry':function(){
           return $http.get('/tutor/dateregistry');
         }
