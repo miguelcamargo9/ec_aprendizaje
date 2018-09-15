@@ -516,7 +516,6 @@
     margin: 0 auto;
   }
   .row-bienvenido{
-   // background-image: linear-gradient(to bottom, #3df2ff 0%, #2d8bff 100%);
    padding: 10px;
   }
 </style>

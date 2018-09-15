@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -32,6 +34,15 @@ class LoginController extends Controller
      *
      * @return void
      */
+    
+    public function authenticated($request){
+        $user = Auth::user();
+        $menus = HomeController::getMenus($user->profiles_id);
+        $request->session()->put('profile', HomeController::getProfile($user->profiles_id)->profile);
+        $request->session()->put('menu', $menus);
+        $request->session()->put('user', $user);
+    }
+    
     public function __construct()
     {
         $this->middleware('guest')->except('logout');

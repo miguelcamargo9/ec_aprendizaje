@@ -238,8 +238,15 @@ class TicketsController extends Controller {
   public function getInfoTickets($idTicket) {
     $infoTicket = Ticket::find($idTicket);
     $registrosTutor = registroTutor::where('id_caso', '=', $idTicket)->get(); //BUSCO LOS REGISROS QUE HA HECHO EL TUTOR
+    foreach ($registrosTutor as $registroTutor) {
+      $registroTutor->user = Usuario::find($registroTutor->users_id_creator);
+    }
     $horasRegistro = registroTutor::where('id_caso', '=', $idTicket)->sum('total_horas');
-
+    $infoTicket->tutors = TicketTutores::where('caso_id', '=', $idTicket)->get();
+    //$infoTicket->invoice = Bills::where('caso_id', '=', $idTicket)->first();
+    foreach ($infoTicket->tutors as $tutor) {
+      $tutor->user = Usuario::find($tutor->users_id_tutor);
+    }
     $client = $this->getClient($infoTicket->id_cliente);
     $child = $this->getChild($client->id_hijo);
     $parent = $this->getParent($client->users_id_padre);

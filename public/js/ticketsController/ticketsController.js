@@ -245,7 +245,7 @@ app.controller('ticketCtrl', ['$scope', 'ticketsFactory', '$timeout', '$filter',
 app.controller('ticketInfoCtrl', ['$scope', 'ticketsFactory', '$timeout', function ($scope, ticketsFactory, $timeout) {
 
     //TRAER LOS DETALLES DE LAS HORAS DEL REGISTRO SELECCIONADO
-    $scope.getDetalesRegistro = function (idRegistro, resumen, totalHoras, estado, comPadre) {
+    $scope.getDetalesRegistro = function (idRegistro, resumen, totalHoras, estado, comPadre, username) {
       var idCaso = $scope.idCaso;
       $scope.resumen = resumen;
       $scope.idRegistro = idRegistro;
@@ -253,6 +253,7 @@ app.controller('ticketInfoCtrl', ['$scope', 'ticketsFactory', '$timeout', functi
       $scope.comPadre = comPadre;
       $scope.answered = (estado === 's') ? true : false;
       $scope.answeredP = (comPadre !== '') ? false : true;
+      $scope.username = username;
       
       ticketsFactory.detalleRegistros(idRegistro,idCaso).then(function (respuesta) {
         $scope.enlace=respuesta.data.enlace;

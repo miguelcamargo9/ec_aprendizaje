@@ -62,7 +62,6 @@ Route::post('/tutor/getall', array('as' => 'tutor.getall', 'uses' => 'Tutor\Tuto
 Route::post('/tutor/getassigned', array('as' => 'tutor.getassigned', 'uses' => 'Tutor\TutorsController@getMyTickets'))->middleware('auth');
 Route::get('/tutor/tickets/ticketinfo/{idTicket}', array('as' => 'tutor.tickets.info', 'uses' => 'Tutor\TutorsController@getInfoTickets'))->middleware('auth');
 Route::post('/tutor/addcommentary', array('as' => 'tutor.commentary', 'uses' => 'Tutor\TutorsController@addCommentary'))->middleware('auth');
-Route::post('/tutor/addcommentary', array('as' => 'tutor.commentary', 'uses' => 'Tutor\TutorsController@addCommentary'))->middleware('auth');
 Route::get('/tutor/dateregistry', array('as' => 'tutor.dateregistry', 'uses' => 'Tutor\TutorsController@dateRegistry'))->middleware('auth');
 Route::post('/tutor/guardarDoc', array('as' => 'tutor.guardar.doc', 'uses' => 'Tutor\TutorsController@guardarDocumentos'))->middleware('auth');
 

@@ -41,9 +41,26 @@
       <div class="form-group">
         Fecha Inicial <input id="fecha_ini" type="date" class="form-control" value="{{$fecha_inicio}}" readonly>
       </div>
+      <div  class="form-group">
+        <div class="panel panel-default">
+          <div class="panel-heading">Tutores</div>
+          <div class="panel-body">
+            @foreach ($tutors as $tutor)
+            <div class="form-group">
+              <div class="form-group row">
+                <div class="col-xs-6">
+                  <input disabled type="text" class="form-control" value="{{$tutor -> user -> name}}" >
+                </div>
+              </div>
+            </div>
+            @endforeach
+          </div>
+        </div>
+      </div>
+      <hr>
       <div class="row">
         <div class="col-xs-12">
-          <h4>Total de horas en el proceso: {{$horasRegisro}}</h4>
+          <h4><i class="fa fa-calculator"></i> Total de horas en el proceso: {{$horasRegisro}}</h4>
         </div>
       </div>
       <div class="row" >
@@ -71,14 +88,15 @@
 
         <div class="col-xs-12">
           <div class="panel panel-default {{$tipoPanel}}">
-            <div class="panel-heading">Resumen del registro - {{$estado}} <b>Fecha:</b> {{date("Y-m-d",strtotime($registro->fecha_creacion))}}</div>
+            <div class="panel-heading">Resumen del registro - {{$estado}} <b>Fecha:</b> {{date("Y-m-d", strtotime($registro -> fecha_creacion))}}
+            <label class="pull-right">&nbsp{{$registro->user->name}}&nbsp</label><li class="fa fa-user pull-right"></li></div>
             <div class="panel-body">
-              {{$registro->resumen}}
+              {{$registro -> resumen}}
             </div>
             <div class="panel-footer">
               <button type="button" 
                       class="btn btn-info" 
-                      ng-click="getDetalesRegistro({{$registro->id}},'{{$registro->resumen}}',{{$registro->total_horas}},'{{$est}}','{{$registro->respuesta_padre}}')" 
+                      ng-click="getDetalesRegistro({{$registro -> id}},'{{$registro -> resumen}}',{{$registro -> total_horas}},'{{$est}}','{{$registro -> respuesta_padre}}', '{{$registro->user->name}}')" 
                       data-toggle="modal" 
                       data-target="#detallesRegistro"> {{$txtBtn}} </button> 
             </div>
@@ -97,6 +115,7 @@
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Detalles del registro</h4>
+                <label class="pull-right">&nbsp<%username%>&nbsp</label><li class="fa fa-user pull-right"></li>
               </div>
               <div class="modal-body">
                 <div data-ng-repeat="hora in horas">
@@ -112,7 +131,7 @@
 
                   </textarea>
                 </div>
-                
+
                 <div ng-hide="answeredP">
                   <h3>Comentario padre:</h3>
                   <textarea  ng-readonly="answered" placeholder="Respuesta" ng-model="comPadre"
