@@ -5,15 +5,10 @@ var app = angular.module('app', ['ui.bootstrap', 'summernote'], function ($inter
 
 app.controller("registrosHoras", ['$scope', 'tutorsFactory', '$timeout', function ($scope, tutorsFactory, $timeout) {
 
-
     $scope.choices = [{
         hI: new Date("8/24/2009 12:00:00:000"),
         hF: new Date("8/24/2009 12:00:00:000")
       }];
-
-
-
-
 
     $scope.formats = ['yyyy-MM-dd', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
     $scope.format = $scope.formats[0];
@@ -61,8 +56,6 @@ app.controller("registrosHoras", ['$scope', 'tutorsFactory', '$timeout', functio
         hI: new Date("8/24/2009 12:00:00:000"),
         hF: new Date("8/24/2009 12:00:00:000")
       });
-
-
     };
 
     $scope.removeNewChoice = function () {
@@ -76,6 +69,7 @@ app.controller("registrosHoras", ['$scope', 'tutorsFactory', '$timeout', functio
     $scope.showAddChoice = function (choice) {
       return choice.id === $scope.choices[$scope.choices.length - 1].id;
     };
+    
     var totalhoras = 0;
     var calcHTotal = function () {
       var registros = $scope.choices;
@@ -84,7 +78,6 @@ app.controller("registrosHoras", ['$scope', 'tutorsFactory', '$timeout', functio
         var hi = registros[reg].hI;
         var hf = registros[reg].hF;
         if (hi < hf) {
-
           totalhoras = ((hf - hi) / 1000);
           horas += (totalhoras / 3600);
         }
@@ -92,12 +85,17 @@ app.controller("registrosHoras", ['$scope', 'tutorsFactory', '$timeout', functio
       // totalhoras++;
       $scope.choices.totalHoras = horas;
     };
+    
     $scope.changed = function () {
       calcHTotal();
     };
 
     $scope.choices.mensaje = "";
     $scope.saveRegistry = function () {
+      angular.forEach($scope.choices, function(value, key) {
+        $scope.choices[key].hI.setHours($scope.choices[key].hI.getHours() - $scope.choices[key].hI.getTimezoneOffset() / 60);;
+        $scope.choices[key].hF.setHours($scope.choices[key].hF.getHours() - $scope.choices[key].hF.getTimezoneOffset() / 60);;
+      });
       var totalHoras = $scope.choices.totalHoras;
       var msg = $scope.choices.mensaje;
       var id = $scope.idCaso;
