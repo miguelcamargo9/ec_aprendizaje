@@ -49,7 +49,7 @@
             <div class="form-group">
               <div class="form-group row">
                 <div class="col-xs-6">
-                  <input disabled type="text" class="form-control" value="{{$tutor -> user -> name}}" >
+                  <input disabled type="text" class="form-control" value="{{$tutor->user->name}}" >
                 </div>
               </div>
             </div>
@@ -68,35 +68,36 @@
         <input type="hidden"  ng-model="idCaso"  ng-init="idCaso={{$id}}" ng-value="{{$id}}"  />
         <input type="hidden" name="_token" id="_token" value="{{csrf_token()}}"  />
 
-
+       
         @foreach ($registros as $registro)
-        @if($registro->aprobado=='N')
-        <?php
-        $tipoPanel = "panel-warning";
-        $estado = "Por verificar";
-        $txtBtn = "Verificar";
-        $est = 'n';
-        ?>
-        @else
-        <?php
-        $tipoPanel = "panel-success";
-        $estado = "Verificado";
-        $txtBtn = "Ver";
-        $est = 's';
-        ?>
+         
+          @if($registro->aprobado=='N')
+            <?php
+            $tipoPanel = "panel-warning";
+            $estado = "Por verificar";
+            $txtBtn = "Verificar";
+            $est = 'n';
+            ?>
+          @else 
+            <?php
+            $tipoPanel = "panel-success";
+            $estado = "Verificado";
+            $txtBtn = "Ver";
+            $est = 's';
+            ?>
         @endif
 
         <div class="col-xs-12">
           <div class="panel panel-default {{$tipoPanel}}">
-            <div class="panel-heading">Resumen del registro - {{$estado}} <b>Fecha:</b> {{date("Y-m-d", strtotime($registro -> fecha_creacion))}}
+            <div class="panel-heading">Resumen del registro - {{$estado}} <b>Fecha:</b> {{date("Y-m-d", strtotime($registro->fecha_creacion))}}
             <label class="pull-right">&nbsp{{$registro->user->name}}&nbsp</label><li class="fa fa-user pull-right"></li></div>
             <div class="panel-body">
-              {{$registro -> resumen}}
+              {{$registro->resumen}}
             </div>
             <div class="panel-footer">
               <button type="button" 
                       class="btn btn-info" 
-                      ng-click="getDetalesRegistro({{$registro -> id}},'{{$registro -> resumen}}',{{$registro -> total_horas}},'{{$est}}','{{$registro -> respuesta_padre}}', '{{$registro->user->name}}')" 
+                      ng-click="getDetalesRegistro({{$registro->id}},'{{$registro->resumen}}',{{$registro->total_horas}},'{{$est}}','{{$registro->respuesta_padre}}', '{{$registro->user->name}}')" 
                       data-toggle="modal" 
                       data-target="#detallesRegistro"> {{$txtBtn}} </button> 
             </div>
@@ -143,7 +144,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-success" ng-hide="answered" ng-click="aprobarRegistro()" data-dismiss="modal">Aprobar</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" ng-click="eliminarRegistro()" data-dismiss="modal">Eliminar</button>
               </div>
             </div>
 

@@ -34,6 +34,29 @@ $(document).ready(function () {
     });
   });
 
+  ///ELIMINAR EL CASO
+  $("#tickets").on('click','.eliminar-caso',function () {
+    var eliminar = confirm("Desea eliminar el caso");
+    var _this = $(this);
+    var idCaso = _this.data("id");
+    var _token = $("#_token").val();
+    console.log(_token)
+    if (eliminar) {
+      $.ajax({
+        url: "/tickets/eliminar",
+        type: "POST",
+        data: {
+          idCaso: idCaso,
+          _token: _token
+        }
+      }).done(function (rta) {
+        $("#msj").text(rta.msj);
+        $("#msg-done").show();
+        setTimeout(function(){ location.reload(); }, 3000);
+      });
+    }
+  });
+
   $("#completar").click(function () {
     var comentario = $("#comentario_tutor").val();
     var fecha_ini = $("#fecha_ini").val();

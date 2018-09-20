@@ -146,19 +146,19 @@
       <div class="row">
  
         @foreach ($registros as $registro)
-        @if($registro->aprobado=='N')
-        <?php
-        $tipoPanel = "panel-warning";
-        $estado = "Por verificar";
-        $est = 'n';
-        ?>
-        @else
-        <?php
-        $tipoPanel = "panel-success";
-        $estado = "Verificado";
-        $est = 's';
-        ?>
-        @endif
+          @if($registro->aprobado=='N')
+          <?php
+          $tipoPanel = "panel-warning";
+          $estado = "Por verificar";
+          $est = 'n';
+          ?>
+          @else
+          <?php
+          $tipoPanel = "panel-success";
+          $estado = "Verificado";
+          $est = 's';
+          ?>
+          @endif
 
         <div class="col-xs-12">
           <div class="panel panel-default {{$tipoPanel}}">
@@ -294,6 +294,8 @@
               <div data-ng-repeat="hora in horas">
                 <p><b>Fecha: </b><% hora.fecha %> <b>Hora inicio: </b><% hora.hora_inicio %> <b>Hora fin:</b> <% hora.hora_fin %></p>
               </div>
+              <label>Documento adjunto: </label>
+              <a href="<%enlace%>" target="_blank"><%nombreEnlace%></a>
               <h3>Total de horas: <%totalH%> </h3>
               <textarea  ng-readonly="true" placeholder="Respuesta" ng-model="resumen"
                          style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">

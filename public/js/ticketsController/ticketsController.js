@@ -282,4 +282,21 @@ app.controller('ticketInfoCtrl', ['$scope', 'ticketsFactory', '$timeout', functi
         }
       });
     };
+    ///ELIMINAR EL REGISTRO DEL TUTOR 
+    $scope.eliminarRegistro = function () {
+      var idRegistro = $scope.idRegistro;
+      var idCaso = $scope.idCaso;
+      ticketsFactory.eliminarRegistro(idRegistro, idCaso).then(function (respuesta) {
+        rta = respuesta.data;
+        if (rta.success) {
+          $scope.success = rta.msj;
+          $timeout(function () {
+            location.reload();
+          }, 3000);
+        } else {
+          $scope.error.msjs = rta;
+        }
+      });
+    };
+    
   }]);

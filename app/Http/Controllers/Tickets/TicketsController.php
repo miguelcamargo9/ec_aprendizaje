@@ -171,10 +171,14 @@ class TicketsController extends Controller {
       }
       $value->id_estado = $this->getState($value->id_estado);
       $idTicket = $value->id;
+      //BOTON PARA VER EL PROCESO 
       $ruta = "/tickets/ticketinfo/$idTicket";
       $boton = "<a href='$ruta' alt='Ver Proceso {$idTicket}'>Ver <i class='fa fa-eye'></i></a>";
+      //BOTON PARA EDITAR EL PROCESO
       $ruta = "/tickets/view/edit/$idTicket";
-      $boton .= "<a href='$ruta' alt='Editar Proceso {$idTicket}'>Editar <i class='fa fa-edit'></i></a>";
+      $boton .= "  <a href='$ruta' alt='Editar Proceso {$idTicket}'>Editar <i class='fa fa-edit'></i></a>";
+      //BOTON PARA ELIMINAR EL PROCESO
+      $boton .= "  <a href='javascript:void(0)' class='eliminar-caso' data-id='$idTicket' alt='Eliminar Proceso {$idTicket}'>Eliminar <i class='fa fa-trash'></i></a>";
       $value->ver = $boton;
     }
 
@@ -295,7 +299,7 @@ class TicketsController extends Controller {
     $cliente = Usuario::find($ticket->clientid);
 //    $para = "andre0190@gmail.com";
     $para = $cliente->email;
-    
+
     $tutors = TicketTutores::where('caso_id', '=', $idCaso)->get();
     $nombreturores = "";
 
@@ -308,7 +312,7 @@ class TicketsController extends Controller {
 
     //HORAS DEL REGISTRO
     $horasRegistro = horasRegistro::where('registro_tutor_id', '=', $idRegistro)->get();
-    
+
     try {
       registroTutor::where('id', '=', $idRegistro)->update(array("resumen" => $resumen, "aprobado" => "S", "fecha_aprobacion" => $fecha));
       $todosAprobados = registroTutor::where(array("aprobado" => 'N', "id_caso" => $idCaso))->get()->count();
@@ -325,11 +329,58 @@ class TicketsController extends Controller {
           $imgRegistroTutor["enlace"] = url("/$idCaso/$idRegistro/$archivo");
         }
       }
-      $this->email($para, $horasRegistro, $nombreturores, $resumen,$imgRegistroTutor);
+      $this->email($para, $horasRegistro, $nombreturores, $resumen, $imgRegistroTutor);
     } catch (Exception $ex) {
       return response()->json(array('error' => array('Error al aprobar el registro')));
     }
     return response()->json(array('success' => true, 'msj' => 'Registro aprobado'));
+  }
+
+  /*
+   * ELIMINAR ALGUN REGISTRO QUE HAYA HECHO EL TUTOR
+   */
+
+  public function eliminarRegistro() {
+    $idRegistro = Input::get('idRegistro');
+    $registro = registroTutor::find($idRegistro);
+    $horasXRegistro = horasRegistro::where('registro_tutor_id', '=', $idRegistro);
+    try {
+      $horasXRegistro->delete();
+      $registro->delete();
+    } catch (Exception $ex) {
+      return response()->json(array('error' => array('Error al aprobar el registro')));
+    }
+    return response()->json(array('success' => true, 'msj' => 'Registro eliminado'));
+  }
+   /*
+   * ELIMINAR UN CASO O PROCESO 
+   */
+  public function eliminar() {
+    $idCaso = Input::get('idCaso');
+    
+    $registro = registroTutor::where("id_caso",$idCaso)->get();
+    $registroBorrar = registroTutor::where("id_caso",$idCaso);
+    $casoTutor = TicketTutores::where("caso_id",$idCaso);
+    $factura = Bills::where('caso_id', '=', $idCaso);
+    
+    $hayRegistros = ($registro->count()>0)?true:false;
+    if($hayRegistros){
+      $horasXRegistro = horasRegistro::where('registro_tutor_id', $registro[0]->id);
+    }
+    $caso = Ticket::find($idCaso);
+    try {
+      if($hayRegistros){
+        $horasXRegistro->delete();
+      }
+      $registroBorrar->delete();
+      $factura->delete();
+      $casoTutor->delete();
+      $caso->delete();
+      
+    } catch (Exception $ex) {
+      return response()->json(array('error' => array('Error al aprobar el registro')));
+    }
+    return response()->json(array('success' => true, 'msj' => 'Caso eliminado con exito'));
   }
 
   public function getClient($id_cliente) {
@@ -358,7 +409,7 @@ class TicketsController extends Controller {
    * FUNCION CON EL CUERPO DEL EMAIL QUE SE ENVIA AL PADRE CUANDO SE APRUEBA UN REGISTRO DEL TUTOR
    */
 
-  private function email($para,$horas,$tutor,$resumen,$imgRegistroTutor) {
+  private function email($para, $horas, $tutor, $resumen, $imgRegistroTutor) {
     $cabeceras = 'MIME-Version: 1.0' . "\r\n";
     $cabeceras .= 'Content-type: text/html; charset=utf-8' . "\r\n";
     $cabeceras .= 'From: Emocion Creativa <info@emocioncreativa.com>' . "\r\n";
@@ -375,7 +426,7 @@ class TicketsController extends Controller {
               <table width='700' border='0' align='center' cellpadding='0' cellspacing='0' style='font-family: Verdana, Geneva, sans-serif; text-align: center; background-color: white;'>
                  <tr>
                   <td>
-                    <img src='".url("/img/logo.jpeg")."'/>
+                    <img src='" . url("/img/logo.jpeg") . "'/>
                   </td>
                  </tr>
                   <tr>
@@ -383,11 +434,11 @@ class TicketsController extends Controller {
                      El tutor $tutor agrego un nuevo registro de la tutoria
                    </td>
                  </tr><tr><td><h3>Registros: </h3></td></tr>";
-                 foreach ($horas as $hora) {
-                    $fecha = $hora->fecha;
-                    $horaIni = $hora->hora_inicio;
-                    $horaFin = $hora->hora_fin;
-                   $mensaje .= "<tr>
+    foreach ($horas as $hora) {
+      $fecha = $hora->fecha;
+      $horaIni = $hora->hora_inicio;
+      $horaFin = $hora->hora_fin;
+      $mensaje .= "<tr>
                       <td>
                         Fecha: $fecha
                       </td>
@@ -398,21 +449,21 @@ class TicketsController extends Controller {
                         Hora de fin: $horaFin
                       </td>
                     </tr>";
-                  }
-                 if(!empty($imgRegistroTutor)){
-                   $mensaje.="<tr>"
-                            . "<td>"
-                              . "<h3>Archivo de registro: </h3>"
-                            . "</td>"
-                           . "</tr>"
-                           . "<tr>"
-                            . "<td>"
-                              . "<a href='{$imgRegistroTutor['enlace']}'>{$imgRegistroTutor['nombreEnlace']}</a>"
-                            . "</td>"
-                           . "</tr>";
-                 }
-                  
-      $mensaje .= "
+    }
+    if (!empty($imgRegistroTutor)) {
+      $mensaje.="<tr>"
+              . "<td>"
+              . "<h3>Archivo de registro: </h3>"
+              . "</td>"
+              . "</tr>"
+              . "<tr>"
+              . "<td>"
+              . "<a href='{$imgRegistroTutor['enlace']}'>{$imgRegistroTutor['nombreEnlace']}</a>"
+              . "</td>"
+              . "</tr>";
+    }
+
+    $mensaje .= "
                 <tr>
                    <td>
                      <h3>Comentario: </h3>

@@ -22,6 +22,9 @@ app.factory('ticketsFactory', function ($http) {
     },
     'aprobarRegistro': function (idRegistro, resumen, idCaso) {
       return $http.post('/tickets/aprobarRegistro', {idRegistro: idRegistro, resumen: resumen, idCaso: idCaso});
+    },
+    'eliminarRegistro': function (idRegistro, idCaso) {
+      return $http.post('/tickets/eliminarRegistro', {idRegistro: idRegistro, idCaso: idCaso});
     }
   };
 

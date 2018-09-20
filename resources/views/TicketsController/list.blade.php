@@ -14,13 +14,13 @@
     <?php
     $visible = (isset($mensaje) && $mensaje != '') ? "display:block;" : "display:none;";
     ?>
-    <div class="alert alert-success" role="alert" style="{{$visible}}">
+    <div id="msg-done" class="alert alert-success" role="alert" style="{{$visible}}">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-        <span class="sr-only">Error:</span>
-        <strong>{{$mensaje}}</strong>
+        <span class="sr-only"></span>
+        <strong id="msj">{{$mensaje}}</strong>
     </div>
-
+    <input type="hidden" name="_token" id="_token" value="{{csrf_token()}}"  />
     <table width="60%" class="table">
         <thead>
         <tr>
