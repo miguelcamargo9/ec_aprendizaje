@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tutor;
 use App\Models\Usuario;
 use App\Models\Ticket;
+use App\Models\TicketTutores;
 use App\Models\Universities;
 use App\Models\Degrees;
 use Validator;
@@ -212,9 +213,9 @@ class TutorsController extends Controller {
     $id = Input::get('id');
     $idUser = Input::get('id_user');
 
-    $tickets = Ticket::where('users_id_tutor', '=', $idUser)->get();
+    $tickets = TicketTutores::where('users_id_tutor', '=', $idUser)->count();
 
-    if (count($tickets) > 0) {
+    if ($tickets > 0) {
       return response()->json(array('error' => array('El tutor tiene casos asignados, no se puede eliminar')));
     } else {
       $tutor = Tutor::find($id);

@@ -15,25 +15,6 @@ $(document).ready(function () {
     'lengthMenu': [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "Todos"]]
   });
 
-  $("#editar").click(function () {
-    var comentario = $("#comentario_tutor").val();
-    var fecha_ini = $("#fecha_ini").val();
-    var idCaso = $("#idCaso").val();
-    var _token = $("#_token").val();
-    $.ajax({
-      url: "/tickets/edit",
-      type: "POST",
-      data: {
-        comentario: comentario,
-        fecha_ini: fecha_ini,
-        id: idCaso,
-        _token: _token
-      }
-    }).done(function () {
-      $("#msg-done").show();
-    });
-  });
-
   ///ELIMINAR EL CASO
   $("#tickets").on('click','.eliminar-caso',function () {
     var eliminar = confirm("Desea eliminar el caso");
@@ -57,23 +38,4 @@ $(document).ready(function () {
     }
   });
 
-  $("#completar").click(function () {
-    var comentario = $("#comentario_tutor").val();
-    var fecha_ini = $("#fecha_ini").val();
-    var idCaso = $("#idCaso").val();
-    var _token = $("#_token").val();
-    $.ajax({
-      url: "/tickets/edit",
-      type: "POST",
-      data: {
-        comentario: comentario,
-        cierre: true,
-        fecha_ini: fecha_ini,
-        id: idCaso,
-        _token: _token
-      }
-    }).done(function () {
-      $("#msg-done").show();
-    });
-  });
 });

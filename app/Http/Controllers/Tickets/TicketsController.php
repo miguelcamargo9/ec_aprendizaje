@@ -87,78 +87,6 @@ class TicketsController extends Controller {
     return response()->json(array('success' => true, 'msj' => 'Proceso Editado con Exito'));
   }
 
-  public function editTicket() {
-    //$comentario = Input::get('comentario');
-    $fecha_ini = Input::get('fecha_ini');
-    $fecha_fin = Input::get('fecha_fin');
-    $id = Input::get('id');
-    $cierre = Input::get('cierre');
-    if (isset($cierre)) {
-      //ENVIO DE CORREO
-
-
-      $cabeceras = 'MIME-Version: 1.0' . "\r\n";
-      $cabeceras .= 'Content-type: text/html; charset=utf-8' . "\r\n";
-      $cabeceras .= 'From: Emocion Creativa <info@emocioncreativa.com>' . "\r\n";
-
-      $titulo = "Caso verificado";
-
-      $ticket = Ticket::where("caso.id", "=", $id)
-                      ->leftJoin('cliente', 'caso.id_cliente', '=', 'cliente.id')
-                      ->leftJoin('hijo', 'cliente.id_hijo', '=', 'hijo.id')
-                      ->leftJoin('estado', 'caso.id_estado', '=', 'estado.id')
-                      ->select('estado.estado as estado', 'hijo.nombre as hijoName', 'hijo.apellido as estudianteAp', 'cliente.users_id_padre as clientid')->first();
-
-      $cliente = Usuario::find($ticket->clientid);
-      $para = "andre0190@gmail.com";
-//      $para = $cliente->email;
-
-      $tutors = TicketTutores::where('caso_id', '=', $id)->get();
-      $nombreturores = "";
-
-      foreach ($tutors as $tutor) {
-        $mistutor = Usuario::find($tutor->users_id_tutor);
-        $nombreturores .= $mistutor->name . ", ";
-      }
-
-      $nombreturores = substr($nombreturores, 0, -2);
-      $ticket->toArray();
-      $estudiante = "{$ticket['hijoName']} {$ticket['estudianteAp']}";
-      $tutor = $ticket['tutor'];
-      $estado = $ticket['estado'];
-
-      $mensaje = "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
-              <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en'>
-              <head>
-                      <meta http-equiv='Content-Type' content='text/html;charset=UTF-8'>
-                      <title>Caso verificado</title>
-                      <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
-              </head>
-              <body style='background-color: #f6f6f6'>
-              <table width='700' border='0' align='center' cellpadding='0' cellspacing='0' style='font-family: Verdana, Geneva, sans-serif; text-align: center; background-color: white;'>
-                 <tr>
-                   <td colspan='4'>
-                     el caso del estudiante:$estudiante con el tutro: $nombreturores ya se encuentra en el estado $estado
-                   </td>
-                 </tr>
-
-
-                <tr>
-                  <td height='60'></td>
-                </tr>
-                <tr style='background-color: #f7f7f7; color: #79797d;'>
-                  <td colspan='4'><p style='font-size: 12px; margin: 30px;'>Copyright © 2018 Emoción creativa </p></td>
-                </tr>
-              </table>
-              </body>
-              </html>";
-
-      mail($para, $titulo, $mensaje, $cabeceras);
-    } else {
-      Ticket::where('id', '=', $id)->update(array('descripcion' => $comentario, "fecha_inicio" => $fecha_ini));
-    }
-  }
-
   public function getAllTickets() {
     $result = Ticket::with('state', 'client')->get();
 
@@ -315,7 +243,7 @@ class TicketsController extends Controller {
 
     try {
       registroTutor::where('id', '=', $idRegistro)->update(array("resumen" => $resumen, "aprobado" => "S", "fecha_aprobacion" => $fecha));
-      $todosAprobados = registroTutor::where(array("aprobado" => 'N', "id_caso" => $idCaso))->get()->count();
+      $todosAprobados = registroTutor::where(array("aprobado" => 'N', "id_caso" => $idCaso))->count();
       if ($todosAprobados == 0) {
         Ticket::where('id', '=', $idCaso)->update(array('id_estado' => 3));
       }
@@ -342,43 +270,39 @@ class TicketsController extends Controller {
 
   public function eliminarRegistro() {
     $idRegistro = Input::get('idRegistro');
-    $registro = registroTutor::find($idRegistro);
-    $horasXRegistro = horasRegistro::where('registro_tutor_id', '=', $idRegistro);
     try {
-      $horasXRegistro->delete();
-      $registro->delete();
+      $registroTutor = registroTutor::find($idRegistro);
+      horasRegistro::where('registro_tutor_id', '=', $idRegistro)->delete();
+      $todosAprobados = registroTutor::where(array("aprobado" => 'N', "id_caso" => $registroTutor->id_caso))->count();
+      if ($todosAprobados == 1 && $registroTutor->aprobado == 'N') {
+        Ticket::where('id', '=', $registroTutor->id_caso)->update(array('id_estado' => 3));
+      }
+      $registroTutor->delete();
     } catch (Exception $ex) {
-      return response()->json(array('error' => array('Error al aprobar el registro')));
+      return response()->json(array('error' => array('Error al elminar el registro')));
     }
     return response()->json(array('success' => true, 'msj' => 'Registro eliminado'));
   }
-   /*
+
+  /*
    * ELIMINAR UN CASO O PROCESO 
    */
+
   public function eliminar() {
     $idCaso = Input::get('idCaso');
-    
-    $registro = registroTutor::where("id_caso",$idCaso)->get();
-    $registroBorrar = registroTutor::where("id_caso",$idCaso);
-    $casoTutor = TicketTutores::where("caso_id",$idCaso);
-    $factura = Bills::where('caso_id', '=', $idCaso);
-    
-    $hayRegistros = ($registro->count()>0)?true:false;
-    if($hayRegistros){
-      $horasXRegistro = horasRegistro::where('registro_tutor_id', $registro[0]->id);
+
+    $registros = registroTutor::where("id_caso", $idCaso)->get();
+    foreach ($registros as $registro) {  
+      horasRegistro::where('registro_tutor_id', $registro->id)->delete();
     }
-    $caso = Ticket::find($idCaso);
+    
     try {
-      if($hayRegistros){
-        $horasXRegistro->delete();
-      }
-      $registroBorrar->delete();
-      $factura->delete();
-      $casoTutor->delete();
-      $caso->delete();
-      
+      registroTutor::where("id_caso", $idCaso)->delete();
+      TicketTutores::where("caso_id", $idCaso)->delete();
+      Bills::where('caso_id', '=', $idCaso)->delete();
+      Ticket::find($idCaso)->delete();
     } catch (Exception $ex) {
-      return response()->json(array('error' => array('Error al aprobar el registro')));
+      return response()->json(array('error' => array('Error al eliminar el caso')));
     }
     return response()->json(array('success' => true, 'msj' => 'Caso eliminado con exito'));
   }
@@ -451,7 +375,7 @@ class TicketsController extends Controller {
                     </tr>";
     }
     if (!empty($imgRegistroTutor)) {
-      $mensaje.="<tr>"
+      $mensaje .= "<tr>"
               . "<td>"
               . "<h3>Archivo de registro: </h3>"
               . "</td>"

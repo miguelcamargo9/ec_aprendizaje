@@ -48,7 +48,6 @@ Route::get('/tickets/new', array('as' => 'tickets.new', 'uses' => 'Tickets\Ticke
 Route::post('/tickets/registry', array('as' => 'tickets.registry', 'uses' => 'Tickets\TicketsController@createNewTicket'))->middleware('auth');
 Route::get('/tickets/view/edit/{idTicket}', array('as' => 'tickets.registry', 'uses' => 'Tickets\TicketsController@viewEditTicket'))->middleware('auth');
 Route::post('/tickets/editTicket', array('as' => 'tickets.editticket', 'uses' => 'Tickets\TicketsController@editInfoTicket'))->middleware('auth');
-Route::post('/tickets/edit', array('as' => 'tickets.edit', 'uses' => 'Tickets\TicketsController@editTicket'))->middleware('auth');
 Route::post('/tickets/getall', array('as' => 'tickets.getall', 'uses' => 'Tickets\TicketsController@getAllTickets'))->middleware('auth');
 Route::any('/tickets/updatestate', array('as' => 'tickets.updatestate', 'uses' => 'Tickets\TicketsController@updateState'))->middleware('auth');
 Route::get('/tickets/ticketinfo/{idTicket}', array('as' => 'tickets.info', 'uses' => 'Tickets\TicketsController@getInfoTickets'))->middleware('auth');
