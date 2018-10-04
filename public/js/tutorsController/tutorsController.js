@@ -96,7 +96,7 @@ app.controller("registrosHoras", ['$scope', 'tutorsFactory', '$timeout', functio
         $scope.choices[key].hI.setHours($scope.choices[key].hI.getHours() - $scope.choices[key].hI.getTimezoneOffset() / 60);;
         $scope.choices[key].hF.setHours($scope.choices[key].hF.getHours() - $scope.choices[key].hF.getTimezoneOffset() / 60);;
       });
-      var totalHoras = $scope.choices.totalHoras;
+      var totalHoras = ($scope.choices.totalHoras === undefined || $scope.choices.totalHoras === null) ? 0 : $scope.choices.totalHoras;
       var msg = $scope.choices.mensaje;
       var id = $scope.idCaso;
       var data = new FormData();
