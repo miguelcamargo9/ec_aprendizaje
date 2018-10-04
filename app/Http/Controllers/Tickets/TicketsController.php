@@ -337,7 +337,7 @@ class TicketsController extends Controller {
     $cabeceras = 'MIME-Version: 1.0' . "\r\n";
     $cabeceras .= 'Content-type: text/html; charset=utf-8' . "\r\n";
     $cabeceras .= 'From: Emocion Creativa <info@emocioncreativa.com>' . "\r\n";
-    $cabeceras .= 'CCO: info@emocioncreativa.com,andre0190@gmail.com' . "\r\n"; 
+    $cabeceras .= 'Bcc: info@emocioncreativa.com,andre0190@gmail.com' . "\r\n"; 
 
     $titulo = "Nuevo comentario en el caso de tutoria";
     $mensaje = "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
