@@ -100,7 +100,8 @@ app.controller("registrosHoras", ['$scope', 'tutorsFactory', '$timeout', functio
       var msg = $scope.choices.mensaje;
       var id = $scope.idCaso;
       var data = new FormData();
-      var adjuntoFoto = ( typeof $scope.files ==="undefined")?false:true;
+      //var adjuntoFoto = ( typeof $scope.files ==="undefined")?false:true;
+      var adjuntoFoto = true;
       if (!adjuntoFoto) {
         alert("Debes adjuntar un registro");
       } else {

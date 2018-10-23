@@ -238,18 +238,15 @@
 
               </div>
               <!--ADJUNTAR DOCUMETNOS-->
-              <div class="col-xs-6">
+             <!--  <div class="col-xs-6">
                 <div class="form-group">
                   <label for="documentos">Adjuntar archivos</label>
                   <input  type="file" name="documentos" accept="image/*"
                           class="form-control" 
                            onchange="angular.element(this).scope().getFileDetails(this)" >
-<!--                  <input accept="image/*" name="file" ng-value="fileToUpload"
-                          value="{%fileToUpload%}" file-model="fileToUpload"
-                          set-file-data="fileToUpload = value;" 
-                          type="file" id="my_file" />-->
+
                 </div>
-              </div>
+              </div> -->
               
               <div class="row">
                 <div class="col-xs-12">
