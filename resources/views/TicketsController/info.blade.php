@@ -97,7 +97,7 @@
             <div class="panel-footer">
               <button type="button" 
                       class="btn btn-info" 
-                      ng-click="getDetalesRegistro({{$registro->id}},'{{$registro->resumen}}',{{$registro->total_horas}},'{{$est}}','{{$registro->respuesta_padre}}', '{{$registro->user->name}}')" 
+                      ng-click="getDetalesRegistro({{$registro->id}},'{{preg_quote($registro->resumen, '\'')}}',{{$registro->total_horas}},'{{$est}}','{{preg_quote($registro->respuesta_padre, '\'')}}', '{{$registro->user->name}}')" 
                       data-toggle="modal" 
                       data-target="#detallesRegistro"> {{$txtBtn}} </button> 
             </div>

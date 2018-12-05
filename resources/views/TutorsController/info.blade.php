@@ -170,7 +170,7 @@
             <div class="panel-footer">
               <button type="button" 
                       class="btn btn-info" 
-                      ng-click="getDetalesRegistro('{{$registro->id}}','{{$registro->resumen}}','{{$registro->total_horas}}','{{$registro->respuesta_padre}}','{{$registro->user->name}}')" 
+                      ng-click="getDetalesRegistro('{{$registro->id}}','{{preg_quote($registro->resumen, '\'')}}','{{$registro->total_horas}}','{{preg_quote($registro->respuesta_padre, '\'')}}','{{$registro->user->name}}')" 
                       data-toggle="modal" 
                       data-target="#detallesRegistro"> ver </button> 
             </div>
@@ -238,7 +238,7 @@
 
               </div>
               <!--ADJUNTAR DOCUMETNOS-->
-             <!--  <div class="col-xs-6">
+             <div class="col-xs-6">
                 <div class="form-group">
                   <label for="documentos">Adjuntar archivos</label>
                   <input  type="file" name="documentos" accept="image/*"
@@ -246,7 +246,7 @@
                            onchange="angular.element(this).scope().getFileDetails(this)" >
 
                 </div>
-              </div> -->
+              </div>
               
               <div class="row">
                 <div class="col-xs-12">
